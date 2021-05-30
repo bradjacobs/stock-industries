@@ -201,6 +201,28 @@ abstract public class BaseDataConverter<T>
     }
 
 
+    protected String cleanValue(String input)
+    {
+        if (input == null) {
+            return "";
+        }
+
+        String result = cleanWhitespace(input);
+
+        // todo - add here
+
+        return result;
+    }
+
+
+    protected String cleanWhitespace(String input) {
+        // replace 2 or more adjacent spaces w/ a single space (i.e. "aaa   bbb" -> "aaa bbb")
+        //   as well as replace any \n, \r, \t, etc w/ space
+        String result = input.replaceAll("\\s+", " ");
+        return result.trim();
+    }
+
+
     ///////////////////////////////////////////////////////////////////
 
 

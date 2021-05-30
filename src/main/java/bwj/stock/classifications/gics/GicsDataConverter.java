@@ -117,32 +117,9 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
 
     private String getCellValue(String[] rowData, Column column)
     {
-        return getCleanValue(rowData[column.getColIndex()]);
+        return cleanValue(rowData[column.getColIndex()]);
     }
 
-    private String getCleanValue(String value)
-    {
-        if (value != null) {
-            value = removeExtraWhitespace(value);
-            if (value.length() > 0) {
-                return value;
-            }
-        }
-        return "";
-    }
-
-    // TODO: simplify + move this method
-    protected String removeExtraWhitespace(String s)
-    {
-        String cleanString = s;
-        cleanString = cleanString.replace("\n", " ");
-        cleanString = cleanString.replace("\r", " ");
-        cleanString = cleanString.replace("\t", " ");
-
-        // replace 2 or more adjacent spaces w/ a single space (i.e. "aaa   bbb" -> "aaa bbb")
-        cleanString = cleanString.replaceAll(" +", " ");
-        return cleanString.trim();
-    }
 
 
     private GicsRecord createBlankRecord() {
