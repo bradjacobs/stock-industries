@@ -114,8 +114,9 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
         String result = super.cleanValue(input);
 
         result = capitalizeLetterAfterDash(result);
-
+        result = result.replace("Exploration&production", "Exploration & Production");  // z
         result = result.replace("Oil&gas", "Oil & Gas");  // z
+
         result = result.replace(" Whole Sales", " Wholesale");  // z
         result = result.replace("Elec Pwr", "Electric Power");  // z
         result = result.replace("Utility-Gas Distr", "Utility-Gas Distribution");  // z
@@ -125,6 +126,8 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
 
         result = result.replace(" And ", " and ");
         result = result.replace(" and ", " & ");
+        result = result.replace(" R & D ", " R&D ");  // note: was originally "... R And D Services ..."
+
         result = result.replace("Reit ", "REIT ");
         result = result.replace(" Rv ", " RV ");
         result = result.replace(" Mlb", " MLB");
