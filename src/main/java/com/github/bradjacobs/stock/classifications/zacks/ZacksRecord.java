@@ -1,4 +1,4 @@
-package bwj.stock.classifications.zacks;
+package com.github.bradjacobs.stock.classifications.zacks;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 

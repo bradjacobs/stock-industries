@@ -1,4 +1,4 @@
-package bwj.stock.classifications.gics;
+package com.github.bradjacobs.stock.classifications.gics;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 

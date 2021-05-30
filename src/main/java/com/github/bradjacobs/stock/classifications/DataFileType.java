@@ -1,4 +1,4 @@
-package bwj.stock.classifications;
+package com.github.bradjacobs.stock.classifications;
 
 enum DataFileType
 {

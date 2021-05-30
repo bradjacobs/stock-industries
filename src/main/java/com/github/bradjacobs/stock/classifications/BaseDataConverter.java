@@ -1,10 +1,10 @@
-package bwj.stock.classifications;
+package com.github.bradjacobs.stock.classifications;
 
-import bwj.stock.classifications.common.objects.ActivityNode;
-import bwj.stock.classifications.common.objects.GroupNode;
-import bwj.stock.classifications.common.objects.IndustryNode;
-import bwj.stock.classifications.common.objects.SectorNode;
-import bwj.stock.classifications.common.objects.SubIndustryNode;
+import com.github.bradjacobs.stock.classifications.common.objects.ActivityNode;
+import com.github.bradjacobs.stock.classifications.common.objects.GroupNode;
+import com.github.bradjacobs.stock.classifications.common.objects.IndustryNode;
+import com.github.bradjacobs.stock.classifications.common.objects.SectorNode;
+import com.github.bradjacobs.stock.classifications.common.objects.SubIndustryNode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

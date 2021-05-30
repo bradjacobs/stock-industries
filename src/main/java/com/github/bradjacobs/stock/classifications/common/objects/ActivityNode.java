@@ -1,4 +1,4 @@
-package bwj.stock.classifications.common.objects;
+package com.github.bradjacobs.stock.classifications.common.objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,7 +1,7 @@
-package bwj.stock.classifications;
+package com.github.bradjacobs.stock.classifications;
 
-import bwj.stock.classifications.gics.GicsDataConverter;
-import bwj.stock.classifications.zacks.ZacksDataConverter;
+import com.github.bradjacobs.stock.classifications.gics.GicsDataConverter;
+import com.github.bradjacobs.stock.classifications.zacks.ZacksDataConverter;
 
 public class MainDriver
 {

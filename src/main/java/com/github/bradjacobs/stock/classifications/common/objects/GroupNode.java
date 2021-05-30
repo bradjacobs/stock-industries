@@ -1,6 +1,5 @@
-package bwj.stock.classifications.common.objects;
+package com.github.bradjacobs.stock.classifications.common.objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;

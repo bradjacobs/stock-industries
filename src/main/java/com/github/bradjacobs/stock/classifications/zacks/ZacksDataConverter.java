@@ -1,6 +1,6 @@
-package bwj.stock.classifications.zacks;
+package com.github.bradjacobs.stock.classifications.zacks;
 
-import bwj.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
