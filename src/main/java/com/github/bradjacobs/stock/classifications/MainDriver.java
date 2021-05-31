@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.classifications;
 
 import com.github.bradjacobs.stock.classifications.gics.GicsDataConverter;
 import com.github.bradjacobs.stock.classifications.icb.IcbDataConverter;
+import com.github.bradjacobs.stock.classifications.isic.IsicDataConverter;
 import com.github.bradjacobs.stock.classifications.mgecs.MgecsDataConverter;
 import com.github.bradjacobs.stock.classifications.naics.NaicsDataConverter;
 import com.github.bradjacobs.stock.classifications.refinitiv.RefinitivDataConverter;
@@ -32,7 +33,10 @@ public class MainDriver
 //        SicDataConverter sicDataConverter = new SicDataConverter();
 //        sicDataConverter.createDataFiles();
 
-        IcbDataConverter icbDataConverter = new IcbDataConverter();
-        icbDataConverter.createDataFiles();
+//        IcbDataConverter icbDataConverter = new IcbDataConverter();
+//        icbDataConverter.createDataFiles();
+
+        IsicDataConverter isicDataConverter = new IsicDataConverter();
+        isicDataConverter.createDataFiles();
     }
 }
