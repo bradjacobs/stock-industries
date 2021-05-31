@@ -64,8 +64,9 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
             if (! shouldSkip(rowRecord))
             {
                 recordList.add(rowRecord);
-                prevRecord = rowRecord;
             }
+
+            prevRecord = rowRecord;
         }
 
         return recordList;
