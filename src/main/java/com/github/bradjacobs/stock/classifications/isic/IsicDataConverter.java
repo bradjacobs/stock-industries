@@ -108,6 +108,11 @@ public class IsicDataConverter extends BaseDataConverter<IsicRecord>
                 }
 
                 divisionName = cleanValue(divisionName);
+
+                // for the moment assign the groupId/groupName same as division
+                //   normally this will be overridden, but there are cases w/o an explicit group.  (i.e. Division 11)
+                groupId = divisionId + "0";
+                groupName = divisionName;
             }
             else
             {
