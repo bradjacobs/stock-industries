@@ -1,7 +1,7 @@
 package com.github.bradjacobs.stock.classifications.gics;
 
 
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
 import org.apache.commons.lang3.StringUtils;

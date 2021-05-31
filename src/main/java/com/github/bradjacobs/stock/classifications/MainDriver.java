@@ -12,17 +12,17 @@ public class MainDriver
     {
         // still in demo-mode.....
 
-//        GicsDataConverter gicsDataConverter = new GicsDataConverter();
-//        gicsDataConverter.createDataFiles();
-//
-//        ZacksDataConverter zacksDataConverter = new ZacksDataConverter();
-//        zacksDataConverter.createDataFiles();
+        GicsDataConverter gicsDataConverter = new GicsDataConverter();
+        gicsDataConverter.createDataFiles();
 
-//        NaicsDataConverter naicsDataConverter = new NaicsDataConverter();
-//        naicsDataConverter.createDataFiles();
+        ZacksDataConverter zacksDataConverter = new ZacksDataConverter();
+        zacksDataConverter.createDataFiles();
 
-//        MgecsDataConverter mgecsDataConverter = new MgecsDataConverter();
-//        mgecsDataConverter.createDataFiles();
+        NaicsDataConverter naicsDataConverter = new NaicsDataConverter();
+        naicsDataConverter.createDataFiles();
+
+        MgecsDataConverter mgecsDataConverter = new MgecsDataConverter();
+        mgecsDataConverter.createDataFiles();
 
         RefinitivDataConverter refvDataConverter = new RefinitivDataConverter();
         refvDataConverter.createDataFiles();

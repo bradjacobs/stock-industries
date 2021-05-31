@@ -1,5 +1,7 @@
-package com.github.bradjacobs.stock.classifications;
+package com.github.bradjacobs.stock.classifications.common;
 
+import com.github.bradjacobs.stock.classifications.DataFileType;
+import com.github.bradjacobs.stock.classifications.common.CanonicalHeaderUpdater;
 import com.github.bradjacobs.stock.classifications.common.objects.ActivityNode;
 import com.github.bradjacobs.stock.classifications.common.objects.GroupNode;
 import com.github.bradjacobs.stock.classifications.common.objects.IndustryNode;
@@ -13,11 +15,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +33,6 @@ abstract public class BaseDataConverter<T>
     abstract public String getFilePrefix();
 
     abstract public List<T> generateDataRecords() throws IOException;
-
 
     private final CsvMapper csvObjectMapper;
     private final CsvMapper csvArrayMapper;
@@ -39,9 +44,18 @@ abstract public class BaseDataConverter<T>
         this.csvArrayMapper = createCsvArrayMapper();
 
         outputDirectory = new File("./output");
-        outputDirectory.mkdir();
+        if (! outputDirectory.isDirectory()) {
+            boolean success = outputDirectory.mkdir();
+            if (! success) {
+                throw new InternalError("Unable to create output directory.");
+            }
+        }
     }
 
+    /**
+     * Fetches data and creates multiple CSV/JSON files representing the sector/industry definitions.
+     * @throws IOException
+     */
     public void createDataFiles() throws IOException
     {
         // create data records
@@ -64,8 +78,26 @@ abstract public class BaseDataConverter<T>
         writeCanonicalJsonTree(sparseArray);
 
 
-        // todo - more to come
+        // todo:  below is (even more) kludgy (but startring with something that just works for now)
+        //
+        File canonicalFile = createFileObject(DataFileType.CANONICAL_TREE_JSON);
+        if (! canonicalFile.exists()) {
+            throw new InternalError("Canonical Json file was expected to exist!");
+        }
 
+        String canonicalJson = new String ( Files.readAllBytes( Paths.get(canonicalFile.getAbsolutePath()) ) );
+
+        CanonicalHeaderUpdater canonicalHeaderUpdater = new CanonicalHeaderUpdater(fullArray[0]);
+
+        // create json tree using 'original' labels (that are unique for each customer)
+        String origJson = canonicalHeaderUpdater.convertJsonKeyNames(canonicalJson, DataFileType.TREE_JSON);
+        File jsonFile = createFileObject(DataFileType.TREE_JSON);
+        FileUtils.writeStringToFile(jsonFile, origJson, StandardCharsets.UTF_8);
+
+        // create another json tree using basic/generic names (so all 'nodes' have same labels)
+        String basicJson = canonicalHeaderUpdater.convertJsonKeyNames(canonicalJson, DataFileType.BASIC_TREE_JSON);
+        File basicJsonFile = createFileObject(DataFileType.BASIC_TREE_JSON);
+        FileUtils.writeStringToFile(basicJsonFile, basicJson, StandardCharsets.UTF_8);
     }
 
 

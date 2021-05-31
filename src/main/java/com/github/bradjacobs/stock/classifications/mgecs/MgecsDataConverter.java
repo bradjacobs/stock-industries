@@ -1,9 +1,6 @@
 package com.github.bradjacobs.stock.classifications.mgecs;
 
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
-import com.github.bradjacobs.stock.classifications.common.objects.GroupNode;
-import com.github.bradjacobs.stock.classifications.common.objects.IndustryNode;
-import com.github.bradjacobs.stock.classifications.common.objects.SectorNode;
+import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import com.github.bradjacobs.stock.util.PdfUtil;
 import org.apache.commons.lang3.StringUtils;
 

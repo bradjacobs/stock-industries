@@ -2,7 +2,7 @@ package com.github.bradjacobs.stock.classifications.naics;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;

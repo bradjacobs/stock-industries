@@ -1,6 +1,6 @@
 package com.github.bradjacobs.stock.classifications.refinitiv;
 
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import com.github.bradjacobs.stock.util.PdfUtil;
 
 import java.io.IOException;
