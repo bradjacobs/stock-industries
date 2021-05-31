@@ -1,6 +1,7 @@
 package com.github.bradjacobs.stock.classifications;
 
 import com.github.bradjacobs.stock.classifications.gics.GicsDataConverter;
+import com.github.bradjacobs.stock.classifications.mgecs.MgecsDataConverter;
 import com.github.bradjacobs.stock.classifications.naics.NaicsDataConverter;
 import com.github.bradjacobs.stock.classifications.zacks.ZacksDataConverter;
 
@@ -16,8 +17,11 @@ public class MainDriver
 //        ZacksDataConverter zacksDataConverter = new ZacksDataConverter();
 //        zacksDataConverter.createDataFiles();
 
-        NaicsDataConverter naicsDataConverter = new NaicsDataConverter();
-        naicsDataConverter.createDataFiles();
+//        NaicsDataConverter naicsDataConverter = new NaicsDataConverter();
+//        naicsDataConverter.createDataFiles();
+
+        MgecsDataConverter mgecsDataConverter = new MgecsDataConverter();
+        mgecsDataConverter.createDataFiles();
 
 
     }
