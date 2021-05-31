@@ -47,8 +47,8 @@ public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
             String code = rowData[1];
             String title = rowData[2];
 
-            if (code.length() == 5) {
-                continue;  // ignore these
+            if (code.length() == 5 && StringUtils.isNumeric(code)) {
+                continue;  // ignore the 5-digit entries
             }
             if (StringUtils.isEmpty(code) || StringUtils.isEmpty(title)) {
                 continue;
@@ -56,7 +56,9 @@ public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
 
             title = cleanValue(title);
 
-            if (code.length() == 2) {
+            // NOTE: there are some code value 'exceptions' that are actually ranges:
+            //   e.g.    31-33  Manufacturing,   44-45  Retail Trade,   etc
+            if (code.length() == 2 || code.contains("-")) {
                 if (currentRecord != null) {
                     recordList.add(currentRecord);
                 }
