@@ -54,12 +54,12 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
                     continue;
                 }
 
-                if (isNumber(line))
+                if (StringUtils.isNumeric(line))
                 {
                     String id = line;
                     String name = "";
 
-                    // note:  page numbers are example of case that would pass 'isNumber' check, but not pass if-check below
+                    // note:  page numbers are example of case that would pass 'isNumeric' check, but not pass if-check below
                     if (id.length() == SECTOR_ID_LENGTH || id.length() == GROUP_ID_LENGTH || id.length() == INDUSTRY_ID_LENGTH)
                     {
                         name = pdfFileLines[++i];  // don't trim (..yet)
@@ -70,7 +70,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
                             // temporarily add back new line and don't trim
                             //  b/c spacing can get messed up.
                             String futureLine = pdfFileLines[i+1];
-                            while (! isNumber(futureLine))
+                            while (! StringUtils.isNumeric(futureLine))
                             {
                                 if (StringUtils.isNotEmpty(futureLine.trim())) {
                                     name = name + futureLine;
@@ -151,25 +151,6 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
         return result;
 
-    }
-
-    private boolean isNumber(String s)
-    {
-        if (s == null) {
-            return false;
-        }
-        s = s.trim();
-        if (s.length() == 0) {
-            return false;
-        }
-
-        try {
-            Long.valueOf(s);
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
     }
 
 }

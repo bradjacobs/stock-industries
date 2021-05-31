@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.classifications.refinitiv;
 
 import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import com.github.bradjacobs.stock.util.PdfUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -86,7 +87,7 @@ public class RefinitivDataConverter extends BaseDataConverter<RefinitivRecord>
             }
 
             String trbcId = lineElements[lineElements.length-1];
-            if (! isNumber(trbcId)) {
+            if (! StringUtils.isNumeric(trbcId)) {
                 continue;
             }
 
@@ -140,25 +141,6 @@ public class RefinitivDataConverter extends BaseDataConverter<RefinitivRecord>
         // todo - some minor upper/lower case fixes.
 
         return super.cleanValue(input);
-    }
-
-    private static boolean isNumber(String s)
-    {
-        if (s == null) {
-            return false;
-        }
-        s = s.trim();
-        if (s.length() == 0) {
-            return false;
-        }
-
-        try {
-            Long.valueOf(s);
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
     }
 
 }
