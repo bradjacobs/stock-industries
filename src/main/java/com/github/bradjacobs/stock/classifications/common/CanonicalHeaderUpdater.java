@@ -82,17 +82,17 @@ public final class CanonicalHeaderUpdater
         if (headerRow.length >= 4) {
             map.put(CANONICAL_LEVEL_2_ID_HEADER, headerRow[2]);
             map.put(CANONICAL_LEVEL_2_NAME_HEADER, headerRow[3]);
-            map.put(CANONICAL_LEVEL_1_CHILDREN_HEADER, pluralizeName(headerRow[3]));
+            map.put(CANONICAL_LEVEL_1_CHILDREN_HEADER, pluralizeName(headerRow[2]));
         }
         if (headerRow.length >= 6) {
             map.put(CANONICAL_LEVEL_3_ID_HEADER, headerRow[4]);
             map.put(CANONICAL_LEVEL_3_NAME_HEADER, headerRow[5]);
-            map.put(CANONICAL_LEVEL_2_CHILDREN_HEADER, pluralizeName(headerRow[5]));
+            map.put(CANONICAL_LEVEL_2_CHILDREN_HEADER, pluralizeName(headerRow[4]));
         }
         if (headerRow.length >= 8) {
             map.put(CANONICAL_LEVEL_4_ID_HEADER, headerRow[6]);
             map.put(CANONICAL_LEVEL_4_NAME_HEADER, headerRow[7]);
-            map.put(CANONICAL_LEVEL_3_CHILDREN_HEADER, pluralizeName(headerRow[7]));
+            map.put(CANONICAL_LEVEL_3_CHILDREN_HEADER, pluralizeName(headerRow[6]));
         }
         if (headerRow.length >= 10) {
             // todo: currently it's always the same name, but can't assume that always
@@ -103,7 +103,8 @@ public final class CanonicalHeaderUpdater
 
 
     private String pluralizeName(String input) {
-        String result = input.replace("Name", "");
+        String result = input.replace("Id", "");
+        result = result.replace("Code", "");
         if (result.endsWith("y")) {
             return result.substring(0, result.length() - 1) + "ies";
         }
