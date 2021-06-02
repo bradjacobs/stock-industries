@@ -44,8 +44,10 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
         {
             // todo - clean up start detectiion.
             String line = pdfFileLines[i].trim();
-            if (line.equalsIgnoreCase(START_LINE_INDICATOR)) {
-                parsingStarted = true;
+            if (!parsingStarted) {
+                if (line.equalsIgnoreCase(START_LINE_INDICATOR)) {
+                    parsingStarted = true;
+                }
             }
 
             if (parsingStarted)
