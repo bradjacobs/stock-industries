@@ -15,7 +15,7 @@ and/or intellectual property rights.
 | :--- | :--- | :--- | :--- |
 | GICS | [Global Industry Classification Standard](https://www.msci.com/gics) | [source](https://www.msci.com/documents/1296102/11185224/GICS_map+2018.xlsx) | Excel |
 | ICB | [Industry Classification Benchmark](https://www.ftserussell.com/data/industry-classification-benchmark-icb) | [source](https://content.ftserussell.com/sites/default/files/icb_structure_and_definitions.xlsx) | Excel |
-| ISIC | [International Standard Industrial Classification](https://unstats.un.org/home/) | [source](https://unstats.un.org/unsd/publication/seriesM/seriesm_4rev4e.pdf) | PDF |
+| ISIC | [International Standard Industrial Classification](https://unstats.un.org/home/) | [source](http://www.ilo.org/ilostat-files/Documents/ISIC.xlsx) | Excel |
 | MGECS | [Morningstar Global Equity Classification System](https://advisor.morningstar.com) | [source](https://advisor.morningstar.com/Enterprise/VTC/MorningstarGlobalEquityClassStructure2019v3.pdf) | PDF |
 | NAICS | [North American Industry Classification System](https://www.naics.com)<br>also see: [Census.gov/naics](https://www.census.gov/naics/) | [source](https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx) | Excel |
 | SASB | [Sustainable Industry Classification System](https://www.sasb.org/find-your-industry/) | [source](https://www.sasb.org/find-your-industry/) | HTML |

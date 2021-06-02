@@ -1,63 +1,72 @@
 package com.github.bradjacobs.stock.classifications.isic;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder( {
-        "sectorId",
-        "sectorName",
+        "sectionId",
+        "sectionLabel",
         "divisionId",
-        "divisionName",
+        "divisionLabel",
         "groupId",
-        "groupName",
+        "groupLabel",
         "classId",
-        "className"
+        "classLabel"
 })
 public class IsicRecord
 {
-    private String sectorId;
-    private String sectorName;
+    @JsonAlias("section")
+    private String sectionId;
+    @JsonAlias("section_label")
+    private String sectionLabel;
+    @JsonAlias("division")
     private String divisionId;
-    private String divisionName;
+    @JsonAlias("division_label")
+    private String divisionLabel;
+    @JsonAlias("group")
     private String groupId;
-    private String groupName;
+    @JsonAlias("group_label")
+    private String groupLabel;
+    @JsonAlias("4-digits")
     private String classId;
-    private String className;
+    @JsonAlias("description")
+    private String classLabel;
 
 
     public IsicRecord() { }
 
 
-    public IsicRecord(String sectorId, String sectorName, String divisionId, String divisionName,
-        String groupId, String groupName, String classId, String className)
+    public IsicRecord(String sectionId, String sectionLabel, String divisionId, String divisionLabel,
+        String groupId, String groupLabel, String classId, String classLabel)
     {
-        this.sectorId = sectorId;
-        this.sectorName = sectorName;
+        this.sectionId = sectionId;
+        this.sectionLabel = sectionLabel;
         this.divisionId = divisionId;
-        this.divisionName = divisionName;
+        this.divisionLabel = divisionLabel;
         this.groupId = groupId;
-        this.groupName = groupName;
+        this.groupLabel = groupLabel;
         this.classId = classId;
-        this.className = className;
+        this.classLabel = classLabel;
     }
 
-    public String getSectorId()
+    public String getSectionId()
     {
-        return sectorId;
+        return sectionId;
     }
 
-    public void setSectorId(String sectorId)
+    public void setSectionId(String sectionId)
     {
-        this.sectorId = sectorId;
+        this.sectionId = sectionId;
     }
 
-    public String getSectorName()
+    public String getSectionLabel()
     {
-        return sectorName;
+        return sectionLabel;
     }
 
-    public void setSectorName(String sectorName)
+    public void setSectionLabel(String sectionLabel)
     {
-        this.sectorName = sectorName;
+        this.sectionLabel = sectionLabel;
     }
 
     public String getDivisionId()
@@ -70,14 +79,14 @@ public class IsicRecord
         this.divisionId = divisionId;
     }
 
-    public String getDivisionName()
+    public String getDivisionLabel()
     {
-        return divisionName;
+        return divisionLabel;
     }
 
-    public void setDivisionName(String divisionName)
+    public void setDivisionLabel(String divisionLabel)
     {
-        this.divisionName = divisionName;
+        this.divisionLabel = divisionLabel;
     }
 
     public String getGroupId()
@@ -90,14 +99,14 @@ public class IsicRecord
         this.groupId = groupId;
     }
 
-    public String getGroupName()
+    public String getGroupLabel()
     {
-        return groupName;
+        return groupLabel;
     }
 
-    public void setGroupName(String groupName)
+    public void setGroupLabel(String groupLabel)
     {
-        this.groupName = groupName;
+        this.groupLabel = groupLabel;
     }
 
     public String getClassId()
@@ -110,13 +119,13 @@ public class IsicRecord
         this.classId = classId;
     }
 
-    public String getClassName()
+    public String getClassLabel()
     {
-        return className;
+        return classLabel;
     }
 
-    public void setClassName(String className)
+    public void setClassLabel(String classLabel)
     {
-        this.className = className;
+        this.classLabel = classLabel;
     }
 }

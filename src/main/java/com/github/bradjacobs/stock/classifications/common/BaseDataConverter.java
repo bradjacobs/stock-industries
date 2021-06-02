@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.classifications.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -32,9 +33,9 @@ import java.util.List;
 
 abstract public class BaseDataConverter<T> implements DataConverter
 {
-    private final CsvMapper csvObjectMapper;
-    private final CsvMapper csvArrayMapper;
-    private final JsonMapper jsonMapper;
+    protected final CsvMapper csvObjectMapper;
+    protected final CsvMapper csvArrayMapper;
+    protected final JsonMapper jsonMapper;
     private final File outputDirectory;
 
     protected final boolean includeDescriptions;
@@ -288,6 +289,7 @@ abstract public class BaseDataConverter<T> implements DataConverter
             .enable(CsvParser.Feature.TRIM_SPACES)
             .enable(CsvParser.Feature.FAIL_ON_MISSING_COLUMNS)  // todo - double check
             .enable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY); // ALWAYS disable this (or it can change the column order)
 
         if (! this.includeDescriptions) {
