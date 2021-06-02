@@ -13,6 +13,12 @@ public class MainDriver
 
         for (Classification classification : Classification.values())
         {
+
+            if (! classification.equals(Classification.ICB)) {
+                continue;
+            }
+
+
             DataConverter converter = DataConverterFactory.createDataConverter(classification, INCLUDE_LONG_DESCRIPTION);
             System.out.println("Creating files for: " + classification);
             converter.createDataFiles();

@@ -1,5 +1,6 @@
 package com.github.bradjacobs.stock.classifications.icb;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder( {
@@ -15,16 +16,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class IcbRecord
 {
+    @JsonAlias("Industry code")
     private String industryCode;
+    @JsonAlias("Industry")
     private String industry;
+    @JsonAlias("Supersector code")
     private String superSectorCode;
+    @JsonAlias("Supersector")
     private String superSector;
+    @JsonAlias("Sector code")
     private String sectorCode;
+    @JsonAlias("Sector")
     private String sector;
+    @JsonAlias("Subsector code")
     private String subSectorCode;
+    @JsonAlias("Subsector")
     private String subSector;
 
+    @JsonAlias("Definition")
     private String definition;
+
 
     public IcbRecord() { }
 
