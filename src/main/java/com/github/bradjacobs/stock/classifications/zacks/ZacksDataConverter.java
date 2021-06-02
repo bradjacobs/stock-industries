@@ -1,17 +1,14 @@
 package com.github.bradjacobs.stock.classifications.zacks;
 
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import org.apache.commons.io.IOUtils;
+import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
+import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,8 +18,6 @@ import java.util.regex.Pattern;
 
 public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
 {
-    private static final String SOURCE_FILE = "https://www.zacks.com/zrank/sector-industry-classification.php";
-
     private static final String KEY_SECTOR_NAME = "Sector Group";
     private static final String KEY_SECTOR_CODE = "Sector Code";
     private static final String KEY_MEDIUM_NAME = "Medium(M) Industry Group";
@@ -30,16 +25,21 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
     private static final String KEY_EXPANDED_NAME = "Expanded(X) Industry Group";
     private static final String KEY_EXPANDED_CODE = "Expanded(X) Industry Code";
 
-    @Override
-    public String getFilePrefix()
+    public ZacksDataConverter(boolean includeDescriptions)
     {
-        return "zacks";
+        super(includeDescriptions);
+    }
+
+    @Override
+    public Classification getClassification()
+    {
+        return Classification.ZACKS;
     }
 
     @Override
     public List<ZacksRecord> generateDataRecords() throws IOException
     {
-        String html = getSourceFileContents();
+        String html = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
         String json = extractNestedJson(html);
 
         List<Map<String, String>> listOfMaps = convertToListOfMaps(json);
@@ -179,23 +179,6 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
         }
 
         return listOfMaps;
-    }
-
-
-
-    private String getSourceFileContents() throws IOException
-    {
-        URL url = null;
-        try {
-            url = new URL(SOURCE_FILE);
-        }
-        catch (MalformedURLException e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
-
-        try (InputStream inputStream = url.openStream()) {
-            return IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
-        }
     }
 
 

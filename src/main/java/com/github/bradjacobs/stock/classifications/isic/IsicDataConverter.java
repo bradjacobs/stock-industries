@@ -1,11 +1,11 @@
 package com.github.bradjacobs.stock.classifications.isic;
 
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
-import com.github.bradjacobs.stock.util.PdfUtil;
+import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,20 +18,21 @@ TODO
  */
 public class IsicDataConverter extends BaseDataConverter<IsicRecord>
 {
-    private static final String SOURCE_FILE = "https://unstats.un.org/unsd/publication/seriesM/seriesm_4rev4e.pdf";
-
+    public IsicDataConverter(boolean includeDescriptions)
+    {
+        super(includeDescriptions);
+    }
 
     @Override
-    public String getFilePrefix()
+    public Classification getClassification()
     {
-        return "isic";
+        return Classification.ISIC;
     }
 
     @Override
     public List<IsicRecord> generateDataRecords() throws IOException
     {
-        URL url = new URL(SOURCE_FILE);
-        String[] pdfLines = PdfUtil.getPdfFileLines(url.openStream());
+        String[] pdfLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
         return generateDataRecords(pdfLines);
     }
 

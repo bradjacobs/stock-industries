@@ -1,9 +1,10 @@
 package com.github.bradjacobs.stock.classifications.gics;
 
 
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
+import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -12,23 +13,26 @@ import java.util.List;
 
 public class GicsDataConverter extends BaseDataConverter<GicsRecord>
 {
-    private static final String SOURCE_FILE = "https://www.msci.com/documents/1296102/11185224/GICS_map+2018.xlsx";
-
     private static final boolean SKIP_DISCONTINUED_RECORDS = true;
     private static final String DISCONTINUED_IDENTIFIER = "discontinued";
 
 
-    @Override
-    public String getFilePrefix()
+    public GicsDataConverter(boolean includeDescriptions)
     {
-        return "gics";
+        super(includeDescriptions);
+    }
+
+    @Override
+    public Classification getClassification()
+    {
+        return Classification.GICS;
     }
 
     @Override
     public List<GicsRecord> generateDataRecords() throws IOException
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
-        String[][] csvData = excelReader.createCsvMatrix(SOURCE_FILE);
+        String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
         return generateRecords(csvData);
     }
 

@@ -1,11 +1,11 @@
 package com.github.bradjacobs.stock.classifications.mgecs;
 
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
-import com.github.bradjacobs.stock.util.PdfUtil;
+import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,18 +19,21 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
     private static final String START_LINE_INDICATOR = "1 Cyclical";
 
-    @Override
-    public String getFilePrefix()
+    public MgecsDataConverter(boolean includeDescriptions)
     {
-        return "morningstar";
+        super(includeDescriptions);
+    }
+
+    @Override
+    public Classification getClassification()
+    {
+        return Classification.MGECS;
     }
 
     @Override
     public List<MgecsRecord> generateDataRecords() throws IOException
     {
-        URL url = new URL(SOURCE_FILE);
-        String[] pdfFileLines = PdfUtil.getPdfFileLines(url.openStream());
-
+        String[] pdfFileLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 
         List<MgecsRecord> recordList = new ArrayList<>();
 
@@ -67,14 +70,23 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
                         // note: the name affiliated w/ the group category can be split across multiple lines
                         if (id.length() == GROUP_ID_LENGTH)
                         {
+                            // SIDE: this is squirrelly
+                            //   Problem is that sometimes text goes to next line and the '\n' is the ONLY space character b/w 2 words.
+                            //   Thus have to take extra caution so that 2 seperate words don't get concatenated into 1.
+
+
                             // temporarily add back new line and don't trim
                             //  b/c spacing can get messed up.
                             String futureLine = pdfFileLines[i+1];
-                            while (! StringUtils.isNumeric(futureLine))
+
+                            while (! StringUtils.isNumeric(futureLine.trim()))
                             {
                                 if (StringUtils.isNotEmpty(futureLine.trim())) {
                                     name = name + futureLine;
                                 }
+
+                                // note:  increment the 'current' i value,
+                                // then the futureLine is the next line after teh current line  (thus the +1)
                                 i++;
                                 futureLine = pdfFileLines[i+1];
                             }
@@ -150,7 +162,6 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 //        }
 
         return result;
-
     }
 
 }

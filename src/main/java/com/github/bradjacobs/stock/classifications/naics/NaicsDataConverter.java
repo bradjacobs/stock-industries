@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.classifications.naics;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,20 +12,22 @@ import java.util.List;
 
 public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
 {
-    private static final String SOURCE_FILE = "https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx";
-
+    public NaicsDataConverter(boolean includeDescriptions)
+    {
+        super(includeDescriptions);
+    }
 
     @Override
-    public String getFilePrefix()
+    public Classification getClassification()
     {
-        return "naics";
+        return Classification.NAICS;
     }
 
     @Override
     public List<NaicsRecord> generateDataRecords() throws IOException
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
-        String[][] csvData = excelReader.createCsvMatrix(SOURCE_FILE);
+        String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
         return generateRecords(csvData);
     }
 

@@ -17,8 +17,9 @@ and/or intellectual property rights.
 | ICB | [Industry Classification Benchmark](https://www.ftserussell.com/data/industry-classification-benchmark-icb) | [source](https://content.ftserussell.com/sites/default/files/icb_structure_and_definitions.xlsx) | Excel |
 | ISIC | [International Standard Industrial Classification](https://unstats.un.org/home/) | [source](https://unstats.un.org/unsd/publication/seriesM/seriesm_4rev4e.pdf) | PDF |
 | MGECS | [Morningstar Global Equity Classification System](https://advisor.morningstar.com) | [source](https://advisor.morningstar.com/Enterprise/VTC/MorningstarGlobalEquityClassStructure2019v3.pdf) | PDF |
-| NAICS | [North American Industry Classification System](https://www.naics.com)<br>alternate: [Census.gov/naics](https://www.census.gov/naics/) | [source](https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx) | Excel |
-| SIC | [Standard Industrial Classification](https://siccode.com) | [source](https://www.osha.gov/data/sic-manual) | HTML |
+| NAICS | [North American Industry Classification System](https://www.naics.com)<br>also see: [Census.gov/naics](https://www.census.gov/naics/) | [source](https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx) | Excel |
+| SASB | [Sustainable Industry Classification System](https://www.sasb.org/find-your-industry/) | [source](https://www.sasb.org/find-your-industry/) | HTML |
+| SIC | [Standard Industrial Classification](https://siccode.com) | [source](https://www.bls.gov/oes/special.requests/oessic87.pdf) | PDF |
 | TRBC | [The Refinitiv Business Classification](https://www.refinitiv.com) | [source](https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf) | PDF |
 | ZACKS | [Zacks Sector & Industry Classification](https://www.zacks.com) | [source](https://www.zacks.com/zrank/sector-industry-classification.php)<br>[alternate](http://www.zacksdata.com/app/download/247340904/Zacks+Sector+Industry+Mapping+Scheme.pdf) | HTML/PDF |
 

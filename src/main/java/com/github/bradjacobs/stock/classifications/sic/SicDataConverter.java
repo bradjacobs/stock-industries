@@ -12,31 +12,32 @@ package com.github.bradjacobs.stock.classifications.sic;
 //
 // https://www.dietrich-direct.com/SIC-Code-Reference-Access.htm
 
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
-import com.github.bradjacobs.stock.util.PdfUtil;
+import com.github.bradjacobs.stock.util.DownloadUtil;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SicDataConverter extends BaseDataConverter<SicRecord>
 {
-    private static final String SOURCE_FILE = "https://www.bls.gov/oes/special.requests/oessic87.pdf";
-
+    public SicDataConverter(boolean includeDescriptions)
+    {
+        super(includeDescriptions);
+    }
 
     @Override
-    public String getFilePrefix()
+    public Classification getClassification()
     {
-        return "sic";
+        return Classification.SIC;
     }
 
     @Override
     public List<SicRecord> generateDataRecords() throws IOException
     {
-        URL url = new URL(SOURCE_FILE);
-        String[] lines = PdfUtil.getPdfFileLines(url.openStream());
+        String[] lines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 
         List<SicRecord> recordList = new ArrayList<>();
 
@@ -88,7 +89,7 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
                 name = cleanValue(name);
 
                 if (!fourDigitValue.endsWith("0")) {
-                    // industires have non-zero 4th digit
+                    // industries have non-zero 4th digit
                     industryId = fourDigitValue;
                     industryName = name;
 

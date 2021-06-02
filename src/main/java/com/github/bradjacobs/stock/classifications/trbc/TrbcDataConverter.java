@@ -1,36 +1,37 @@
-package com.github.bradjacobs.stock.classifications.refinitiv;
+package com.github.bradjacobs.stock.classifications.trbc;
 
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
-import com.github.bradjacobs.stock.util.PdfUtil;
+import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RefinitivDataConverter extends BaseDataConverter<RefinitivRecord>
+public class TrbcDataConverter extends BaseDataConverter<TrbcRecord>
 {
-    private static final String SOURCE_FILE = "https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf";
-
     private static final int ECONOMIC_SECTOR_ID_LENGTH = 2;
     private static final int BUSINESS_SECTOR_ID_LENGTH = 4;
     private static final int INDUSTRY_GROUP_ID_LENGTH = 6;
     private static final int INDUSTRY_ID_LENGTH = 8;
     private static final int ACTIVITY_ID_LENGTH = 10;
 
-
-    @Override
-    public String getFilePrefix()
+    public TrbcDataConverter(boolean includeDescriptions)
     {
-        return "trbc";
+        super(includeDescriptions);
     }
 
     @Override
-    public List<RefinitivRecord> generateDataRecords() throws IOException
+    public Classification getClassification()
     {
-        URL url = new URL(SOURCE_FILE);
-        String[] pdfFileLines = PdfUtil.getPdfFileLines(url.openStream());
+        return Classification.TRBC;
+    }
+
+    @Override
+    public List<TrbcRecord> generateDataRecords() throws IOException
+    {
+        String[] pdfFileLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 
         return parseLines(pdfFileLines);
     }
@@ -56,9 +57,9 @@ public class RefinitivDataConverter extends BaseDataConverter<RefinitivRecord>
     }
 
 
-    private List<RefinitivRecord> parseLines(String[] lines)
+    private List<TrbcRecord> parseLines(String[] lines)
     {
-        List<RefinitivRecord> recordList = new ArrayList<>();
+        List<TrbcRecord> recordList = new ArrayList<>();
 
         String economicSectorName = "";
         String businessSectorName = "";
@@ -121,7 +122,7 @@ public class RefinitivDataConverter extends BaseDataConverter<RefinitivRecord>
                 activityId = trbcId;
                 activityName = name;
 
-                RefinitivRecord record = new RefinitivRecord(
+                TrbcRecord record = new TrbcRecord(
                     economicSectorId, economicSectorName,
                     businessSectorId, businessSectorName,
                     industryGroupId, industryGroupName,

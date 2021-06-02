@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.classifications.icb;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
 
 import java.io.IOException;
@@ -10,19 +11,23 @@ import java.util.List;
 
 public class IcbDataConverter extends BaseDataConverter<IcbRecord>
 {
-    private static final String SOURCE_FILE = "https://content.ftserussell.com/sites/default/files/icb_structure_and_definitions.xlsx";
+
+    public IcbDataConverter(boolean includeDescriptions)
+    {
+        super(includeDescriptions);
+    }
 
     @Override
-    public String getFilePrefix()
+    public Classification getClassification()
     {
-        return "icb";
+        return Classification.ICB;
     }
 
     @Override
     public List<IcbRecord> generateDataRecords() throws IOException
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
-        String[][] origCsvData = excelReader.createCsvMatrix(SOURCE_FILE);
+        String[][] origCsvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
         return generateRecords(origCsvData);
     }
 

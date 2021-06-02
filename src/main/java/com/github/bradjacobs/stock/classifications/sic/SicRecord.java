@@ -1,7 +1,6 @@
 package com.github.bradjacobs.stock.classifications.sic;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.github.bradjacobs.stock.classifications.mgecs.MgecsRecord;
 
 @JsonPropertyOrder( {
         "divisionId",

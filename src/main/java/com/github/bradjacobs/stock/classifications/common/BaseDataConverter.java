@@ -1,20 +1,22 @@
 package com.github.bradjacobs.stock.classifications.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvParser;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.classifications.DataFileType;
-import com.github.bradjacobs.stock.classifications.common.CanonicalHeaderUpdater;
 import com.github.bradjacobs.stock.classifications.common.objects.ActivityNode;
 import com.github.bradjacobs.stock.classifications.common.objects.GroupNode;
 import com.github.bradjacobs.stock.classifications.common.objects.IndustryNode;
 import com.github.bradjacobs.stock.classifications.common.objects.SectorNode;
 import com.github.bradjacobs.stock.classifications.common.objects.SubIndustryNode;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvParser;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -28,20 +30,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-abstract public class BaseDataConverter<T>
+abstract public class BaseDataConverter<T> implements DataConverter
 {
-    abstract public String getFilePrefix();
-
-    abstract public List<T> generateDataRecords() throws IOException;
-
     private final CsvMapper csvObjectMapper;
     private final CsvMapper csvArrayMapper;
+    private final JsonMapper jsonMapper;
     private final File outputDirectory;
 
-    public BaseDataConverter()
+    protected final boolean includeDescriptions;
+
+    /**
+     *
+     * @param includeDescriptions include long description in CSV output (IF AVAILABLE)
+     */
+    public BaseDataConverter(boolean includeDescriptions)
     {
+        this.includeDescriptions = includeDescriptions;
         this.csvObjectMapper = createCsvObjectMapper();
         this.csvArrayMapper = createCsvArrayMapper();
+        this.jsonMapper = createJsonMapper();
+
 
         outputDirectory = new File("./output");
         if (! outputDirectory.isDirectory()) {
@@ -51,6 +59,17 @@ abstract public class BaseDataConverter<T>
             }
         }
     }
+
+
+
+    abstract public Classification getClassification();
+
+    abstract public List<T> generateDataRecords() throws IOException;
+
+
+
+
+
 
     /**
      * Fetches data and creates multiple CSV/JSON files representing the sector/industry definitions.
@@ -78,7 +97,7 @@ abstract public class BaseDataConverter<T>
         writeCanonicalJsonTree(sparseArray);
 
 
-        // todo:  below is (even more) kludgy (but startring with something that just works for now)
+        // todo:  below is (even more) kludgy (but starting with something that just works for now)
         //
         File canonicalFile = createFileObject(DataFileType.CANONICAL_TREE_JSON);
         if (! canonicalFile.exists()) {
@@ -129,7 +148,6 @@ abstract public class BaseDataConverter<T>
         IndustryNode currentIndustry = null;
         SubIndustryNode currentSubIndustry = null;
 
-
         // start and index 1 (ignore header row)
         for (int i = 1; i < sparseArray.length; i++) {
 
@@ -176,24 +194,17 @@ abstract public class BaseDataConverter<T>
             }
         }
 
-
-        ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-
-        // note: avoid marshalling out an empty array.
-        mapper = mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-
         File canonicalJsonFile = createFileObject(DataFileType.CANONICAL_TREE_JSON);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(canonicalJsonFile)) {
-            mapper.writeValue(fileOutputStream, sectorNodeList);
+            jsonMapper.writeValue(fileOutputStream, sectorNodeList);
         }
     }
 
 
 
     private File createFileObject(DataFileType dataFileType) {
-        String fileName = this.getFilePrefix() + dataFileType.getSuffix();
+        String fileName = this.getClassification().getPrefix() + dataFileType.getSuffix();
         return new File(this.outputDirectory, fileName);
     }
 
@@ -272,12 +283,27 @@ abstract public class BaseDataConverter<T>
     }
 
     protected CsvMapper.Builder createDefaultCsvMapperBuilder() {
-        return CsvMapper.builder()
+        CsvMapper.Builder builder = CsvMapper.builder()
             .enable(CsvParser.Feature.SKIP_EMPTY_LINES)
             .enable(CsvParser.Feature.TRIM_SPACES)
             .enable(CsvParser.Feature.FAIL_ON_MISSING_COLUMNS)  // todo - double check
             .enable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING)
             .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY); // ALWAYS disable this (or it can change the column order)
+
+        if (! this.includeDescriptions) {
+            builder = builder.addMixIn(getParameterizedClass(), NoDescriptionMixin.class);
+        }
+        return builder;
+    }
+
+    protected JsonMapper createJsonMapper() {
+        JsonMapper mapper = new JsonMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        // note: avoid marshalling out an empty array.
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        return mapper;
     }
 
     @SuppressWarnings("unchecked")
@@ -286,4 +312,13 @@ abstract public class BaseDataConverter<T>
             .getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
+
+
+    // Mixin used to suppress serialization of 'full descriptions'
+    private static abstract class NoDescriptionMixin {
+        @JsonIgnore
+        abstract public String getDescription();
+        @JsonIgnore
+        abstract public String getDefinition();
+    }
 }

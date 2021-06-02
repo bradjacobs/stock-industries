@@ -1,4 +1,4 @@
-package com.github.bradjacobs.stock.classifications.refinitiv;
+package com.github.bradjacobs.stock.classifications.trbc;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "activityId",
         "activityName"
 })
-public class RefinitivRecord
+public class TrbcRecord
 {
     private String economicSectorId;
     private String economicSectorName;
@@ -28,9 +28,9 @@ public class RefinitivRecord
     private String activityName;
 
 
-    public RefinitivRecord() { }
+    public TrbcRecord() { }
 
-    public RefinitivRecord(String economicSectorId, String economicSectorName, String businessSectorId, String businessSectorName, String industryGroupId,
+    public TrbcRecord(String economicSectorId, String economicSectorName, String businessSectorId, String businessSectorName, String industryGroupId,
         String industryGroupName, String industryId, String industryName, String activityId, String activityName)
     {
         this.economicSectorId = economicSectorId;
