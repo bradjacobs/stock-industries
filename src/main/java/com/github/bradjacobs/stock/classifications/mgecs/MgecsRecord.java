@@ -19,6 +19,8 @@ public class MgecsRecord
     private String industryId;
     private String industryName;
 
+    private String description;
+
     public MgecsRecord() { }
 
 
@@ -70,7 +72,15 @@ public class MgecsRecord
         this.industryName = industryName;
     }
 
+    public String getDescription()
+    {
+        return description;
+    }
 
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 
     public MgecsRecord copy()
     {
@@ -81,6 +91,8 @@ public class MgecsRecord
         newRecord.industryGroupName = this.industryGroupName;
         newRecord.industryId = this.industryId;
         newRecord.industryName = this.industryName;
+        newRecord.description = this.description;
+
         return newRecord;
     }
 

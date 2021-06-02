@@ -30,6 +30,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
         return Classification.MGECS;
     }
 
+
     @Override
     public List<MgecsRecord> generateDataRecords() throws IOException
     {
@@ -55,7 +56,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
                 if (StringUtils.isEmpty(line)) {
                     continue;
                 }
-                else if (line.toLowerCase().contains("morningstar")) {
+                else if (isMorningstarLine(line)) {
                     continue;
                 }
 
@@ -125,6 +126,12 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
                                 recordList.add(currentRecord);
                                 currentRecord = currentRecord.copy();
                             }
+
+                            // NOTE: sub-optimal soln b/c future lines are examined in getDescription method as well as this loop.
+                            //   (even though problem exists, not worth addressing at present)
+                            String desc = getDescription(pdfFileLines, i+1);
+                            currentRecord.setDescription(desc);
+
                             currentRecord.setIndustryId(id);
                             currentRecord.setIndustryName(name);
                         }
@@ -152,6 +159,16 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
         return recordList;
     }
 
+    /**
+     * check if line contains "Morningstar", which implies it's a header/footer
+     * @param line line
+     * @return if line contains 'morningstar' keyword
+     */
+    private boolean isMorningstarLine(String line) {
+        return line != null && line.toLowerCase().contains("morningstar");
+    }
+
+
     @Override
     protected String cleanValue(String input)
     {
@@ -165,5 +182,43 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
         return result;
     }
+
+
+    private String getDescription(String[] pdfFileLines, int startingIndex)
+    {
+        StringBuffer sb = new StringBuffer();
+
+        int currentIndex = startingIndex;
+
+        while (true)
+        {
+            if (currentIndex >= pdfFileLines.length) {
+                break;
+            }
+            String currentLine = pdfFileLines[currentIndex++].trim();
+
+            if (StringUtils.isEmpty(currentLine)) {
+                continue;
+            }
+            else if (isMorningstarLine(currentLine)) {
+                continue;
+            }
+            if (StringUtils.isNumeric(currentLine)) {
+                // if number is a sector/group etc, then hit next section, thus done reading current description
+                // if number is 'small', then it's probably a page number that can be skipped.
+                if (currentLine.length() >= 3) {
+                    break;
+                }
+                else {
+                    continue;
+                }
+            }
+
+            sb.append(' ').append(currentLine);
+        }
+
+        return cleanWhitespace(sb.toString());
+    }
+
 
 }
