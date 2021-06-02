@@ -19,11 +19,6 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
     private static final String START_LINE_INDICATOR = "1 Cyclical";
 
-    public MgecsDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
     @Override
     public Classification getClassification()
     {

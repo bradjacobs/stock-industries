@@ -23,11 +23,6 @@ import java.util.List;
 
 public class SicDataConverter extends BaseDataConverter<SicRecord>
 {
-    public SicDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
     @Override
     public Classification getClassification()
     {

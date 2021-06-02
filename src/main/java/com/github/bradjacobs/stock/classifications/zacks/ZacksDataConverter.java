@@ -25,11 +25,6 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
     private static final String KEY_EXPANDED_NAME = "Expanded(X) Industry Group";
     private static final String KEY_EXPANDED_CODE = "Expanded(X) Industry Code";
 
-    public ZacksDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
     @Override
     public Classification getClassification()
     {

@@ -19,24 +19,9 @@ public class SasbDataConverter extends BaseDataConverter<SasbRecord>
 {
     private static final String PANELS_CLASS = "vc_tta-panels";
 
-
     private static final String DESCRIPTION_FILE = "https://www.sasb.org/standards/download/";
     private static final String DESCRIPTION_LABEL_CLASS = "hs-form-booleancheckbox-display";
     private static final String DESCRIPTION_CLASS = "single-company-description";
-
-
-
-    public static void main(String[] args) throws IOException
-    {
-        SasbDataConverter converter = new SasbDataConverter(true);
-        converter.generateDataRecords();
-    }
-
-    public SasbDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
 
     @Override
     public Classification getClassification()
@@ -82,11 +67,9 @@ public class SasbDataConverter extends BaseDataConverter<SasbRecord>
             }
         }
 
-        if (this.includeDescriptions)
-        {
-            // fetch descriptions (from a different page) and append to the records, if configured.
-            appendDescriptions(recordList);
-        }
+        // fetch descriptions (from a different page) and append to the records
+        appendDescriptions(recordList);
+
 
         return recordList;
     }

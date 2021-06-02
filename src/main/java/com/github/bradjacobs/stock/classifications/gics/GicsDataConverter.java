@@ -17,11 +17,6 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
     private static final String DISCONTINUED_IDENTIFIER = "discontinued";
 
 
-    public GicsDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
     @Override
     public Classification getClassification()
     {

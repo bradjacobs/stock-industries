@@ -17,11 +17,6 @@ public class TrbcDataConverter extends BaseDataConverter<TrbcRecord>
     private static final int INDUSTRY_ID_LENGTH = 8;
     private static final int ACTIVITY_ID_LENGTH = 10;
 
-    public TrbcDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
     @Override
     public Classification getClassification()
     {

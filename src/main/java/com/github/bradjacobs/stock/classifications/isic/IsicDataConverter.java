@@ -28,12 +28,6 @@ public class IsicDataConverter extends BaseDataConverter<IsicRecord>
     // explicit tab name in the Excel file
     private static final String EXCEL_TAB_NAME = "ISIC_Rev_4";
 
-
-    public IsicDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
     @Override
     public Classification getClassification()
     {

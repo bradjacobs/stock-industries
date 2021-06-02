@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO - this file needs an overhaul / cleanup
 abstract public class BaseDataConverter<T> implements DataConverter
 {
     protected final CsvMapper csvObjectMapper;
@@ -38,19 +39,14 @@ abstract public class BaseDataConverter<T> implements DataConverter
     protected final JsonMapper jsonMapper;
     private final File outputDirectory;
 
-    protected final boolean includeDescriptions;
-
     /**
      *
-     * @param includeDescriptions include long description in CSV output (IF AVAILABLE)
      */
-    public BaseDataConverter(boolean includeDescriptions)
+    public BaseDataConverter()
     {
-        this.includeDescriptions = includeDescriptions;
-        this.csvObjectMapper = createCsvObjectMapper();
+        this.csvObjectMapper = createCsvObjectMapper(true);
         this.csvArrayMapper = createCsvArrayMapper();
         this.jsonMapper = createJsonMapper();
-
 
         outputDirectory = new File("./output");
         if (! outputDirectory.isDirectory()) {
@@ -62,12 +58,9 @@ abstract public class BaseDataConverter<T> implements DataConverter
     }
 
 
-
     abstract public Classification getClassification();
 
     abstract public List<T> generateDataRecords() throws IOException;
-
-
 
 
 
@@ -84,9 +77,12 @@ abstract public class BaseDataConverter<T> implements DataConverter
         // save the data into full CSV file format
         writeFullCsv(records);
 
+        writeFullNoDescriptionsCsv(records);
+
+
         // read in the generated CSV file into a 2-D string array
-        File fullCsv = createFileObject(DataFileType.FULL_CSV);
-        String[][] fullArray = csvArrayMapper.readValue(fullCsv, String[][].class);
+        File fullNoDescCsv = createFileObject(DataFileType.NO_DESCRIPTION_CSV);
+        String[][] fullArray = csvArrayMapper.readValue(fullNoDescCsv, String[][].class);
 
 
         String[][] sparseArray = createSparseCsvArray(fullArray);
@@ -130,6 +126,18 @@ abstract public class BaseDataConverter<T> implements DataConverter
         CsvSchema schema = csvObjectMapper.schemaFor(clazz).withHeader();
         ObjectWriter writer = csvObjectMapper.writerFor(clazz).with(schema);
         writer.writeValues(fullCsv).writeAll(records);
+    }
+
+    private void writeFullNoDescriptionsCsv(List<T> records) throws IOException
+    {
+        Class<T> clazz = getParameterizedClass();
+
+        File fullNoDescCsv = createFileObject(DataFileType.NO_DESCRIPTION_CSV);
+
+        CsvMapper csvDescObjectMapper = createCsvObjectMapper(false);
+        CsvSchema schema = csvDescObjectMapper.schemaFor(clazz).withHeader();
+        ObjectWriter writer = csvDescObjectMapper.writerFor(clazz).with(schema);
+        writer.writeValues(fullNoDescCsv).writeAll(records);
     }
 
     private void writeSparseCsv(String[][] sparseArray) throws IOException
@@ -270,20 +278,21 @@ abstract public class BaseDataConverter<T> implements DataConverter
     ///////////////////////////////////////////////////////////////////
 
 
-    protected CsvMapper createCsvObjectMapper() {
-        return createDefaultCsvMapperBuilder().build();
+    protected CsvMapper createCsvObjectMapper(boolean includeDescriptions) {
+        return createDefaultCsvMapperBuilder(includeDescriptions).build();
     }
+
 
     protected CsvMapper createCsvArrayMapper() {
         // Important Note:
         //   must create a new builder (and can NOT 'reuse' a builder)
         //     b/c csv builder.build() will give the same instance (and not a new one)
-        CsvMapper.Builder builder = createDefaultCsvMapperBuilder();
+        CsvMapper.Builder builder = createDefaultCsvMapperBuilder(false);
         builder.enable(CsvParser.Feature.WRAP_AS_ARRAY);
         return builder.build();
     }
 
-    protected CsvMapper.Builder createDefaultCsvMapperBuilder() {
+    protected CsvMapper.Builder createDefaultCsvMapperBuilder(boolean includeDescriptions) {
         CsvMapper.Builder builder = CsvMapper.builder()
             .enable(CsvParser.Feature.SKIP_EMPTY_LINES)
             .enable(CsvParser.Feature.TRIM_SPACES)
@@ -292,7 +301,7 @@ abstract public class BaseDataConverter<T> implements DataConverter
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY); // ALWAYS disable this (or it can change the column order)
 
-        if (! this.includeDescriptions) {
+        if (! includeDescriptions) {
             builder = builder.addMixIn(getParameterizedClass(), NoDescriptionMixin.class);
         }
         return builder;

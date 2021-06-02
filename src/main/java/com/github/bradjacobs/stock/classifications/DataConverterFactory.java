@@ -18,16 +18,8 @@ public class DataConverterFactory
 {
     private DataConverterFactory() { }
 
-    // flag to also include the long description in the CSV files
-    //   IF AND ONLY IF long description is actually available
-    private static final boolean DEFAULT_INCLUDE_LONG_DESCRIPTION = true;
-
 
     public static DataConverter createDataConverter(Classification classification) {
-        return createDataConverter(classification, DEFAULT_INCLUDE_LONG_DESCRIPTION);
-    }
-
-    public static DataConverter createDataConverter(Classification classification, boolean includeLongDescription) {
         if (classification == null) {
             throw new IllegalArgumentException("Must provide a classificaiton!");
         }
@@ -36,34 +28,31 @@ public class DataConverterFactory
 //            case BICS:
 //                throw new NotImplementedException("No current implemenation for BICS.");
             case GICS:
-                return new GicsDataConverter(includeLongDescription);
+                return new GicsDataConverter();
             case ICB:
-                return new IcbDataConverter(includeLongDescription);
+                return new IcbDataConverter();
             case ISIC:
-                return new IsicDataConverter(includeLongDescription);
+                return new IsicDataConverter();
             case MGECS:
-                return new MgecsDataConverter(includeLongDescription);
+                return new MgecsDataConverter();
             case NAICS:
-                return new NaicsDataConverter(includeLongDescription);
+                return new NaicsDataConverter();
             case SASB:
-                return new SasbDataConverter(includeLongDescription);
+                return new SasbDataConverter();
             case SIC:
-                return new SicDataConverter(includeLongDescription);
+                return new SicDataConverter();
             case TRBC:
-                return new TrbcDataConverter(includeLongDescription);
+                return new TrbcDataConverter();
             case ZACKS:
-                return new ZacksDataConverter(includeLongDescription);
+                return new ZacksDataConverter();
             default:
                 throw new IllegalArgumentException("Unrecognized classification type: " + classification);
         }
     }
 
 
-    public static Map<Classification, DataConverter> createDataConverters(List<Classification> classifications) {
-        return createDataConverters(classifications, DEFAULT_INCLUDE_LONG_DESCRIPTION);
-    }
 
-    public static Map<Classification, DataConverter> createDataConverters(List<Classification> classifications, boolean includeLongDescription) {
+    public static Map<Classification, DataConverter> createDataConverters(List<Classification> classifications) {
 
         if (classifications == null || classifications.isEmpty()) {
             throw new IllegalArgumentException("Must provide one or more classificaitons!");
@@ -73,7 +62,7 @@ public class DataConverterFactory
         Map<Classification, DataConverter> resultMap = new LinkedHashMap<>();
         for (Classification classification : classifications)
         {
-            resultMap.put(classification, createDataConverter(classification, includeLongDescription));
+            resultMap.put(classification, createDataConverter(classification));
         }
 
         return resultMap;

@@ -19,11 +19,6 @@ import java.util.List;
  */
 public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
 {
-    public NaicsDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
     @Override
     public Classification getClassification()
     {

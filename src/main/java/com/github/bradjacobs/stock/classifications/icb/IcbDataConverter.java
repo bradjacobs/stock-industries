@@ -13,11 +13,6 @@ import java.util.List;
 
 public class IcbDataConverter extends BaseDataConverter<IcbRecord>
 {
-    public IcbDataConverter(boolean includeDescriptions)
-    {
-        super(includeDescriptions);
-    }
-
     @Override
     public Classification getClassification()
     {

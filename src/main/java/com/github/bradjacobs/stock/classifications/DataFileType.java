@@ -3,6 +3,7 @@ package com.github.bradjacobs.stock.classifications;
 public enum DataFileType
 {
     FULL_CSV("_full.csv"),
+    NO_DESCRIPTION_CSV("_full_no_desc.csv"),
     SPARSE_CSV("_sparse.csv"),
     TREE_JSON("_data_tree.json"),
     CANONICAL_TREE_JSON("_canonical_tree.json"),
