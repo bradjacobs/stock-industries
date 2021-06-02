@@ -23,6 +23,7 @@ public class NaicsRecord
     private String industryGroupName;
     private String industryId;
     private String industryName;
+    private String description;
 
     public NaicsRecord()
     {
@@ -108,6 +109,15 @@ public class NaicsRecord
         this.industryName = industryName;
     }
 
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 
     public NaicsRecord copy()
     {
@@ -120,6 +130,7 @@ public class NaicsRecord
         newRecord.industryGroupName = this.industryGroupName;
         newRecord.industryId = this.industryId;
         newRecord.industryName = this.industryName;
+        newRecord.description = this.description;
         return newRecord;
     }
 }

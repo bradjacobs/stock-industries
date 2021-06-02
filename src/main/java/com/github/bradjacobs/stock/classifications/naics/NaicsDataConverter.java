@@ -10,6 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * NOTE:
+ *   these 2 files have code values in different columns:
+ *      https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx
+ *      https://www.census.gov/naics/2017NAICS/2017_NAICS_Descriptions.xlsx
+ */
 public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
 {
     public NaicsDataConverter(boolean includeDescriptions)
@@ -47,8 +54,9 @@ public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
         {
             String[] rowData = csvData[i];
 
-            String code = rowData[1];
-            String title = rowData[2];
+            String code = rowData[0];
+            String title = rowData[1];
+            String description = rowData[2];
 
             if (code.length() == 5 && StringUtils.isNumeric(code)) {
                 continue;  // ignore the 5-digit entries
@@ -97,6 +105,7 @@ public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
             }
             else if (code.length() == 6)
             {
+                description = cleanValue(description);
                 if (currentRecord.getIndustryId() != null) {
                     recordList.add(currentRecord);
                     currentRecord = currentRecord.copy();
@@ -104,6 +113,7 @@ public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
 
                 currentRecord.setIndustryId(code);
                 currentRecord.setIndustryName(title);
+                currentRecord.setDescription(description);
             }
             else {
                 throw new RuntimeException("Unexpected code value: " + code);
