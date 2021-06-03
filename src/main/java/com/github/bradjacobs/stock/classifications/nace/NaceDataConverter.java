@@ -27,16 +27,6 @@ public class NaceDataConverter extends BaseDataConverter<NaceRecord>
     //   when downloading the file with a GET (instead of a POST), seems to use semicolon ';' instead of comma ',' for separator
     private static final Character COLUMN_SEPARATOR = ';';
 
-
-    public static void main(String[] args) throws IOException
-    {
-        NaceDataConverter converter = new NaceDataConverter();
-        List<NaceRecord> recordList = converter.generateDataRecords();
-
-        int kj = 33;
-        System.out.println("kjkj");
-    }
-
     @Override
     public Classification getClassification()
     {
@@ -91,7 +81,6 @@ public class NaceDataConverter extends BaseDataConverter<NaceRecord>
 
         return recordList;
     }
-
 
     private static class NacePojo
     {
