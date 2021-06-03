@@ -7,6 +7,7 @@ public enum Classification
     ICB("icb","https://content.ftserussell.com/sites/default/files/icb_structure_and_definitions.xlsx"),
     ISIC("isic","http://www.ilo.org/ilostat-files/Documents/ISIC.xlsx"),
     MGECS("mgecs","https://advisor.morningstar.com/Enterprise/VTC/MorningstarGlobalEquityClassStructure2019v3.pdf"),  // aka MorningStar
+    NACE("nace","https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=ACT_OTH_CLS_DLD&StrNom=NACE_REV2&StrFormat=CSV&StrLanguageCode=EN&IntKey=&IntLevel=&bExport="),
     NAICS("naics","https://www.census.gov/naics/2017NAICS/2017_NAICS_Descriptions.xlsx"),
     SASB("sasb","https://www.sasb.org/find-your-industry/"), // **
     SIC("sic","https://www.bls.gov/oes/special.requests/oessic87.pdf"),

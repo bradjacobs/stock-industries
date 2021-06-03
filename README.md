@@ -17,6 +17,7 @@ and/or intellectual property rights.
 | ICB | [Industry Classification Benchmark](https://www.ftserussell.com/data/industry-classification-benchmark-icb) | [source](https://content.ftserussell.com/sites/default/files/icb_structure_and_definitions.xlsx) | Excel |
 | ISIC | [International Standard Industrial Classification](https://unstats.un.org/home/) | [source](http://www.ilo.org/ilostat-files/Documents/ISIC.xlsx) | Excel |
 | MGECS | [Morningstar Global Equity Classification System](https://advisor.morningstar.com) | [source](https://advisor.morningstar.com/Enterprise/VTC/MorningstarGlobalEquityClassStructure2019v3.pdf) | PDF |
+| NACE | [Statistical Classification of Economic Activities in the European Community](https://unstats.un.org/unsd/classifications) | [source](https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_CLS_DLD&StrNom=NACE_REV2&StrLanguageCode=EN&StrLayoutCode=HIERARCHIC) | CSV |
 | NAICS | [North American Industry Classification System](https://www.naics.com)<br>also see: [Census.gov/naics](https://www.census.gov/naics/) | [source](https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx) | Excel |
 | SASB | [Sustainable Industry Classification System](https://www.sasb.org/find-your-industry/) | [source](https://www.sasb.org/find-your-industry/) | HTML |
 | SIC | [Standard Industrial Classification](https://siccode.com) | [source](https://www.bls.gov/oes/special.requests/oessic87.pdf) | PDF |
