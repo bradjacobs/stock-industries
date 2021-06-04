@@ -27,33 +27,28 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
     public List<GicsRecord> createDataRecords() throws IOException
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
-        String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
+
+
+//        String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
+        String[][] csvData = excelReader.createCsvMatrix("/Users/bjacob101/git/github.com/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/gics/GICS_map_2018_8.xlsx");
+
+
         return generateRecords(csvData);
     }
 
-
+    
 
     public List<GicsRecord> generateRecords(String[][] csvData)
     {
         List<GicsRecord> recordList = new ArrayList<>();
         GicsRecord prevRecord = createBlankRecord();
 
-        boolean discoveredFirstDataRow = false;
+        int startIndex = findFirstDataRowIndex(csvData);
 
         int rowCount = csvData.length;
-        for (int i = 0; i < rowCount; i++)
+        for (int i = startIndex; i < rowCount; i++)
         {
             String[] dataRow = csvData[i];
-
-            if (!discoveredFirstDataRow) {
-                String firstColumnValue = dataRow[Column.COL_SECTOR_ID.ordinal()];
-                if (StringUtils.isNumeric(firstColumnValue)) {
-                    discoveredFirstDataRow = true;
-                }
-                else {
-                    continue;
-                }
-            }
 
             // the description is always on the following line.
             String[] descriptionRow = csvData[++i];
@@ -70,6 +65,19 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
 
         return recordList;
     }
+
+    private int findFirstDataRowIndex(String[][] csvData) {
+        for (int i = 0; i < csvData.length; i++)
+        {
+            String[] dataRow = csvData[i];
+            String firstColumnValue = dataRow[0].trim();
+            if (StringUtils.isNumeric(firstColumnValue)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 
 
     private boolean shouldSkip(GicsRecord record)
