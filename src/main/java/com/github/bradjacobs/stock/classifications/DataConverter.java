@@ -1,8 +1,12 @@
 package com.github.bradjacobs.stock.classifications;
 
 import java.io.IOException;
+import java.util.List;
 
-public interface DataConverter
+// TODO - need to rename this interface (and related classes)
+public interface DataConverter<T>
 {
-    void createDataFiles() throws IOException;
+    // create data records
+    List<T> createDataRecords() throws IOException;
+
 }

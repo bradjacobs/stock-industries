@@ -13,7 +13,7 @@ package com.github.bradjacobs.stock.classifications.sic;
 // https://www.dietrich-direct.com/SIC-Code-Reference-Access.htm
 
 import com.github.bradjacobs.stock.classifications.Classification;
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
     }
 
     @Override
-    public List<SicRecord> generateDataRecords() throws IOException
+    public List<SicRecord> createDataRecords() throws IOException
     {
         String[] lines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 

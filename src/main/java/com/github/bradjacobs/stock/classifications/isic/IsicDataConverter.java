@@ -4,20 +4,14 @@ import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.classifications.Classification;
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
-import com.github.bradjacobs.stock.classifications.gics.GicsDataConverter;
-import com.github.bradjacobs.stock.classifications.gics.GicsRecord;
-import com.github.bradjacobs.stock.util.DownloadUtil;
-import org.apache.commons.lang3.StringUtils;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.serialize.CsvSerializer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -35,13 +29,14 @@ public class IsicDataConverter extends BaseDataConverter<IsicRecord>
     }
 
     @Override
-    public List<IsicRecord> generateDataRecords() throws IOException
+    public List<IsicRecord> createDataRecords() throws IOException
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NORMAL).setSkipEmptyRows(true).setSheetName(EXCEL_TAB_NAME).build();
 
         String csvText = excelReader.createCsvText(getClassification().getSourceFileLocation());
 
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
+        CsvMapper csvObjectMapper = CsvSerializer.createCsvMapper(false);
         ObjectReader objReader = csvObjectMapper.readerFor(IsicRecord.class).with(schema);
 
         MappingIterator<IsicRecord> iterator = objReader.readValues(csvText);

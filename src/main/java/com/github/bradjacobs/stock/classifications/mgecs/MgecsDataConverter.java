@@ -1,7 +1,7 @@
 package com.github.bradjacobs.stock.classifications.mgecs;
 
 import com.github.bradjacobs.stock.classifications.Classification;
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,7 +27,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
 
     @Override
-    public List<MgecsRecord> generateDataRecords() throws IOException
+    public List<MgecsRecord> createDataRecords() throws IOException
     {
         String[] pdfFileLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 

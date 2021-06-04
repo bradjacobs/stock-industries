@@ -1,6 +1,5 @@
-package com.github.bradjacobs.stock.classifications.common;
+package com.github.bradjacobs.stock.serialize.canonical;
 
-import com.github.bradjacobs.stock.classifications.DataFileType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -18,22 +17,21 @@ public final class CanonicalHeaderUpdater
         canonicalToGenericMap = createQuotedKeyValueMap(CANONICAL_TO_GENERIC_MAP);
     }
 
-
-    public String convertJsonKeyNames(String canonicalJson, DataFileType dataFileType)
+    public String convertToNormalKeyNames(String canonicalJson)
     {
-        Map<String,String> entryMap = null;
-        if (DataFileType.TREE_JSON.equals(dataFileType)) {
-            entryMap = canonicalToOrigHeaderMap;
-        }
-        else if (DataFileType.BASIC_TREE_JSON.equals(dataFileType)) {
-            entryMap = canonicalToGenericMap;
-        }
-        else {
-            throw new IllegalArgumentException("Unsupported dataFileType: " + dataFileType);
-        }
+        return convertKeyNames(canonicalJson, canonicalToOrigHeaderMap);
+    }
 
+    public String convertToGenericKeyNames(String canonicalJson)
+    {
+        return convertKeyNames(canonicalJson, canonicalToGenericMap);
+    }
+
+
+    private String convertKeyNames(String canonicalJson, Map<String,String> headerMap)
+    {
         String result = canonicalJson;
-        for (Map.Entry<String, String> entry : entryMap.entrySet()) {
+        for (Map.Entry<String, String> entry : headerMap.entrySet()) {
             result = StringUtils.replace(result, entry.getKey(), entry.getValue());
         }
         return result;

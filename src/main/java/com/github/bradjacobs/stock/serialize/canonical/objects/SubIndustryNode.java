@@ -1,6 +1,7 @@
-package com.github.bradjacobs.stock.classifications.common.objects;
+package com.github.bradjacobs.stock.serialize.canonical.objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.bradjacobs.stock.serialize.canonical.objects.ActivityNode;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.github.bradjacobs.stock.classifications.sasb;
 
 import com.github.bradjacobs.stock.classifications.Classification;
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -31,7 +31,7 @@ public class SasbDataConverter extends BaseDataConverter<SasbRecord>
 
 
     @Override
-    public List<SasbRecord> generateDataRecords() throws IOException
+    public List<SasbRecord> createDataRecords() throws IOException
     {
         String htmlData = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
 

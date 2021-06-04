@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.bradjacobs.stock.classifications.Classification;
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,7 +32,7 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
     }
 
     @Override
-    public List<ZacksRecord> generateDataRecords() throws IOException
+    public List<ZacksRecord> createDataRecords() throws IOException
     {
         String html = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
         String json = extractNestedJson(html);

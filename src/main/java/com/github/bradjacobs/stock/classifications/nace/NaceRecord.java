@@ -1,7 +1,5 @@
 package com.github.bradjacobs.stock.classifications.nace;
 
-import com.github.bradjacobs.stock.classifications.mgecs.MgecsRecord;
-
 public class NaceRecord
 {
     private String sectionCode = "";

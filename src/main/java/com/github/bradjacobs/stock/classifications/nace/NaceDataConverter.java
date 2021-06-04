@@ -5,9 +5,11 @@ package com.github.bradjacobs.stock.classifications.nace;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.classifications.Classification;
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.serialize.CsvSerializer;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 
 import java.io.IOException;
@@ -34,9 +36,11 @@ public class NaceDataConverter extends BaseDataConverter<NaceRecord>
     }
 
     @Override
-    public List<NaceRecord> generateDataRecords() throws IOException
+    public List<NaceRecord> createDataRecords() throws IOException
     {
         CsvSchema schema = CsvSchema.emptySchema().withHeader().withColumnSeparator(COLUMN_SEPARATOR);
+        CsvMapper csvObjectMapper = CsvSerializer.createCsvMapper(false);
+
         ObjectReader objReader = csvObjectMapper.readerFor(NacePojo.class).with(schema);
 
         String csvData = DownloadUtil.downloadFile(this.getClassification().getSourceFileLocation());

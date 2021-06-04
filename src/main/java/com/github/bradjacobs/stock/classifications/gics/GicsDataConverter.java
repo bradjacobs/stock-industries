@@ -4,7 +4,7 @@ package com.github.bradjacobs.stock.classifications.gics;
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
 import com.github.bradjacobs.stock.classifications.Classification;
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
     }
 
     @Override
-    public List<GicsRecord> generateDataRecords() throws IOException
+    public List<GicsRecord> createDataRecords() throws IOException
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
         String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());

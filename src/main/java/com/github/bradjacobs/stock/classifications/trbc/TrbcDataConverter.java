@@ -1,7 +1,7 @@
 package com.github.bradjacobs.stock.classifications.trbc;
 
 import com.github.bradjacobs.stock.classifications.Classification;
-import com.github.bradjacobs.stock.classifications.common.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,7 +24,7 @@ public class TrbcDataConverter extends BaseDataConverter<TrbcRecord>
     }
 
     @Override
-    public List<TrbcRecord> generateDataRecords() throws IOException
+    public List<TrbcRecord> createDataRecords() throws IOException
     {
         String[] pdfFileLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 

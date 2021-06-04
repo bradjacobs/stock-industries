@@ -54,21 +54,4 @@ public class DataConverterFactory
     }
 
 
-
-    public static Map<Classification, DataConverter> createDataConverters(List<Classification> classifications) {
-
-        if (classifications == null || classifications.isEmpty()) {
-            throw new IllegalArgumentException("Must provide one or more classificaitons!");
-        }
-
-        // using LinkedHashMap to retain order (in case that's important)
-        Map<Classification, DataConverter> resultMap = new LinkedHashMap<>();
-        for (Classification classification : classifications)
-        {
-            resultMap.put(classification, createDataConverter(classification));
-        }
-
-        return resultMap;
-    }
-
 }
