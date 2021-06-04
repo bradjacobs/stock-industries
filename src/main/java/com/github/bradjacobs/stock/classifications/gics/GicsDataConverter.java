@@ -1,6 +1,5 @@
 package com.github.bradjacobs.stock.classifications.gics;
 
-
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
 import com.github.bradjacobs.stock.classifications.Classification;
@@ -27,19 +26,8 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
     public List<GicsRecord> createDataRecords() throws IOException
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
+        String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
 
-
-//        String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
-        String[][] csvData = excelReader.createCsvMatrix("/Users/bjacob101/git/github.com/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/gics/GICS_map_2018_8.xlsx");
-
-
-        return generateRecords(csvData);
-    }
-
-    
-
-    public List<GicsRecord> generateRecords(String[][] csvData)
-    {
         List<GicsRecord> recordList = new ArrayList<>();
         GicsRecord prevRecord = createBlankRecord();
 
