@@ -16,7 +16,6 @@ public class CsvDeserializer extends BaseDeserializer
 
     private final CsvDefinition csvDefinition;
 
-
     public CsvDeserializer(CsvDefinition csvDefinition)
     {
         this.csvDefinition = csvDefinition;
@@ -25,33 +24,23 @@ public class CsvDeserializer extends BaseDeserializer
     @Override
     public <T> List<T> deserializeObjects(Class<T> clazz, String data) throws IOException
     {
-        return toListOfObjects(clazz, data, true);
-    }
+        // if the incoming data is 'sparse', then populate it.
+        //     todo: fix naming b/c it's confusing
+        if (this.csvDefinition.isSparsely()) {
+            data = csvFullSparseConverter.fillCsvData(data);
+        }
 
-
-    // todo: the 'withHeader' param is still up in the air.
-    private <T> List<T> toListOfObjects(Class<T> type, String csvData, boolean withHeader) throws IOException
-    {
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
 
         CsvMapper csvMapper = CsvSerializer.createCsvMapper(false);
 
-        ObjectReader objReader;
-        if (withHeader) {
-            objReader = csvMapper.readerFor(type).with(schema);
-        }
-        else {
-            // todo: 'readerWithTypedSchemaFor' generally seems nicer,
-            //   BUT it seems more prone to error if data isn't perfectly formatted
-            objReader = csvMapper.readerWithTypedSchemaFor(type);
-        }
+        ObjectReader objReader = csvMapper.readerFor(clazz).with(schema);
 
-        MappingIterator<T> iterator = objReader.readValues(csvData);
+        MappingIterator<T> iterator = objReader.readValues(data);
 
         List<T> inputRecords = iterator.readAll();
 
         return inputRecords;
     }
-
 
 }
