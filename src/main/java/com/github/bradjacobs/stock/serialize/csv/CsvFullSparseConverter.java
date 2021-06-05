@@ -1,23 +1,40 @@
-package com.github.bradjacobs.stock.serialize;
+package com.github.bradjacobs.stock.serialize.csv;
 
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+
+import java.io.IOException;
 import java.util.Arrays;
 
 // TODO:
 //   1 think of better class name
 //   2 think of better method names
 //   3 add javadocs to explain this class
-public class FullSparseMatrixConverter
+public class CsvFullSparseConverter
 {
-    public String[][] createSparseCsvArray(String[][] fullDataArray)
-    {
+
+    public String sparseifyCsvData(String csvData) throws IOException {
+        return convertCsvData(csvData, true);
+    }
+
+    public String fillCsvData(String csvData) throws IOException {
+        return convertCsvData(csvData, false);
+    }
+
+    public String[][] sparseifyCsvArray(String[][] fullDataArray) {
         return convertMatrix(fullDataArray, true);
     }
 
-    public String[][] createFullCsvArray(String[][] sparseDataArray)
-    {
+    public String[][] fillCsvArray(String[][] sparseDataArray) {
         return convertMatrix(sparseDataArray, false);
     }
 
+
+    private String convertCsvData(String csvData, boolean makeSparse) throws IOException
+    {
+        String[][] origMatrix = CsvMatrixConverter.convertToMatrix(csvData);
+        String[][] convertedMatrix = convertMatrix(origMatrix, makeSparse);
+        return CsvMatrixConverter.convertToCsv(convertedMatrix);
+    }
 
     private String[][] convertMatrix(String[][] dataArray, boolean makeSparse)
     {
@@ -84,6 +101,5 @@ public class FullSparseMatrixConverter
 
         // add others as needed
     }
-
 
 }

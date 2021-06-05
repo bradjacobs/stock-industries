@@ -1,5 +1,8 @@
 package com.github.bradjacobs.stock.serialize;
 
+import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
+import com.github.bradjacobs.stock.serialize.csv.CsvSerializer;
+import com.github.bradjacobs.stock.serialize.json.JsonSerializer;
 import com.github.bradjacobs.stock.types.CsvDefinition;
 import com.github.bradjacobs.stock.types.DataDefinition;
 import com.github.bradjacobs.stock.types.JsonDefinition;
@@ -26,8 +29,21 @@ public class SerializerFactory
     }
 
 
-    public static CsvSerializer createCsvSerializer(CsvDefinition csvDefinition) {
-        return new CsvSerializer((CsvDefinition)csvDefinition);
+    public static BaseDeserializer createDeserialzer(DataDefinition dataDefinition)
+    {
+        if (dataDefinition == null) {
+            throw new IllegalArgumentException("Must provide a dataDefinition!");
+        }
+
+        if (dataDefinition instanceof CsvDefinition) {
+            return new CsvDeserializer((CsvDefinition)dataDefinition);
+        }
+//        else if (dataDefinition instanceof JsonDefinition) {
+//            return new JsonDeserializer((JsonDefinition)dataDefinition);
+//        }
+        else {
+            throw new IllegalArgumentException("Unrecognized dataDefinition type: " + dataDefinition.getClass());
+        }
     }
 
 }

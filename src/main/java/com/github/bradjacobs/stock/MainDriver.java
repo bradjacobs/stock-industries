@@ -1,5 +1,8 @@
-package com.github.bradjacobs.stock.classifications;
+package com.github.bradjacobs.stock;
 
+import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
+import com.github.bradjacobs.stock.classifications.DataConverterFactory;
 import com.github.bradjacobs.stock.serialize.BaseSerializer;
 import com.github.bradjacobs.stock.serialize.SerializerFactory;
 import com.github.bradjacobs.stock.types.CsvDefinition;
@@ -31,6 +34,10 @@ public class MainDriver
 
         for (Classification classification : Classification.values())
         {
+//            if (! classification.equals(Classification.GICS)) {
+//                continue;
+//            }
+
             System.out.println("Creating files for: " + classification);
 
             DataConverter converter = DataConverterFactory.createDataConverter(classification);

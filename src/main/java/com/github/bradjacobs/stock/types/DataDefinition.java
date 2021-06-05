@@ -4,5 +4,7 @@ public interface DataDefinition
 {
     String generateFileSuffix();
 
+    String getExtension();
+
 
 }

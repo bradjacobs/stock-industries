@@ -1,11 +1,11 @@
-package com.github.bradjacobs.stock.serialize;
+package com.github.bradjacobs.stock.serialize.csv;
 
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 
 
-public class FullSparseMatrixConverterTest
+public class CsvFullSparseConverterTest
 {
     private static final String[][] FULL_TEST_DATA = new String[][] {
         { "sectorId", "sectorName", "groupId", "groupName" },
@@ -31,16 +31,16 @@ public class FullSparseMatrixConverterTest
     @Test
     public void testFullToSparse() throws Exception
     {
-        FullSparseMatrixConverter converter = new FullSparseMatrixConverter();
-        String[][] sparseMatrix = converter.createSparseCsvArray(FULL_TEST_DATA);
+        CsvFullSparseConverter converter = new CsvFullSparseConverter();
+        String[][] sparseMatrix = converter.sparseifyCsvArray(FULL_TEST_DATA);
         assert2dArraysEquals(sparseMatrix, SPARSE_TEST_DATA);
     }
 
     @Test
     public void testSparseToFull() throws Exception
     {
-        FullSparseMatrixConverter converter = new FullSparseMatrixConverter();
-        String[][] fullMatrix = converter.createFullCsvArray(SPARSE_TEST_DATA);
+        CsvFullSparseConverter converter = new CsvFullSparseConverter();
+        String[][] fullMatrix = converter.fillCsvArray(SPARSE_TEST_DATA);
         assert2dArraysEquals(fullMatrix, FULL_TEST_DATA);
     }
 

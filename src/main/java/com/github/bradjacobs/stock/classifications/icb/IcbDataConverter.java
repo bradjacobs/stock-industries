@@ -8,7 +8,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
-import com.github.bradjacobs.stock.serialize.CsvSerializer;
+import com.github.bradjacobs.stock.serialize.csv.CsvSerializer;
 
 import java.io.IOException;
 import java.util.List;

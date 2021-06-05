@@ -1,14 +1,18 @@
-package com.github.bradjacobs.stock.serialize;
+package com.github.bradjacobs.stock.serialize.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.github.bradjacobs.stock.serialize.BaseSerializer;
+import com.github.bradjacobs.stock.serialize.SerializerFactory;
 import com.github.bradjacobs.stock.serialize.canonical.CanonicalHeaderUpdater;
 import com.github.bradjacobs.stock.serialize.canonical.objects.ActivityNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.GroupNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.IndustryNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.SectorNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.SubIndustryNode;
+import com.github.bradjacobs.stock.serialize.csv.CsvMatrixConverter;
+import com.github.bradjacobs.stock.serialize.csv.CsvSerializer;
 import com.github.bradjacobs.stock.types.CsvDefinition;
 import com.github.bradjacobs.stock.types.JsonDefinition;
 
@@ -70,8 +74,9 @@ public class JsonSerializer extends BaseSerializer
         //      doesn't have to remain, but works for now.
         CsvDefinition csvDefn = CsvDefinition.builder().makeSparsely(true).withLongDescriptions(false).build();
 
-        CsvSerializer csvSerializer = SerializerFactory.createCsvSerializer(csvDefn);
-        String[][] sparseMatrix = csvSerializer.serializeToMatrix(objectList);
+        BaseSerializer csvSerializer = SerializerFactory.createSerializer(csvDefn);
+        String csvData = csvSerializer.serialize(objectList);
+        String[][] sparseMatrix = CsvMatrixConverter.convertToMatrix(csvData);
         List<SectorNode> sectorNodes = createCanonicalJsonTree(sparseMatrix);
 
         String jsonTree = null;

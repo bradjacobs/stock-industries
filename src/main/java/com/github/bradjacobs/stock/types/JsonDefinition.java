@@ -1,12 +1,17 @@
 package com.github.bradjacobs.stock.types;
 
-import java.awt.*;
+import org.apache.commons.lang3.StringUtils;
+
 
 public class JsonDefinition implements DataDefinition
 {
     private final boolean includeDescription;
     private final boolean isTree;
     private final JsonKeyName jsonKeyName;
+
+    private static final String EXTENSION = "json";
+    private static final String DOT_EXTENSION = "." + EXTENSION;
+
 
     public JsonDefinition(boolean includeDescription, boolean isTree, JsonKeyName jsonKeyName)
     {
@@ -31,6 +36,12 @@ public class JsonDefinition implements DataDefinition
     }
 
     @Override
+    public String getExtension()
+    {
+        return EXTENSION;
+    }
+
+    @Override
     public String generateFileSuffix()
     {
         StringBuilder sb = new StringBuilder();
@@ -47,9 +58,44 @@ public class JsonDefinition implements DataDefinition
         else if (this.jsonKeyName.equals(JsonKeyName.BASIC)) {
             sb.append("_basic");
         }
-        sb.append(".json");
+        sb.append(DOT_EXTENSION);
         return sb.toString();
     }
+
+    public static JsonDefinition generateInstance(String fileName)
+    {
+        // todo - come back to simplify
+        if (StringUtils.isEmpty(fileName)) {
+            throw new IllegalArgumentException("Must supply a fileName");
+        }
+        if (fileName.contains(DOT_EXTENSION)) {
+            throw new IllegalArgumentException("Not a recognized JSON file extension: " + fileName);
+        }
+
+        // todo - fix redundant strings
+        Builder builder = new Builder();
+        if (fileName.contains("_tree")) {
+            JsonTreeBuilder treeBuilder = builder.asTree();
+            if (fileName.contains("_canonical")) {
+                treeBuilder.withCanonicalKeyNames();
+            }
+            else if (fileName.contains("_basic")) {
+                treeBuilder.withGenericKeyNames();
+            }
+            else {
+                treeBuilder.withNormalKeyNames();
+            }
+            return treeBuilder.build();
+        }
+        else {
+            JsonFlatBuilder pojoListBuilder = builder.asPojoList();
+            if (fileName.contains("_w_desc")) {
+                pojoListBuilder.withLongDescriptions(true);
+            }
+            return pojoListBuilder.build();
+        }
+    }
+
 
     public enum JsonKeyName {
         NORMAL,
@@ -57,14 +103,14 @@ public class JsonDefinition implements DataDefinition
         BASIC
     }
 
-    public static JsonBuilder builder() {
-        return new JsonBuilder();
+    public static Builder builder() {
+        return new Builder();
     }
 
 
-    public static class JsonBuilder
+    public static class Builder
     {
-        private JsonBuilder() { }
+        private Builder() { }
 
         public JsonTreeBuilder asTree() {
             return new JsonTreeBuilder();
@@ -91,6 +137,7 @@ public class JsonDefinition implements DataDefinition
             return this;
         }
 
+        // note: the tree form will never have the long description (presently)
         public JsonDefinition build() {
             return new JsonDefinition( false,  true, jsonKeyName);
         }
