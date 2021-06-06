@@ -12,7 +12,6 @@ import com.github.bradjacobs.stock.serialize.canonical.objects.IndustryNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.SectorNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.SubIndustryNode;
 import com.github.bradjacobs.stock.serialize.csv.CsvMatrixConverter;
-import com.github.bradjacobs.stock.serialize.csv.CsvSerializer;
 import com.github.bradjacobs.stock.types.CsvDefinition;
 import com.github.bradjacobs.stock.types.JsonDefinition;
 
@@ -61,12 +60,6 @@ public class JsonSerializer extends BaseSerializer
         return jsonData;
     }
 
-    //          File canonicalJsonFile = createFileObject(DataFileType.CANONICAL_TREE_JSON);
-    //
-    //        try (FileOutputStream fileOutputStream = new FileOutputStream(canonicalJsonFile)) {
-    //            jsonMapper.writeValue(fileOutputStream, sectorNodeList);
-    //        }
-
 
     protected <T> String serializeObjectsToTree(JsonMapper jsonMapper, List<T> objectList) throws IOException
     {
@@ -98,8 +91,6 @@ public class JsonSerializer extends BaseSerializer
 
         return jsonTree;
     }
-
-
 
 
     private List<SectorNode> createCanonicalJsonTree(String[][] sparseArray) throws IOException
@@ -170,15 +161,5 @@ public class JsonSerializer extends BaseSerializer
 
         return mapper;
     }
-
-
-
-    //         if (writeFile)
-    //        {
-    //            ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-    //            FileOutputStream fileOutputStream = new FileOutputStream(OUTPUT_FILE);
-    //            mapper.writeValue(fileOutputStream, sectorNodeList);
-    //            fileOutputStream.close();
-    //        }
 
 }
