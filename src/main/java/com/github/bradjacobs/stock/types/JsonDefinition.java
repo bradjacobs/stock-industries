@@ -2,7 +2,7 @@ package com.github.bradjacobs.stock.types;
 
 import org.apache.commons.lang3.StringUtils;
 
-
+// todo - add unit tests for this.
 public class JsonDefinition implements DataDefinition
 {
     private final boolean includeDescription;
@@ -11,6 +11,15 @@ public class JsonDefinition implements DataDefinition
 
     private static final String EXTENSION = "json";
     private static final String DOT_EXTENSION = "." + EXTENSION;
+
+
+    //   todo - come back and reorginize a little better.
+    // substrings included as part of the fileName specifc format
+    private static final String LONG_DESC_FILE_NAME_ID = "_w_desc";  // includes long descriptions (if available, n/a for tree)
+    private static final String TREE_FILE_NAME_ID = "_tree";  // indicates hierarchical tree
+    private static final String CANONICAL_FILE_NAME_ID = "_canonical";  // indicates canonical form (i.e. 'common header names regardless of customer)
+    private static final String BASIC_FILE_NAME_ID = "_basic";  // indicates basic tree form (i.e. simple generic nodes)
+
 
 
     public JsonDefinition(boolean includeDescription, boolean isTree, JsonKeyName jsonKeyName)
@@ -47,16 +56,16 @@ public class JsonDefinition implements DataDefinition
         StringBuilder sb = new StringBuilder();
 
         if (this.includeDescription) {
-            sb.append("_w_desc");
+            sb.append(LONG_DESC_FILE_NAME_ID);
         }
         if (isTree) {
-            sb.append("_tree");
+            sb.append(TREE_FILE_NAME_ID);
         }
         if (this.jsonKeyName.equals(JsonKeyName.CANONICAL)) {
-            sb.append("_canonical");
+            sb.append(CANONICAL_FILE_NAME_ID);
         }
         else if (this.jsonKeyName.equals(JsonKeyName.BASIC)) {
-            sb.append("_basic");
+            sb.append(BASIC_FILE_NAME_ID);
         }
         sb.append(DOT_EXTENSION);
         return sb.toString();
@@ -74,12 +83,12 @@ public class JsonDefinition implements DataDefinition
 
         // todo - fix redundant strings
         Builder builder = new Builder();
-        if (fileName.contains("_tree")) {
+        if (fileName.contains(TREE_FILE_NAME_ID)) {
             JsonTreeBuilder treeBuilder = builder.asTree();
-            if (fileName.contains("_canonical")) {
+            if (fileName.contains(CANONICAL_FILE_NAME_ID)) {
                 treeBuilder.withCanonicalKeyNames();
             }
-            else if (fileName.contains("_basic")) {
+            else if (fileName.contains(BASIC_FILE_NAME_ID)) {
                 treeBuilder.withGenericKeyNames();
             }
             else {
@@ -89,7 +98,7 @@ public class JsonDefinition implements DataDefinition
         }
         else {
             JsonFlatBuilder pojoListBuilder = builder.asPojoList();
-            if (fileName.contains("_w_desc")) {
+            if (fileName.contains(LONG_DESC_FILE_NAME_ID)) {
                 pojoListBuilder.withLongDescriptions(true);
             }
             return pojoListBuilder.build();

@@ -10,6 +10,16 @@ public class CsvDefinition implements DataDefinition
     private static final String EXTENSION = "csv";
     private static final String DOT_EXTENSION = "." + EXTENSION;
 
+
+    // included as part of the fileName to indicate in 'sparse' format
+    private static final String SPARSE_FILE_NAME_ID = "_sparse";
+
+    // included as part of the fileName to indicate includes 'long descriptions'
+    //   will be n/a if no long descriptions available
+    private static final String LONG_DESC_FILE_NAME_ID = "_w_desc";
+
+
+
     private CsvDefinition(boolean includeDescription, boolean sparsely)
     {
         this.includeDescription = includeDescription;
@@ -36,10 +46,10 @@ public class CsvDefinition implements DataDefinition
     public String generateFileSuffix() {
         StringBuilder sb = new StringBuilder();
         if (sparsely) {
-            sb.append("_sparse");
+            sb.append(SPARSE_FILE_NAME_ID);
         }
         if (this.includeDescription) {
-            sb.append("_w_desc");
+            sb.append(LONG_DESC_FILE_NAME_ID);
         }
         sb.append(DOT_EXTENSION);
         return sb.toString();
@@ -56,12 +66,11 @@ public class CsvDefinition implements DataDefinition
             throw new IllegalArgumentException("Not a recognized CSV file extension: " + fileName);
         }
 
-        // todo - fix redundant strings
         Builder builder = new Builder();
-        if (fileName.contains("_sparse")) {
+        if (fileName.contains(SPARSE_FILE_NAME_ID)) {
             builder.makeSparsely(true);
         }
-        if (fileName.contains("_w_desc")) {
+        if (fileName.contains(LONG_DESC_FILE_NAME_ID)) {
             builder.withLongDescriptions(true);
         }
         return builder.build();
