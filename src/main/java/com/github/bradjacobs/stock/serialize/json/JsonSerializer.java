@@ -1,23 +1,22 @@
 package com.github.bradjacobs.stock.serialize.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.bradjacobs.stock.serialize.BaseSerializer;
-import com.github.bradjacobs.stock.serialize.SerializerFactory;
 import com.github.bradjacobs.stock.serialize.canonical.CanonicalHeaderUpdater;
 import com.github.bradjacobs.stock.serialize.canonical.objects.ActivityNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.GroupNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.IndustryNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.SectorNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.SubIndustryNode;
-import com.github.bradjacobs.stock.serialize.csv.CsvMatrixConverter;
-import com.github.bradjacobs.stock.types.CsvDefinition;
 import com.github.bradjacobs.stock.types.JsonDefinition;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class JsonSerializer extends BaseSerializer
 {
@@ -56,28 +55,34 @@ public class JsonSerializer extends BaseSerializer
             jsonData = jsonMapper.writeValueAsString(objectList);
         }
 
-
         return jsonData;
     }
 
 
+    // todo - most likely will move this
+    public <T> List<Map<String,String>> convertToListOfMaps(List<T> objectList) throws IOException
+    {
+        JsonMapper jsonMapper = createJsonMapper();
+        String jsonData = jsonMapper.writeValueAsString(objectList);
+        List<Map<String, String>> listOfMaps = jsonMapper.readValue(jsonData, new TypeReference<List<Map<String, String>>>() {});
+        return listOfMaps;
+    }
+
+
+
     protected <T> String serializeObjectsToTree(JsonMapper jsonMapper, List<T> objectList) throws IOException
     {
-        //  for now first convert the objects to a 2-d string array
-        //      doesn't have to remain, but works for now.
-        CsvDefinition csvDefn = CsvDefinition.builder().makeSparsely(true).withLongDescriptions(false).build();
+        List<Map<String, String>> listOfMaps = convertToListOfMaps(objectList);
+        List<SectorNode> sectorNodes = createCanonicalJsonTree(listOfMaps);
 
-        BaseSerializer csvSerializer = SerializerFactory.createSerializer(csvDefn);
-        String csvData = csvSerializer.serialize(objectList);
-        String[][] sparseMatrix = CsvMatrixConverter.convertToMatrix(csvData);
-        List<SectorNode> sectorNodes = createCanonicalJsonTree(sparseMatrix);
+        String[] headerRow = new ArrayList<>(listOfMaps.get(0).keySet()).toArray(new String[0]);
 
         String jsonTree = null;
         String canonicalTreeJson = jsonMapper.writeValueAsString(sectorNodes);
 
         if (! this.jsonDefinition.getJsonKeyName().equals(JsonDefinition.JsonKeyName.CANONICAL))
         {
-            CanonicalHeaderUpdater canonicalHeaderUpdater = new CanonicalHeaderUpdater(sparseMatrix[0]);
+            CanonicalHeaderUpdater canonicalHeaderUpdater = new CanonicalHeaderUpdater(headerRow);
             if (this.jsonDefinition.getJsonKeyName().equals(JsonDefinition.JsonKeyName.NORMAL)) {
                 jsonTree = canonicalHeaderUpdater.convertToNormalKeyNames(canonicalTreeJson);
             }
@@ -93,23 +98,24 @@ public class JsonSerializer extends BaseSerializer
     }
 
 
-    private List<SectorNode> createCanonicalJsonTree(String[][] sparseArray) throws IOException
+    private List<SectorNode> createCanonicalJsonTree(List<Map<String,String>> listOfMaps) throws IOException
     {
         List<SectorNode> sectorNodeList = new ArrayList<>();
-        SectorNode currentSector = null;
-        GroupNode currentGroup = null;
-        IndustryNode currentIndustry = null;
-        SubIndustryNode currentSubIndustry = null;
+        SectorNode currentSector = new SectorNode("", "");
+        GroupNode currentGroup = new GroupNode("", "");
+        IndustryNode currentIndustry = new IndustryNode("", "");
+        SubIndustryNode currentSubIndustry = new SubIndustryNode("", "");
 
-        // start and index 1 (ignore header row)
-        for (int i = 1; i < sparseArray.length; i++) {
 
-            String[] rowData = sparseArray[i];
+        for (Map<String, String> entryMap : listOfMaps)
+        {
+            List<String> entryValues = new ArrayList<>(entryMap.values());
+            String[] rowData = entryValues.toArray(new String[0]);
 
             if (rowData.length >= 2) {
                 SectorNode sectorNode = new SectorNode(rowData[0], rowData[1]);
 
-                if (! sectorNode.getSectorId().isEmpty()) {
+                if (! sectorNode.getSectorId().equals(currentSector.getSectorId())) {
                     sectorNodeList.add(sectorNode);
                     currentSector = sectorNode;
                 }
@@ -117,7 +123,7 @@ public class JsonSerializer extends BaseSerializer
             if (rowData.length >= 4) {
                 GroupNode groupNode = new GroupNode(rowData[2], rowData[3]);
 
-                if (! groupNode.getGroupId().isEmpty()) {
+                if (! groupNode.getGroupId().equals(currentGroup.getGroupId())) {
                     currentSector.addGroup(groupNode);
                     currentGroup = groupNode;
                 }
@@ -125,7 +131,7 @@ public class JsonSerializer extends BaseSerializer
             if (rowData.length >= 6) {
                 IndustryNode industryNode = new IndustryNode(rowData[4], rowData[5]);
 
-                if (! industryNode.getIndustryId().isEmpty()) {
+                if (! industryNode.getIndustryId().equals(currentIndustry.getIndustryId())) {
                     currentGroup.addIndustry(industryNode);
                     currentIndustry = industryNode;
                 }
@@ -133,7 +139,7 @@ public class JsonSerializer extends BaseSerializer
             if (rowData.length >= 8) {
                 SubIndustryNode subIndustryNode = new SubIndustryNode(rowData[6], rowData[7]);
 
-                if (! subIndustryNode.getSubIndustryId().isEmpty()) {
+                if (! subIndustryNode.getSubIndustryId().equals(currentSubIndustry.getSubIndustryId())) {
                     currentIndustry.addSubIndustry(subIndustryNode);
                     currentSubIndustry = subIndustryNode;
                 }
