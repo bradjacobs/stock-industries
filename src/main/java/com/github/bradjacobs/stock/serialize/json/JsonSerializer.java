@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.serialize.BaseSerializer;
 import com.github.bradjacobs.stock.serialize.canonical.CanonicalHeaderUpdater;
 import com.github.bradjacobs.stock.serialize.canonical.objects.ActivityNode;
@@ -28,9 +29,9 @@ public class JsonSerializer extends BaseSerializer
     }
 
     @Override
-    public String generateFileSuffix()
+    public String generateFileName(Classification classification)
     {
-        return this.jsonDefinition.generateFileSuffix();
+        return this.jsonDefinition.generateFileName(classification);
     }
 
 

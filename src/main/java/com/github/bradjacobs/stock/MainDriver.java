@@ -16,6 +16,7 @@ import java.util.List;
 
 public class MainDriver
 {
+    // todo - add in the permid column for the TRBC for the csv.
 
     public static void main(String[] args) throws Exception
     {
@@ -47,7 +48,7 @@ public class MainDriver
             {
                 BaseSerializer serializer = SerializerFactory.createSerializer(dataDefinition);
 
-                String fileName = serializer.createFileName(classification);
+                String fileName = serializer.generateFileName(classification);
                 File outFile = new File(outputDirectory, fileName);
 
                 serializer.serializeToFile(outFile, recordList);

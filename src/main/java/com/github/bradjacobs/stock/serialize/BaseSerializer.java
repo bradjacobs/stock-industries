@@ -14,21 +14,13 @@ abstract public class BaseSerializer
 {
     abstract protected <T> String serializeObjects(List<T> objectList) throws IOException;
 
-    abstract public String generateFileSuffix();
+    abstract public String generateFileName(Classification classification);
 
     @SuppressWarnings("unchecked")
     public <T> String serialize(List<T> objectList) throws IOException
     {
         validateObjectList(objectList);
         return serializeObjects(objectList);
-    }
-
-
-    public String createFileName(Classification classification) {
-        return classification.getPrefix() + generateFileSuffix();
-    }
-    public String createFileName(String filePrefix) {
-        return filePrefix + generateFileSuffix();
     }
 
     public <T> void serializeToFile(String filePath, List<T> objectList) throws IOException

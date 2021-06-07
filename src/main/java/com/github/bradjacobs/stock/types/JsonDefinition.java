@@ -1,5 +1,6 @@
 package com.github.bradjacobs.stock.types;
 
+import com.github.bradjacobs.stock.classifications.Classification;
 import org.apache.commons.lang3.StringUtils;
 
 // todo - add unit tests for this.
@@ -44,17 +45,15 @@ public class JsonDefinition implements DataDefinition
         return jsonKeyName;
     }
 
-    @Override
-    public String getExtension()
-    {
-        return EXTENSION;
-    }
 
     @Override
-    public String generateFileSuffix()
+    public String generateFileName(Classification classification)
     {
+        if (classification == null) {
+            throw new IllegalArgumentException("Must provide a classificaiton");
+        }
         StringBuilder sb = new StringBuilder();
-
+        sb.append(classification.getPrefix());
         if (this.includeDescription) {
             sb.append(LONG_DESC_FILE_NAME_ID);
         }
@@ -81,7 +80,6 @@ public class JsonDefinition implements DataDefinition
             throw new IllegalArgumentException("Not a recognized JSON file extension: " + fileName);
         }
 
-        // todo - fix redundant strings
         Builder builder = new Builder();
         if (fileName.contains(TREE_FILE_NAME_ID)) {
             JsonTreeBuilder treeBuilder = builder.asTree();

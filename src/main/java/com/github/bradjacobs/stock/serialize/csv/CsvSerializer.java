@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.serialize.BaseSerializer;
 import com.github.bradjacobs.stock.types.CsvDefinition;
 
@@ -24,9 +25,9 @@ public class CsvSerializer extends BaseSerializer
     }
 
     @Override
-    public String generateFileSuffix()
+    public String generateFileName(Classification classification)
     {
-        return this.csvDefinition.generateFileSuffix();
+        return csvDefinition.generateFileName(classification);
     }
 
     @Override

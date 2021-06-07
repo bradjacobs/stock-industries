@@ -1,5 +1,6 @@
 package com.github.bradjacobs.stock.types;
 
+import com.github.bradjacobs.stock.classifications.Classification;
 import org.apache.commons.lang3.StringUtils;
 
 public class CsvDefinition implements DataDefinition
@@ -36,15 +37,15 @@ public class CsvDefinition implements DataDefinition
         return sparsely;
     }
 
-    @Override
-    public String getExtension()
-    {
-        return EXTENSION;
-    }
 
     @Override
-    public String generateFileSuffix() {
+    public String generateFileName(Classification classification)
+    {
+        if (classification == null) {
+            throw new IllegalArgumentException("Must provide a classificaiton");
+        }
         StringBuilder sb = new StringBuilder();
+        sb.append(classification.getPrefix());
         if (sparsely) {
             sb.append(SPARSE_FILE_NAME_ID);
         }
