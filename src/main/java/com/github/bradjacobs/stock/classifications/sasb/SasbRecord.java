@@ -1,5 +1,17 @@
 package com.github.bradjacobs.stock.classifications.sasb;
 
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder( {
+    "sectorId",
+    "sectorName",
+    "subSectorId",
+    "subSectorName",
+    "industryId",
+    "industryName",
+    "description"
+})
 public class SasbRecord
 {
     private String sectorId = "";

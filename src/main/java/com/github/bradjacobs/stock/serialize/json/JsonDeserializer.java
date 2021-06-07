@@ -119,6 +119,10 @@ public class JsonDeserializer extends BaseDeserializer
             headerValues = propOrderAnnotation.value();
         }
 
+        if (headerValues == null || headerValues.length == 0) {
+            throw new IllegalArgumentException("class is missing 'JsonPropertyOrder' annotation: " + clazz.getCanonicalName());
+        }
+
         return headerValues;
     }
 

@@ -8,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "industryGroupId",
         "industryGroupName",
         "industryId",
-        "industryName"
+        "industryName",
+        "description"
 })
 public class MgecsRecord
 {

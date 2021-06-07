@@ -1,5 +1,17 @@
 package com.github.bradjacobs.stock.classifications.nace;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder( {
+    "sectionCode",
+    "sectionName",
+    "divisionCode",
+    "divisionName",
+    "groupCode",
+    "groupName",
+    "classCode",
+    "className"
+})
 public class NaceRecord
 {
     private String sectionCode = "";
