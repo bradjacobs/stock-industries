@@ -1,7 +1,5 @@
 package com.github.bradjacobs.stock.classifications.nace;
 
-//   file:///Users/bjacob101/Downloads/NACE_REV2_20210603_033502.htm
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
