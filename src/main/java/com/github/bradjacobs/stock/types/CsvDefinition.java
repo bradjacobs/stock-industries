@@ -62,7 +62,7 @@ public class CsvDefinition implements DataDefinition
         if (StringUtils.isEmpty(fileName)) {
             throw new IllegalArgumentException("Must supply a fileName");
         }
-        if (fileName.contains(DOT_EXTENSION)) {
+        if (!fileName.endsWith(DOT_EXTENSION)) {
             throw new IllegalArgumentException("Not a recognized CSV file extension: " + fileName);
         }
 

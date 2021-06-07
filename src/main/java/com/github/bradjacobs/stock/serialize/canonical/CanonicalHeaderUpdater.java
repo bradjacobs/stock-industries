@@ -9,17 +9,26 @@ import java.util.Map;
 public final class CanonicalHeaderUpdater
 {
     private final Map<String,String> canonicalToOrigHeaderMap;
+    private final Map<String,String> origToCanonicalHeaderMap;
     private final Map<String,String> canonicalToGenericMap;
 
     public CanonicalHeaderUpdater(String[] originalDataHeaderRow)
     {
         canonicalToOrigHeaderMap = createMapping(originalDataHeaderRow);
+        origToCanonicalHeaderMap = reverseKeyValues(canonicalToOrigHeaderMap);
+
         canonicalToGenericMap = createQuotedKeyValueMap(CANONICAL_TO_GENERIC_MAP);
     }
 
     public String convertToNormalKeyNames(String canonicalJson)
     {
         return convertKeyNames(canonicalJson, canonicalToOrigHeaderMap);
+    }
+
+    // Todo - fix... this is horrible naming!
+    public String convertNormalToCanonicalKeyNames(String normalJson)
+    {
+        return convertKeyNames(normalJson, origToCanonicalHeaderMap);
     }
 
     public String convertToGenericKeyNames(String canonicalJson)
@@ -97,6 +106,16 @@ public final class CanonicalHeaderUpdater
         }
 
         return createQuotedKeyValueMap(map);
+    }
+
+
+    private Map<String,String> reverseKeyValues(Map<String,String> inputMap)
+    {
+        Map<String,String> resultMap = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : inputMap.entrySet()) {
+            resultMap.put(entry.getValue(), entry.getKey());
+        }
+        return resultMap;
     }
 
 
