@@ -11,13 +11,11 @@ import java.util.List;
 
 public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 {
-    private static final String SOURCE_FILE = "https://advisor.morningstar.com/Enterprise/VTC/MorningstarGlobalEquityClassStructure2019v3.pdf";
-
     private static final int SECTOR_ID_LENGTH = 3;
     private static final int GROUP_ID_LENGTH = 5;
     private static final int INDUSTRY_ID_LENGTH = 8;
 
-    private static final String START_LINE_INDICATOR = "1 Cyclical";
+    private static final String START_LINE_INDICATOR = "1 Cyclical"; // todo - address this
 
     @Override
     public Classification getClassification()
@@ -181,8 +179,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
     private String getDescription(String[] pdfFileLines, int startingIndex)
     {
-        StringBuffer sb = new StringBuffer();
-
+        StringBuilder sb = new StringBuilder();
         int currentIndex = startingIndex;
 
         while (true)
