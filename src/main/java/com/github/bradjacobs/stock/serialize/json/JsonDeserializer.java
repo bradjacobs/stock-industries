@@ -48,7 +48,6 @@ public class JsonDeserializer extends BaseDeserializer
     }
 
 
-
     private <T> List<T> deserializeTreeToObjects(Class<T> clazz, String json) throws JsonProcessingException
     {
         // read in a generic form of the map data   (if it's something else, then convert to generic node form)
@@ -58,9 +57,8 @@ public class JsonDeserializer extends BaseDeserializer
         GenericNode[] genericNodes = mapper.readValue(genericTreeJson, GenericNode[].class);
         GenericNodeToFlatListOfMapsConverter converter = new GenericNodeToFlatListOfMapsConverter(headerFields);
         List<Map<String, String>> listOfMaps = converter.createFlatMapList(genericNodes);
-
-        String adaptedJson = mapper.writeValueAsString(listOfMaps);
-        return convertFlatListOfMapsToObjects(clazz, adaptedJson);
+        JavaType javaType = mapper.getTypeFactory().constructParametricType(List.class, clazz);
+        return mapper.convertValue(listOfMaps, javaType);
     }
 
     // todo - fix naming
