@@ -2,12 +2,18 @@ package com.github.bradjacobs.stock.serialize.canonical.objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ActivityNode
 {
     @JsonProperty("activityId")
     private String activityId;
     @JsonProperty("activityName")
     private String activityName;
+
+    @JsonProperty("subActivities")
+    private List<SubActivityNode> subActivities = null;
 
     public ActivityNode()
     {
@@ -38,4 +44,12 @@ public class ActivityNode
     {
         this.activityName = activityName;
     }
+
+    public void addSubActivity(SubActivityNode subActivityNode) {
+        if (subActivities == null) {
+            subActivities = new ArrayList<>();
+        }
+        subActivities.add(subActivityNode);
+    }
+
 }

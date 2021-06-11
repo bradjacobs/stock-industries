@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * TODO - this whole class needs refactoring help
+ */
 public final class CanonicalHeaderUpdater
 {
     private final Map<String,String> canonicalToOrigHeaderMap;
@@ -49,7 +52,6 @@ public final class CanonicalHeaderUpdater
 
 
 
-
     // todo - would be better to read from the object annotations
     //   b/c this is technically duplication
 
@@ -76,7 +78,10 @@ public final class CanonicalHeaderUpdater
     private static final String CANONICAL_LEVEL_5_ID_HEADER = "activityId";
     private static final String CANONICAL_LEVEL_5_NAME_HEADER = "activityName";
 
+    private static final String CANONICAL_LEVEL_5_CHILDREN_HEADER = "subActivities";
 
+    private static final String CANONICAL_LEVEL_6_ID_HEADER = "subActivityId";
+    private static final String CANONICAL_LEVEL_6_NAME_HEADER = "subActivityName";
 
     private Map<String,String> createMapping(String[] headerRow)
     {
@@ -102,7 +107,14 @@ public final class CanonicalHeaderUpdater
             map.put(CANONICAL_LEVEL_3_CHILDREN_HEADER, pluralizeName(headerRow[6]));
         }
         if (headerRow.length >= 10) {
-            // todo: currently it's always the same name, but can't assume that always
+            map.put(CANONICAL_LEVEL_5_ID_HEADER, headerRow[8]);
+            map.put(CANONICAL_LEVEL_5_NAME_HEADER, headerRow[9]);
+            map.put(CANONICAL_LEVEL_4_CHILDREN_HEADER, pluralizeName(headerRow[8]));
+        }
+        if (headerRow.length >= 12) {
+            map.put(CANONICAL_LEVEL_6_ID_HEADER, headerRow[10]);
+            map.put(CANONICAL_LEVEL_6_NAME_HEADER, headerRow[11]);
+            map.put(CANONICAL_LEVEL_5_CHILDREN_HEADER, pluralizeName(headerRow[10]));
         }
 
         return createQuotedKeyValueMap(map);
@@ -161,6 +173,9 @@ public final class CanonicalHeaderUpdater
         put(CANONICAL_LEVEL_4_CHILDREN_HEADER, GENERIC_CHILDREN_HEADER);
         put(CANONICAL_LEVEL_5_ID_HEADER, GENERIC_ID_HEADER);
         put(CANONICAL_LEVEL_5_NAME_HEADER, GENERIC_NAME_HEADER);
+        put(CANONICAL_LEVEL_5_CHILDREN_HEADER, GENERIC_CHILDREN_HEADER);
+        put(CANONICAL_LEVEL_6_ID_HEADER, GENERIC_ID_HEADER);
+        put(CANONICAL_LEVEL_6_NAME_HEADER, GENERIC_NAME_HEADER);
     }};
 
 

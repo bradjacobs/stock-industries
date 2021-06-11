@@ -11,6 +11,7 @@ import com.github.bradjacobs.stock.serialize.canonical.objects.ActivityNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.GroupNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.IndustryNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.SectorNode;
+import com.github.bradjacobs.stock.serialize.canonical.objects.SubActivityNode;
 import com.github.bradjacobs.stock.serialize.canonical.objects.SubIndustryNode;
 import com.github.bradjacobs.stock.types.JsonDefinition;
 
@@ -106,6 +107,7 @@ public class JsonSerializer extends BaseSerializer
         GroupNode currentGroup = new GroupNode("", "");
         IndustryNode currentIndustry = new IndustryNode("", "");
         SubIndustryNode currentSubIndustry = new SubIndustryNode("", "");
+        ActivityNode currentActivity = new ActivityNode("", "");
 
 
         for (Map<String, String> entryMap : listOfMaps)
@@ -150,6 +152,14 @@ public class JsonSerializer extends BaseSerializer
 
                 if (! activityNode.getActivityId().isEmpty()) {
                     currentSubIndustry.addActivity(activityNode);
+                    currentActivity = activityNode;
+                }
+            }
+            if (rowData.length >= 12) {
+                SubActivityNode subactivityNode = new SubActivityNode(rowData[10], rowData[11]);
+
+                if (! subactivityNode.getSubActivityId().isEmpty()) {
+                    currentActivity.addSubActivity(subactivityNode);
                 }
             }
         }

@@ -6,6 +6,7 @@ import com.github.bradjacobs.stock.classifications.isic.IsicDataConverter;
 import com.github.bradjacobs.stock.classifications.mgecs.MgecsDataConverter;
 import com.github.bradjacobs.stock.classifications.nace.NaceDataConverter;
 import com.github.bradjacobs.stock.classifications.naics.NaicsDataConverter;
+import com.github.bradjacobs.stock.classifications.napcs.NapcsDataConverter;
 import com.github.bradjacobs.stock.classifications.nasdaq.NasdaqDataConverter;
 import com.github.bradjacobs.stock.classifications.sasb.SasbDataConverter;
 import com.github.bradjacobs.stock.classifications.sic.SicDataConverter;
@@ -39,6 +40,8 @@ public class DataConverterFactory
                 return new NaceDataConverter();
             case NAICS:
                 return new NaicsDataConverter();
+            case NAPCS:
+                return new NapcsDataConverter();
             case NASDAQ:
                 return new NasdaqDataConverter();
             case SASB:
