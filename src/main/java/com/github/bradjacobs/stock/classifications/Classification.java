@@ -9,6 +9,7 @@ public enum Classification
     MGECS("mgecs","https://advisor.morningstar.com/Enterprise/VTC/MorningstarGlobalEquityClassStructure2019v3.pdf"),  // aka MorningStar
     NACE("nace","https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=ACT_OTH_CLS_DLD&StrNom=NACE_REV2&StrFormat=CSV&StrLanguageCode=EN&IntKey=&IntLevel=&bExport="),
     NAICS("naics","https://www.census.gov/naics/2017NAICS/2017_NAICS_Descriptions.xlsx"),
+    NASDAQ("nasdaq","https://api.nasdaq.com/api/screener/stocks?limit=0&download=true"), // **
     SASB("sasb","https://www.sasb.org/find-your-industry/"), // **
     SIC("sic","https://www.bls.gov/oes/special.requests/oessic87.pdf"),
     TRBC("trbc","https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf"),  // aka Refinitiv

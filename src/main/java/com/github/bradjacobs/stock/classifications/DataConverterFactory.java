@@ -6,6 +6,7 @@ import com.github.bradjacobs.stock.classifications.isic.IsicDataConverter;
 import com.github.bradjacobs.stock.classifications.mgecs.MgecsDataConverter;
 import com.github.bradjacobs.stock.classifications.nace.NaceDataConverter;
 import com.github.bradjacobs.stock.classifications.naics.NaicsDataConverter;
+import com.github.bradjacobs.stock.classifications.nasdaq.NasdaqDataConverter;
 import com.github.bradjacobs.stock.classifications.sasb.SasbDataConverter;
 import com.github.bradjacobs.stock.classifications.sic.SicDataConverter;
 import com.github.bradjacobs.stock.classifications.trbc.TrbcDataConverter;
@@ -26,8 +27,6 @@ public class DataConverterFactory
         }
 
         switch (classification) {
-//            case BICS:
-//                throw new NotImplementedException("No current implemenation for BICS.");
             case GICS:
                 return new GicsDataConverter();
             case ICB:
@@ -40,6 +39,8 @@ public class DataConverterFactory
                 return new NaceDataConverter();
             case NAICS:
                 return new NaicsDataConverter();
+            case NASDAQ:
+                return new NasdaqDataConverter();
             case SASB:
                 return new SasbDataConverter();
             case SIC:
