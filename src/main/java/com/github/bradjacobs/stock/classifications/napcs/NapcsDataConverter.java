@@ -20,7 +20,7 @@ public class NapcsDataConverter extends BaseDataConverter<NapcsRecord>
     private static final int ID_COL_INDEX = 1;
     private static final int TITLE_COL_INDEX = 2;
 
-    // map to determine the depth level based on the lenght of the id.
+    // map to determine the depth level based on the length of the id.
     private static final Map<Integer,Integer> LENGTH_TO_LEVEL_MAP =  new HashMap<Integer, Integer>() {{
         put( 2, 1);
         put( 3, 2);

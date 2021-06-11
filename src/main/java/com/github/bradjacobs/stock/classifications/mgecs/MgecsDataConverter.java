@@ -33,7 +33,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
         MgecsRecord currentRecord = null;
 
-        // search for line where teh data 'actually' starts.
+        // search for line where the data 'actually' starts.
         int firstDataLineIndex = findFirstDataRowIndex(pdfFileLines);
 
         for (int i = firstDataLineIndex; i < pdfFileLines.length; i++)

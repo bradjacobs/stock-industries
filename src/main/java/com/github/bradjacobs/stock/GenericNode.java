@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
+// todo
+//   better class Name
+//   better class Home
+//   location that can serialize/deserialize this.
 public class GenericNode
 {
     private String id;
