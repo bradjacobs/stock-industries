@@ -1,31 +1,20 @@
 package com.github.bradjacobs.stock.classifications.zacks;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.util.DownloadUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
 {
-    private static final String KEY_SECTOR_NAME = "Sector Group";
-    private static final String KEY_SECTOR_CODE = "Sector Code";
-    private static final String KEY_MEDIUM_NAME = "Medium(M) Industry Group";
-    private static final String KEY_MEDIUM_CODE = "Medium(M) Industry Code";
-    private static final String KEY_EXPANDED_NAME = "Expanded(X) Industry Group";
-    private static final String KEY_EXPANDED_CODE = "Expanded(X) Industry Code";
-
     @Override
     public Classification getClassification()
     {
@@ -35,75 +24,37 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
     @Override
     public List<ZacksRecord> createDataRecords() throws IOException
     {
+        // download html page..
         String html = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
+
+        // grab the nextes json within the page
         String json = extractNestedJson(html);
 
-        List<Map<String, String>> listOfMaps = convertToListOfMaps(json);
+        // convert the JSON to ZacksRecords  (the 'ZacksRecord' has the header alias definitions)
+        JsonMapper mapper = MapperBuilder.json().build();
+        ZacksRecord[] recordArray = mapper.readValue(json, ZacksRecord[].class);
 
-        List<ZacksRecord> recordList = new ArrayList<>();
-
-        for (Map<String, String> recordMap : listOfMaps) {
-
-            ZacksRecord record = generateRecord(recordMap);
-
-            //   the '0' is an odd 'index' sector
-            //if (record.getSectorCode().equals("0")) {
-            //    continue;
-            //}
-
-            recordList.add(record);
+        // even though now have records, the names are in a bad format (html cruft)
+        //  so now iterate and clean up the name on each record.
+        List<ZacksRecord> resultList = new ArrayList<>();
+        for (ZacksRecord record : recordArray)
+        {
+            record.setSectorName( cleanUpName(record.getSectorName()) );
+            record.setMediumIndustryName( cleanUpName(record.getMediumIndustryName()) );
+            record.setExpandedIndustryName( cleanUpName(record.getExpandedIndustryName()) );
+            resultList.add(record);
         }
 
-        Collections.sort(recordList);
+        Collections.sort(resultList);
 
-        return recordList;
+        return resultList;
     }
 
-
-    private ZacksRecord generateRecord(Map<String, String> recordMap)
-    {
-        String sectorGroup = recordMap.get(KEY_SECTOR_NAME);
-        String sectorCode = recordMap.get(KEY_SECTOR_CODE);
-        String mediumGroup = recordMap.get(KEY_MEDIUM_NAME);
-        String mediumCode = recordMap.get(KEY_MEDIUM_CODE);
-        String expandedGroup = recordMap.get(KEY_EXPANDED_NAME);
-        String expandedCode = recordMap.get(KEY_EXPANDED_CODE);
-
-        sectorGroup = extractTitleFromSpanTag(sectorGroup);
-        mediumGroup = extractTitleFromSpanTag(mediumGroup);
-        expandedGroup = extractTitleFromSpanTag(expandedGroup);
-
-        sectorGroup = cleanValue(sectorGroup);
-        mediumGroup = cleanValue(mediumGroup);
-        expandedGroup = cleanValue(expandedGroup);
-
-        ZacksRecord record = new ZacksRecord();
-        record.setSectorName(sectorGroup);
-        record.setSectorCode(sectorCode);
-        record.setMediumIndustryName(mediumGroup);
-        record.setMediumIndustryCode(mediumCode);
-        record.setExpandedIndustryName(expandedGroup);
-        record.setExpandedIndustryCode(expandedCode);
-
-        return record;
+    private String cleanUpName(String inputName) {
+        String extractedName = extractTitleFromSpanTag(inputName);
+        return cleanValue(extractedName);
     }
 
-
-    // todo -- not the best all cases, i.e. "non-ferrous"
-    protected String capitalizeLetterAfterDash(String input)
-    {
-        String result = input;
-        // capitalize a letter immediately following a dash
-        String regex = "(-[a-z])";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(result);
-
-        while (matcher.find()) {
-            result = result.replaceFirst(matcher.group(), matcher.group(1).toUpperCase());
-        }
-        return result;
-
-    }
 
     // todo - revisit a better way
     protected String cleanValue(String input) {
@@ -132,7 +83,6 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
         result = result.replace(" Hmos", " HMOs");
         result = result.replace(" It ", " IT ");
 
-
         // redo the super in case our replacements messed up whitespace (cautious/pedantic)
         result = super.cleanValue(result);
 
@@ -140,6 +90,20 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
     }
 
 
+    // todo -- not the best all cases, i.e. "non-ferrous"
+    protected String capitalizeLetterAfterDash(String input)
+    {
+        String result = input;
+        // capitalize a letter immediately following a dash
+        String regex = "(-[a-z])";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(result);
+
+        while (matcher.find()) {
+            result = result.replaceFirst(matcher.group(), matcher.group(1).toUpperCase());
+        }
+        return result;
+    }
 
     private String extractTitleFromSpanTag(String str)
     {
@@ -155,28 +119,6 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
             return str;
         }
     }
-
-
-
-    public static List<Map<String, String>> convertToListOfMaps(String json)
-    {
-        if (StringUtils.isEmpty(json)) {
-            return Collections.emptyList();
-        }
-
-        List<Map<String, String>> listOfMaps = null;
-
-        try {
-            JsonMapper mapper = MapperBuilder.json().build();
-            listOfMaps = mapper.readValue(json, new TypeReference<List<Map<String, String>>>() {});
-        }
-        catch (JsonProcessingException e) {
-            throw new RuntimeException("Unable to convert json string to list of maps: " + e.getMessage(), e);
-        }
-
-        return listOfMaps;
-    }
-
 
 
     public String extractNestedJson(String html) throws IOException

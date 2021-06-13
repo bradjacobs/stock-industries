@@ -1,5 +1,7 @@
 package com.github.bradjacobs.stock.classifications.zacks;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Objects;
@@ -14,13 +16,28 @@ import java.util.Objects;
 })
 public class ZacksRecord implements Comparable<ZacksRecord>
 {
+    @JsonProperty
+    @JsonAlias("Sector Code")
     private int sectorCode;
+
+    @JsonProperty
+    @JsonAlias("Sector Group")
     private String sectorName;
 
+    @JsonProperty
+    @JsonAlias("Medium(M) Industry Code")
     private int mediumIndustryCode;
+
+    @JsonProperty
+    @JsonAlias("Medium(M) Industry Group")
     private String mediumIndustryName;
 
+    @JsonProperty
+    @JsonAlias("Expanded(X) Industry Code")
     private int expandedIndustryCode;
+
+    @JsonProperty
+    @JsonAlias("Expanded(X) Industry Group")
     private String expandedIndustryName;
 
 
