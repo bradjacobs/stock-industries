@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.serialize.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.serialize.BaseSerializer;
@@ -21,7 +22,6 @@ import java.util.Map;
 
 public class JsonSerializer extends BaseSerializer
 {
-    private static final JsonMapper jsonMapper = MapperBuilder.json().build();
     private final JsonDefinition jsonDefinition;
 
     public JsonSerializer(JsonDefinition jsonDefinition)
@@ -41,15 +41,12 @@ public class JsonSerializer extends BaseSerializer
     {
         Class<?> clazz = identifyClass(objectList);
 
-        if (! this.jsonDefinition.isIncludeDescription()) {
-            jsonMapper.addMixIn(clazz, NoDescriptionMixin.class);
-        }
+        JsonMapper jsonMapper = MapperBuilder.json().setClazz(clazz).setIncludeLongDescription(this.jsonDefinition.isIncludeDescription()).build();
 
         String jsonString = null;
 
-
         if (this.jsonDefinition.isTree()) {
-            jsonString = serializeObjectsToTree(objectList);
+            jsonString = serializeObjectsToTree(jsonMapper, objectList);
         }
         else {
             //  note:  jsonDefinition.getJsonKeyName()  currently not used for this case.
@@ -61,18 +58,17 @@ public class JsonSerializer extends BaseSerializer
 
 
     // todo - most likely will move this
-    public <T> List<Map<String,String>> convertToListOfMaps(List<T> objectList) throws IOException
+    protected <T> List<Map<String,String>> convertToListOfMaps(JsonMapper jsonMapper, List<T> objectList) throws IOException
     {
         String jsonData = jsonMapper.writeValueAsString(objectList);
-        List<Map<String, String>> listOfMaps = jsonMapper.readValue(jsonData, new TypeReference<List<Map<String, String>>>() {});
-        return listOfMaps;
+        return jsonMapper.readValue(jsonData, new TypeReference<List<Map<String, String>>>() {});
     }
 
 
 
-    protected <T> String serializeObjectsToTree(List<T> objectList) throws IOException
+    protected <T> String serializeObjectsToTree(JsonMapper jsonMapper, List<T> objectList) throws IOException
     {
-        List<Map<String, String>> listOfMaps = convertToListOfMaps(objectList);
+        List<Map<String, String>> listOfMaps = convertToListOfMaps(jsonMapper, objectList);
         List<SectorNode> sectorNodes = createCanonicalJsonTree(listOfMaps);
 
         String[] headerRow = new ArrayList<>(listOfMaps.get(0).keySet()).toArray(new String[0]);

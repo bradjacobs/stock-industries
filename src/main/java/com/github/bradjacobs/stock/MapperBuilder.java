@@ -25,6 +25,18 @@ public class MapperBuilder
     public static class JsonMapperBuilder {
         private boolean indentOutput = true;   // default to pretty mode
         private boolean suppressNullArrays = true;
+        private boolean includeLongDescription = true;
+        private Class clazz = null;
+
+        public JsonMapperBuilder setIncludeLongDescription(boolean includeLongDescription) {
+            this.includeLongDescription = includeLongDescription;
+            return this;
+        }
+
+        public JsonMapperBuilder setClazz(Class clazz) {
+            this.clazz = clazz;
+            return this;
+        }
 
         public JsonMapperBuilder setIndentOutput(boolean indentOutput) {
             this.indentOutput = indentOutput;
@@ -46,6 +58,15 @@ public class MapperBuilder
                 // avoid marshalling out an null array.
                 mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             }
+
+            if (! includeLongDescription) {
+                // if don't want long description, than add a MixIn to suppress it
+                if (this.clazz == null) {
+                    throw new IllegalArgumentException("The Clazz must be set when includeLongDescription = false");
+                }
+                mapper.addMixIn(clazz, NoDescriptionMixin.class);
+            }
+
             return mapper;
         }
     }

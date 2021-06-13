@@ -76,11 +76,4 @@ abstract public class BaseSerializer
         }
     }
 
-
-    // Mixin used to suppress serialization of 'full descriptions'
-    protected static abstract class NoDescriptionMixin {
-        @JsonIgnore abstract public String getDescription();
-        @JsonIgnore abstract public String getDefinition();
-    }
-
 }

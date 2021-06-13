@@ -18,10 +18,30 @@ public class MainDriver
 {
     // todo - add in the permid column for the TRBC for the csv.
 
+
     public static void main(String[] args) throws Exception
     {
         // still in demo-mode.....
+        MainDriver driver = new MainDriver();
+        driver.generateAllSources();
+    }
 
+
+    // set to true if want to create 'long description' output files, even if the data source doesn't have any.
+    private final boolean serializeEmptyLongDescriptionFiles;
+
+    public MainDriver() {
+        this(false);
+    }
+
+    public MainDriver(boolean serializeEmptyLongDescriptionFiles) {
+        this.serializeEmptyLongDescriptionFiles = serializeEmptyLongDescriptionFiles;
+    }
+
+
+
+    public void generateAllSources() throws Exception
+    {
         List<DataDefinition> dataDefinitions = createPermutations();
 
         File outputDirectory = new File("./output");
@@ -31,7 +51,6 @@ public class MainDriver
                 throw new InternalError("Unable to create output directory.");
             }
         }
-
 
         for (Classification classification : Classification.values())
         {
@@ -45,16 +64,34 @@ public class MainDriver
                 BaseSerializer serializer = SerializerFactory.createSerializer(dataDefinition);
 
                 String fileName = serializer.generateFileName(classification);
-                File outFile = new File(outputDirectory, fileName);
 
-                serializer.serializeToFile(outFile, recordList);
+                if (shouldSerialzeFile(classification, fileName))
+                {
+                    File outFile = new File(outputDirectory, fileName);
+                    serializer.serializeToFile(outFile, recordList);
+                }
             }
         }
     }
 
 
-    // todo - comments + documentation for below
+    // a little kludgy...  come back to this
+    private boolean shouldSerialzeFile(Classification classification, String fileName)
+    {
+        // for the case of
+        //   1. classificaiton dosn't have long descriptions available
+        //   2. configured to not write long description files if not available
+        //   3. this file is a long description file (based on file name)
+        // then skip
+        if (!serializeEmptyLongDescriptionFiles && !classification.isLongDescriptionAvailable() && fileName.contains("_desc")) {
+            return false;
+        }
 
+        return true;
+    }
+
+
+    // todo - comments + documentation for below
 
     private static List<DataDefinition> createPermutations() {
         List<DataDefinition> resultList = new ArrayList<>();
