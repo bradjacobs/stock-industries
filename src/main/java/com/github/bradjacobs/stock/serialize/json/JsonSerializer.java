@@ -1,9 +1,8 @@
 package com.github.bradjacobs.stock.serialize.json;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.serialize.BaseSerializer;
 import com.github.bradjacobs.stock.serialize.canonical.CanonicalHeaderUpdater;
@@ -22,6 +21,7 @@ import java.util.Map;
 
 public class JsonSerializer extends BaseSerializer
 {
+    private static final JsonMapper jsonMapper = MapperBuilder.json().build();
     private final JsonDefinition jsonDefinition;
 
     public JsonSerializer(JsonDefinition jsonDefinition)
@@ -40,7 +40,6 @@ public class JsonSerializer extends BaseSerializer
     protected <T> String serializeObjects(List<T> objectList) throws IOException
     {
         Class<?> clazz = identifyClass(objectList);
-        JsonMapper jsonMapper = createJsonMapper();
 
         if (! this.jsonDefinition.isIncludeDescription()) {
             jsonMapper.addMixIn(clazz, NoDescriptionMixin.class);
@@ -64,7 +63,6 @@ public class JsonSerializer extends BaseSerializer
     // todo - most likely will move this
     public <T> List<Map<String,String>> convertToListOfMaps(List<T> objectList) throws IOException
     {
-        JsonMapper jsonMapper = createJsonMapper();
         String jsonData = jsonMapper.writeValueAsString(objectList);
         List<Map<String, String>> listOfMaps = jsonMapper.readValue(jsonData, new TypeReference<List<Map<String, String>>>() {});
         return listOfMaps;
@@ -166,17 +164,4 @@ public class JsonSerializer extends BaseSerializer
 
         return sectorNodeList;
     }
-
-
-    protected JsonMapper createJsonMapper()
-    {
-        JsonMapper mapper = new JsonMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);  // for now always get pretty indenting
-
-        // note: avoid marshalling out an empty array.
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-        return mapper;
-    }
-
 }

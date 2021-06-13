@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.serialize.BaseDeserializer;
 import com.github.bradjacobs.stock.types.CsvDefinition;
 
@@ -32,9 +33,9 @@ public class CsvDeserializer extends BaseDeserializer
 
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
 
-        CsvMapper csvMapper = CsvSerializer.createCsvMapper(false);
+        CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
 
-        ObjectReader objReader = csvMapper.readerFor(clazz).with(schema);
+        ObjectReader objReader = csvObjectMapper.readerFor(clazz).with(schema);
 
         MappingIterator<T> iterator = objReader.readValues(data);
 

@@ -1,7 +1,5 @@
 package com.github.bradjacobs.stock.serialize.csv;
 
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-
 import java.io.IOException;
 import java.util.Arrays;
 

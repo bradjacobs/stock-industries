@@ -12,8 +12,8 @@ package com.github.bradjacobs.stock.classifications.sic;
 //
 // https://www.dietrich-direct.com/SIC-Code-Reference-Access.htm
 
-import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 
 import java.io.IOException;

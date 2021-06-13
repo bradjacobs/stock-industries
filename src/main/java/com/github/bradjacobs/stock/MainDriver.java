@@ -35,10 +35,6 @@ public class MainDriver
 
         for (Classification classification : Classification.values())
         {
-//            if (! classification.equals(Classification.GICS)) {
-//                continue;
-//            }
-
             System.out.println("Creating files for: " + classification);
 
             DataConverter converter = DataConverterFactory.createDataConverter(classification);

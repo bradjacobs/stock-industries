@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.classifications.nasdaq;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.util.DownloadUtil;
@@ -45,7 +46,7 @@ public class NasdaqDataConverter extends BaseDataConverter<NasdaqRecord>
     {
         String json = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
 
-        JsonMapper mapper = new JsonMapper();
+        JsonMapper mapper = MapperBuilder.json().build();
         String innerRowsJson = mapper.writeValueAsString(mapper.readTree(json).get("data").get("rows"));
         List<Map<String,String>> listOfMaps = mapper.readValue(innerRowsJson, new TypeReference<List<Map<String, String>>>() {});
 

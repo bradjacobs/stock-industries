@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
-import com.github.bradjacobs.stock.serialize.csv.CsvSerializer;
+import com.github.bradjacobs.stock.classifications.Classification;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +29,7 @@ public class IcbDataConverter extends BaseDataConverter<IcbRecord>
         String csvText = excelReader.createCsvText(getClassification().getSourceFileLocation());
 
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
-        CsvMapper csvObjectMapper = CsvSerializer.createCsvMapper(false);
+        CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
         ObjectReader objReader = csvObjectMapper.readerFor(IcbRecord.class).with(schema);
 
         MappingIterator<IcbRecord> iterator = objReader.readValues(csvText);

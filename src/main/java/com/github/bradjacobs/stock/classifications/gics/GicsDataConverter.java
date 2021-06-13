@@ -2,8 +2,8 @@ package com.github.bradjacobs.stock.classifications.gics;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
-import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.Classification;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;

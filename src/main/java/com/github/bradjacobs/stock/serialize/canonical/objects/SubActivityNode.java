@@ -2,8 +2,6 @@ package com.github.bradjacobs.stock.serialize.canonical.objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 public class SubActivityNode
 {
     @JsonProperty("subActivityId")

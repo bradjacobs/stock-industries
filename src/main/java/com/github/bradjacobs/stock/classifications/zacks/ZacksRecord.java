@@ -2,6 +2,8 @@ package com.github.bradjacobs.stock.classifications.zacks;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.Objects;
+
 @JsonPropertyOrder( {
         "sectorCode",
         "sectorName",
@@ -96,4 +98,29 @@ public class ZacksRecord implements Comparable<ZacksRecord>
         return Integer.compare(this.expandedIndustryCode, other.expandedIndustryCode);
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (!(o instanceof ZacksRecord))
+        {
+            return false;
+        }
+        ZacksRecord that = (ZacksRecord) o;
+        return sectorCode == that.sectorCode &&
+            mediumIndustryCode == that.mediumIndustryCode &&
+            expandedIndustryCode == that.expandedIndustryCode &&
+            sectorName.equals(that.sectorName) &&
+            mediumIndustryName.equals(that.mediumIndustryName) &&
+            expandedIndustryName.equals(that.expandedIndustryName);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(sectorCode, sectorName, mediumIndustryCode, mediumIndustryName, expandedIndustryCode, expandedIndustryName);
+    }
 }

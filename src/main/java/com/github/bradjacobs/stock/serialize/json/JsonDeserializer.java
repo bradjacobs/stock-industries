@@ -1,12 +1,11 @@
 package com.github.bradjacobs.stock.serialize.json;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.bradjacobs.stock.GenericNode;
+import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.serialize.BaseDeserializer;
 import com.github.bradjacobs.stock.serialize.canonical.CanonicalHeaderUpdater;
 import com.github.bradjacobs.stock.types.JsonDefinition;
@@ -25,7 +24,8 @@ public class JsonDeserializer extends BaseDeserializer
     public JsonDeserializer(JsonDefinition jsonDefinition)
     {
         this.jsonDefinition = jsonDefinition;
-        this.mapper = createJsonMapper();
+        this.mapper = MapperBuilder.json().build();
+
     }
 
     @Override
@@ -90,17 +90,6 @@ public class JsonDeserializer extends BaseDeserializer
     }
 
 
-    // todo - method is a dupicate copy... come back and address
-    protected JsonMapper createJsonMapper()
-    {
-        JsonMapper mapper = new JsonMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);  // for now always get pretty indenting
-
-        // note: avoid marshalling out an empty array.
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-        return mapper;
-    }
 
 
     protected <T> String[] getHeaderFields(Class<T> clazz)

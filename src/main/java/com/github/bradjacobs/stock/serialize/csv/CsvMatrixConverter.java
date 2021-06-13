@@ -1,6 +1,7 @@
 package com.github.bradjacobs.stock.serialize.csv;
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.github.bradjacobs.stock.MapperBuilder;
 
 import java.io.IOException;
 
@@ -10,7 +11,8 @@ import java.io.IOException;
  */
 public class CsvMatrixConverter
 {
-    private static final CsvMapper csvArrayMapper = CsvSerializer.createCsvMapper(true);
+    private static final CsvMapper csvArrayMapper = MapperBuilder.csv().setArrayWrap(true).build();
+
 
     public static String[][] convertToMatrix(String csv) throws IOException
     {

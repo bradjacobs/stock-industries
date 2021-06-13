@@ -3,8 +3,9 @@ package com.github.bradjacobs.stock.classifications.zacks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -166,7 +167,7 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
         List<Map<String, String>> listOfMaps = null;
 
         try {
-            JsonMapper mapper = new JsonMapper();
+            JsonMapper mapper = MapperBuilder.json().build();
             listOfMaps = mapper.readValue(json, new TypeReference<List<Map<String, String>>>() {});
         }
         catch (JsonProcessingException e) {

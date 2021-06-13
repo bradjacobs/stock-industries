@@ -1,7 +1,6 @@
 package com.github.bradjacobs.stock.serialize.canonical.objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.bradjacobs.stock.serialize.canonical.objects.GroupNode;
 
 import java.util.ArrayList;
 import java.util.List;

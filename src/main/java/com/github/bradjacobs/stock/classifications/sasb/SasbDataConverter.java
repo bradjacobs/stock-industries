@@ -1,7 +1,7 @@
 package com.github.bradjacobs.stock.classifications.sasb;
 
-import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
+import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;

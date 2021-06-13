@@ -13,10 +13,6 @@ import com.github.bradjacobs.stock.classifications.sic.SicDataConverter;
 import com.github.bradjacobs.stock.classifications.trbc.TrbcDataConverter;
 import com.github.bradjacobs.stock.classifications.zacks.ZacksDataConverter;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 public class DataConverterFactory
 {
     private DataConverterFactory() { }
