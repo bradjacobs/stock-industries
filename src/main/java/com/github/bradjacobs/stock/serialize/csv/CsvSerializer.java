@@ -46,24 +46,6 @@ public class CsvSerializer extends BaseSerializer
     }
 
 
-//    public <T> String[][] serializeToMatrix(List<T> objectList) throws IOException
-//    {
-//        String serializedString = serialize(objectList);
-//        return serializeToMatrix(serializedString);
-//    }
-//
-//    // todo: fix - this method is in more than 1 location.
-//    protected String[][] serializeToMatrix(String csv) throws IOException
-//    {
-//        if (csv.isEmpty()) {
-//            return new String[0][0];
-//        }
-//
-//        CsvMapper csvArrayMapper = createCsvMapper(true);
-//        return csvArrayMapper.readValue(csv, String[][].class);
-//    }
-
-
     // TODO... fix below...it's kludgy
     public static CsvMapper createCsvMapper(boolean isArrayMapper)
     {
