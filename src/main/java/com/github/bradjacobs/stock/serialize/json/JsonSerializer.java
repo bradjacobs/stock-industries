@@ -45,18 +45,18 @@ public class JsonSerializer extends BaseSerializer
             jsonMapper.addMixIn(clazz, NoDescriptionMixin.class);
         }
 
-        String jsonData = null;
+        String jsonString = null;
 
 
         if (this.jsonDefinition.isTree()) {
-            jsonData = serializeObjectsToTree(jsonMapper, objectList);
+            jsonString = serializeObjectsToTree(objectList);
         }
         else {
             //  note:  jsonDefinition.getJsonKeyName()  currently not used for this case.
-            jsonData = jsonMapper.writeValueAsString(objectList);
+            jsonString = jsonMapper.writeValueAsString(objectList);
         }
 
-        return jsonData;
+        return jsonString;
     }
 
 
@@ -70,7 +70,7 @@ public class JsonSerializer extends BaseSerializer
 
 
 
-    protected <T> String serializeObjectsToTree(JsonMapper jsonMapper, List<T> objectList) throws IOException
+    protected <T> String serializeObjectsToTree(List<T> objectList) throws IOException
     {
         List<Map<String, String>> listOfMaps = convertToListOfMaps(objectList);
         List<SectorNode> sectorNodes = createCanonicalJsonTree(listOfMaps);
