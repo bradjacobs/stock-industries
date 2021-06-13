@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.classifications.naics;
 
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.github.bradjacobs.stock.classifications.napcs.NapcsRecord;
 
 @JsonPropertyOrder( {
     "sectorId",
@@ -16,15 +17,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class NaicsRecord
 {
-    private String sectorId;
-    private String sectorName;
-    private String subSectorId;
-    private String subSectorName;
-    private String industryGroupId;
-    private String industryGroupName;
-    private String industryId;
-    private String industryName;
-    private String description;
+    private String sectorId = "";
+    private String sectorName = "";
+    private String subSectorId = "";
+    private String subSectorName = "";
+    private String industryGroupId = "";
+    private String industryGroupName = "";
+    private String industryId = "";
+    private String industryName = "";
+    private String description = "";
 
     public NaicsRecord()
     {
@@ -120,18 +121,30 @@ public class NaicsRecord
         this.description = description;
     }
 
-    public NaicsRecord copy()
+    public NaicsRecord copy(int levelsToCopy)
     {
         NaicsRecord newRecord = new NaicsRecord();
-        newRecord.sectorId = this.sectorId;
-        newRecord.sectorName = this.sectorName;
-        newRecord.subSectorId = this.subSectorId;
-        newRecord.subSectorName = this.subSectorName;
-        newRecord.industryGroupId = this.industryGroupId;
-        newRecord.industryGroupName = this.industryGroupName;
-        newRecord.industryId = this.industryId;
-        newRecord.industryName = this.industryName;
-        newRecord.description = this.description;
+        if (levelsToCopy >= 1) {
+            newRecord.sectorId = this.sectorId;
+            newRecord.sectorName = this.sectorName;
+        }
+        if (levelsToCopy >= 2) {
+            newRecord.subSectorId = this.subSectorId;
+            newRecord.subSectorName = this.subSectorName;
+        }
+        if (levelsToCopy >= 3) {
+            newRecord.industryGroupId = this.industryGroupId;
+            newRecord.industryGroupName = this.industryGroupName;
+        }
+        if (levelsToCopy >=4) {
+            newRecord.industryId = this.industryId;
+            newRecord.industryName = this.industryName;
+
+            // note: only care about the long description at the bottom level
+            newRecord.description = this.description;
+        }
+
         return newRecord;
     }
+
 }
