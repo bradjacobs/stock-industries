@@ -12,7 +12,7 @@ import java.io.IOException;
 public class CsvMatrixConverter
 {
     private static final CsvMapper csvArrayMapper = MapperBuilder.csv().setArrayWrap(true).build();
-
+    private static final CsvMatrixValidator csvMatrixValiator = new CsvMatrixValidator();
 
     public static String[][] convertToMatrix(String csv) throws IOException
     {
@@ -24,7 +24,7 @@ public class CsvMatrixConverter
 
     public static String convertToCsv(String[][] csvMatrix) throws IOException
     {
-        validateMatrixInput(csvMatrix);
+        csvMatrixValiator.validateMatrix(csvMatrix);
 
         if (csvMatrix.length == 0) {
             return "";  // tbd to allow this
@@ -32,23 +32,5 @@ public class CsvMatrixConverter
         return csvArrayMapper.writeValueAsString(csvMatrix);
     }
 
-
-
-    // todo - fix redundant method
-    private static void validateMatrixInput(String[][] dataArray) {
-        if (dataArray == null) {
-            throw new IllegalArgumentException("dataArray cannot be null.");
-        }
-
-        if (dataArray.length == 0) {
-            throw new IllegalArgumentException("cannot convert array with zero rows.");
-        }
-
-        String[] firstRow = dataArray[0];
-        if (firstRow == null || firstRow.length == 0) {
-            throw new IllegalArgumentException("cannot convert array with no columns.");
-        }
-        // add others as needed
-    }
 
 }

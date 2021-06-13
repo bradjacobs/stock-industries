@@ -9,6 +9,7 @@ import java.util.Arrays;
 //   3 add javadocs to explain this class
 public class CsvFullSparseConverter
 {
+    private static final CsvMatrixValidator csvMatrixValiator = new CsvMatrixValidator();
 
     public String sparseifyCsvData(String csvData) throws IOException {
         return convertCsvData(csvData, true);
@@ -36,7 +37,7 @@ public class CsvFullSparseConverter
 
     private String[][] convertMatrix(String[][] dataArray, boolean makeSparse)
     {
-        validateInput(dataArray);
+        csvMatrixValiator.validateMatrix(dataArray);
 
         int rowCount = dataArray.length;
         int colCount = dataArray[0].length;
@@ -80,24 +81,6 @@ public class CsvFullSparseConverter
         }
 
         return resultDataArray;
-    }
-
-
-    private void validateInput(String[][] dataArray) {
-        if (dataArray == null) {
-            throw new IllegalArgumentException("dataArray cannot be null.");
-        }
-
-        if (dataArray.length == 0) {
-            throw new IllegalArgumentException("cannot convert array with zero rows.");
-        }
-
-        String[] firstRow = dataArray[0];
-        if (firstRow == null || firstRow.length == 0) {
-            throw new IllegalArgumentException("cannot convert array with no columns.");
-        }
-
-        // add others as needed
     }
 
 }
