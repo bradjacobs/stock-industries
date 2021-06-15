@@ -14,14 +14,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class SicRecord
 {
-    private String divisionId;
-    private String divisionName;
-    private String majorGroupId;
-    private String majorGroupName;
-    private String industryGroupId;
-    private String industryGroupName;
-    private String industryId;
-    private String industryName;
+    private String divisionId = "";
+    private String divisionName = "";
+    private String majorGroupId = "";
+    private String majorGroupName = "";
+    private String industryGroupId = "";
+    private String industryGroupName = "";
+    private String industryId = "";
+    private String industryName = "";
 
 
     public SicRecord() { }

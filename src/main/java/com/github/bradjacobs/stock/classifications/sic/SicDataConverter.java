@@ -23,6 +23,13 @@ import java.util.List;
 
 public class SicDataConverter extends BaseDataConverter<SicRecord>
 {
+    private static final String DIVISION_NAME_PREFIX = "Division ";
+
+    private static final int DIVISION_COLUMN_INDEX = 0;
+    private static final int TWO_DIGIT_COLUMN_INDEX = 1;
+    private static final int THREE_DIGIT_COLUMN_INDEX = 2;
+    private static final int FOUR_DIGIT_COLUMN_INDEX = 3;
+
     @Override
     public Classification getClassification()
     {
@@ -35,76 +42,90 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
         String[] lines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 
         List<SicRecord> recordList = new ArrayList<>();
-
-        String prevDivisionId = "";
-
-        String divisionId = "";
-        String divisionName = "";
-        String majorGroupId = "";
-        String majorGroupName = "";
-        String industryGroupId = "";
-        String industryGroupName = "";
-        String industryId = "";
-        String industryName = "";
-
+        SicRecord currentRecord = new SicRecord();
 
         for (String line : lines)
         {
             String[] rowData = line.split(" ");
 
-            divisionId = rowData[0];
+            String divisionId = rowData[0];
 
             if (divisionId.length() != 1) {
                 // all data entries have a 1-letter first value
                 continue;
             }
 
-            if (!divisionId.equals(prevDivisionId))
-            {
-                String subStringToFind = "Division " + divisionId + " ";
-                int index = line.indexOf(subStringToFind);
-                if (index > 0) {
-                    divisionName = line.substring(index + subStringToFind.length());
-                    divisionName = cleanValue(divisionName);
-                }
-                prevDivisionId = divisionId;
+            if (line.contains(DIVISION_NAME_PREFIX)) {
+                // it's a special case new division entry
+                currentRecord.setDivisionId(divisionId);
+                currentRecord.setDivisionName(cleanValue(line));
             }
-            else
-            {
-                String twoDigitValue = rowData[1];
-                String threeDigitValue = rowData[2];
-                String fourDigitValue = rowData[3];
+            else {
+                String fourDigitValue = rowData[FOUR_DIGIT_COLUMN_INDEX];
+
+                try {
+                    Integer intValue = Integer.valueOf(fourDigitValue);
+                }
+                catch (Exception e) {
+                    int kjkj = 33333;
+                }
+
 
                 // use the 'rest of the array' to reconstruct the name value
                 List<String> dataList = Arrays.asList(rowData);
-                List<String> subList = dataList.subList(4, dataList.size());
+                List<String> subList = dataList.subList(FOUR_DIGIT_COLUMN_INDEX+1, dataList.size());
                 String[] subArray = subList.toArray(new String[0]);
                 String name = String.join(" ", subArray);
 
                 name = cleanValue(name);
 
-                if (!fourDigitValue.endsWith("0")) {
-                    // industries have non-zero 4th digit
-                    industryId = fourDigitValue;
-                    industryName = name;
-
-                    SicRecord record = new SicRecord(divisionId, divisionName, majorGroupId, majorGroupName, industryGroupId, industryGroupName, industryId, industryName);
-                    recordList.add(record);
+                if (isMajorGroupId(fourDigitValue)) {
+                    currentRecord.setMajorGroupId(fourDigitValue);
+                    currentRecord.setMajorGroupName(name);
                 }
-                else if (!threeDigitValue.endsWith("0")) {
-                    // industryGroups have non-zero 3rd digit
-                    industryGroupId = fourDigitValue;
-                    industryGroupName = name;
+                else if (isIndustryGroupId(fourDigitValue)) {
+                    currentRecord.setIndustryGroupId(fourDigitValue);
+                    currentRecord.setIndustryGroupName(name);
+                }
+                else if (isIndustryId(fourDigitValue)) {
+                    currentRecord.setIndustryId(fourDigitValue);
+                    currentRecord.setIndustryName(name);
+                    recordList.add(currentRecord);
+                    currentRecord = currentRecord.copy();
                 }
                 else {
-                    majorGroupId = fourDigitValue;
-                    majorGroupName = name;
+                    throw new InternalError("Illegal id detected: " + fourDigitValue);
                 }
             }
         }
-
         return recordList;
     }
 
 
+    private boolean isMajorGroupId(String id) {
+        return id.endsWith("00");
+    }
+
+    private boolean isIndustryGroupId(String id) {
+        return (id.endsWith("0") && !isMajorGroupId(id));
+    }
+
+    private boolean isIndustryId(String id) {
+        return !id.endsWith("0");
+    }
+
+    @Override
+    protected String cleanValue(String input)
+    {
+        // if starts with "Division ", then it's a new division,
+        //  so remove redundant prefix.   Add an extra "1" to ALSO remove the letter
+        //  following the prefix
+
+        int divisionPrefixIndex = input.indexOf(DIVISION_NAME_PREFIX);
+        if (divisionPrefixIndex > 0) {
+            input = input.substring(divisionPrefixIndex + DIVISION_NAME_PREFIX.length() + 1);
+        }
+
+        return super.cleanValue(input);
+    }
 }
