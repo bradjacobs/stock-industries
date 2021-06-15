@@ -7,7 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 {
@@ -29,9 +32,13 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
     {
         String[] pdfFileLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 
-        List<MgecsRecord> recordList = new ArrayList<>();
+        // UPDATE:
+        //    come to find out that specific whitespace placement can cause the PdfParser to mess up the line order.
+        //    thus each 'part' will be temporary saved, then everything reassmabled afterwards.
+        Map<String, String> sectorNameMap = new HashMap<>();
+        Map<String, String> groupNameMap = new HashMap<>();
+        Map<String, MgecsRecord> industryToRecordMap = new TreeMap<>();  // keep keys sorted
 
-        MgecsRecord currentRecord = null;
 
         // search for line where the data 'actually' starts.
         int firstDataLineIndex = findFirstDataRowIndex(pdfFileLines);
@@ -53,12 +60,12 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
                 String name = "";
 
                 // note:  page numbers are example of case that would pass 'isNumeric' check, but not pass if-check below
-                if (id.length() == SECTOR_ID_LENGTH || id.length() == GROUP_ID_LENGTH || id.length() == INDUSTRY_ID_LENGTH)
+                if (isValidIdLength(id))
                 {
                     name = pdfFileLines[++i];  // don't trim (..yet)
 
                     // note: the name affiliated w/ the group category can be split across multiple lines
-                    if (id.length() == GROUP_ID_LENGTH)
+                    if (id.length() == SECTOR_ID_LENGTH || id.length() == GROUP_ID_LENGTH)
                     {
                         // SIDE: this is squirrelly
                         //   Problem is that sometimes text goes to next line and the '\n' is the ONLY space character b/w 2 words.
@@ -89,44 +96,46 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
                     if (id.length() == SECTOR_ID_LENGTH)
                     {
-                        if (currentRecord != null) {
-                            recordList.add(currentRecord);
-                        }
-                        currentRecord = new MgecsRecord();
-                        currentRecord.setSectorId(id);
-                        currentRecord.setSectorName(name);
+                        sectorNameMap.put(id, name);
                     }
                     else if (id.length() == GROUP_ID_LENGTH)
                     {
-                        if (currentRecord.getIndustryGroupId() != null) {
-                            recordList.add(currentRecord);
-                            currentRecord = currentRecord.copy();
-                            currentRecord.setIndustryId(null);
-                            currentRecord.setIndustryName(null);
-                        }
-                        currentRecord.setIndustryGroupId(id);
-                        currentRecord.setIndustryGroupName(name);
+                        groupNameMap.put(id, name);
                     }
                     else if (id.length() == INDUSTRY_ID_LENGTH)
                     {
-                        if (currentRecord.getIndustryId() != null) {
-                            recordList.add(currentRecord);
-                            currentRecord = currentRecord.copy();
-                        }
-
                         // NOTE: sub-optimal soln b/c future lines are examined in getDescription method as well as this loop.
                         //   (even though problem exists, not worth addressing at present)
                         String desc = getDescription(pdfFileLines, i+1);
-                        currentRecord.setDescription(desc);
 
-                        currentRecord.setIndustryId(id);
-                        currentRecord.setIndustryName(name);
+                        MgecsRecord record = new MgecsRecord();
+                        record.setDescription(desc);
+                        record.setIndustryId(id);
+                        record.setIndustryName(name);
+
+                        industryToRecordMap.put(id, record);
                     }
                 }
             }
         }
 
-        recordList.add(currentRecord);
+        // now the industryToRecordMap.values() have all of the records,
+        //   but need to backfill in the sector and group information.
+        List<MgecsRecord> recordList = new ArrayList<>(industryToRecordMap.values());
+        for (MgecsRecord record : recordList)
+        {
+            String industryId = record.getIndustryId();
+
+            // taking advantage that the sector & group ids are alwasy a substring of the industry id.
+            String sectorId = industryId.substring(0, SECTOR_ID_LENGTH);
+            String groupId = industryId.substring(0, GROUP_ID_LENGTH);
+
+            record.setSectorId(sectorId);
+            record.setSectorName(sectorNameMap.get(sectorId));
+            record.setIndustryGroupId(groupId);
+            record.setIndustryGroupName(groupNameMap.get(groupId));
+        }
+
 
         // sanity check
         for (MgecsRecord naicsRecord : recordList)
@@ -143,6 +152,14 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
         }
 
         return recordList;
+    }
+
+    private boolean isValidIdLength(String id) {
+        int idLength = id.length();
+        if (idLength == SECTOR_ID_LENGTH || idLength == GROUP_ID_LENGTH || idLength == INDUSTRY_ID_LENGTH) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -218,6 +235,5 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
         return cleanWhitespace(sb.toString());
     }
-
 
 }
