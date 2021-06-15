@@ -12,7 +12,7 @@ public enum Classification
     NAPCS("napcs", false,"https://www.census.gov/naics/napcs/structure/2017NAPCSStructure.xlsx"),
     NASDAQ("nasdaq", false,"https://api.nasdaq.com/api/screener/stocks?limit=0&download=true"), // **
     SASB("sasb", true,"https://www.sasb.org/find-your-industry/"), // **
-    SIC("sic", false,"https://www.bls.gov/oes/special.requests/oessic87.pdf"),
+    SIC("sic", false,"https://www.osha.gov/data/sic-manual"),
     TRBC("trbc", false,"https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf"),  // aka Refinitiv
     ZACKS("zacks", false,"https://www.zacks.com/zrank/sector-industry-classification.php");
 
