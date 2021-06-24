@@ -121,7 +121,7 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
     }
 
 
-    public String extractNestedJson(String html) throws IOException
+    public String extractNestedJson(String html)
     {
         String[] lines = html.split("\n");
 

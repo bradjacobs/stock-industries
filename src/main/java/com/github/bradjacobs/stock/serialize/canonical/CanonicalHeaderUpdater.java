@@ -158,7 +158,7 @@ public final class CanonicalHeaderUpdater
     private static final String GENERIC_NAME_HEADER = "name";
     private static final String GENERIC_CHILDREN_HEADER = "children";
 
-    private static Map<String,String> CANONICAL_TO_GENERIC_MAP = new HashMap<String,String>(){{
+    private static final Map<String,String> CANONICAL_TO_GENERIC_MAP = new HashMap<String,String>(){{
         put(CANONICAL_LEVEL_1_ID_HEADER, GENERIC_ID_HEADER);
         put(CANONICAL_LEVEL_1_NAME_HEADER, GENERIC_NAME_HEADER);
         put(CANONICAL_LEVEL_1_CHILDREN_HEADER, GENERIC_CHILDREN_HEADER);

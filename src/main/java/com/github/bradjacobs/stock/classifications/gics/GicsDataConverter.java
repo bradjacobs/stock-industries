@@ -70,10 +70,7 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
 
     private boolean shouldSkip(GicsRecord record)
     {
-        if (SKIP_DISCONTINUED_RECORDS && isDiscontinued(record)) {
-            return true;
-        }
-        return false;
+        return SKIP_DISCONTINUED_RECORDS && isDiscontinued(record);
     }
 
     private boolean isDiscontinued(GicsRecord record) {

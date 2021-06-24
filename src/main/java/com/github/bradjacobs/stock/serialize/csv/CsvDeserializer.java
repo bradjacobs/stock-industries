@@ -39,9 +39,7 @@ public class CsvDeserializer extends BaseDeserializer
 
         MappingIterator<T> iterator = objReader.readValues(data);
 
-        List<T> inputRecords = iterator.readAll();
-
-        return inputRecords;
+        return iterator.readAll();
     }
 
 }

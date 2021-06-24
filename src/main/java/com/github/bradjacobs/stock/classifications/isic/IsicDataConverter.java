@@ -40,9 +40,7 @@ public class IsicDataConverter extends BaseDataConverter<IsicRecord>
         ObjectReader objReader = csvObjectMapper.readerFor(IsicRecord.class).with(schema);
 
         MappingIterator<IsicRecord> iterator = objReader.readValues(csvText);
-        List<IsicRecord> recordList = iterator.readAll();
-
-        return recordList;
+        return iterator.readAll();
     }
 
 }

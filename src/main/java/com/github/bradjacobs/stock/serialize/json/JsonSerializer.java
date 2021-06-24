@@ -43,7 +43,7 @@ public class JsonSerializer extends BaseSerializer
 
         JsonMapper jsonMapper = MapperBuilder.json().setClazz(clazz).setIncludeLongDescription(this.jsonDefinition.isIncludeDescription()).build();
 
-        String jsonString = null;
+        String jsonString;
 
         if (this.jsonDefinition.isTree()) {
             jsonString = serializeObjectsToTree(jsonMapper, objectList);
@@ -94,7 +94,7 @@ public class JsonSerializer extends BaseSerializer
     }
 
 
-    private List<SectorNode> createCanonicalJsonTree(List<Map<String,String>> listOfMaps) throws IOException
+    private List<SectorNode> createCanonicalJsonTree(List<Map<String,String>> listOfMaps)
     {
         List<SectorNode> sectorNodeList = new ArrayList<>();
         SectorNode currentSector = new SectorNode("", "");

@@ -50,8 +50,4 @@ public class SectorNode
         groups.add(groupNode);
     }
 
-//    public void setGroups(List<GroupNode> groups) {
-//        this.groups = groups;
-//    }
-
 }

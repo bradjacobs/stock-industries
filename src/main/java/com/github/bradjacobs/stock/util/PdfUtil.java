@@ -14,8 +14,6 @@ public class PdfUtil
         String[] lines = null;
         try (PDDocument document = PDDocument.load(inputStream)) {
 
-            document.getClass();
-
             if (!document.isEncrypted()) {
 
                 //PDFTextStripperByArea stripper = new PDFTextStripperByArea();
