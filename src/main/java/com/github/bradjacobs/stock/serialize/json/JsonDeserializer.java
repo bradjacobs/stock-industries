@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.github.bradjacobs.stock.GenericNode;
 import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.serialize.BaseDeserializer;
 import com.github.bradjacobs.stock.serialize.canonical.CanonicalHeaderUpdater;
@@ -144,10 +143,10 @@ public class JsonDeserializer extends BaseDeserializer
         private void createFlatMapList(GenericNode node, List<String> parentRowData)
         {
             List<String> rowData = new ArrayList<>(parentRowData);
-            rowData.add(node.getId());
-            rowData.add(node.getName());
+            rowData.add(node.id);
+            rowData.add(node.name);
 
-            List<GenericNode> children = node.getChildren();
+            List<GenericNode> children = node.children;
             if (children != null && children.size() > 0) {
                 for (GenericNode child : children) {
                     createFlatMapList(child, rowData);
@@ -168,4 +167,13 @@ public class JsonDeserializer extends BaseDeserializer
     }
 
 
+    // NOTE: right now this class is only used for some special deserialize cases.  May ultimately get removed.
+    private static class GenericNode
+    {
+        public String id;
+        public String name;
+        public List<GenericNode> children = new ArrayList<>();
+
+        public GenericNode() { }
+    }
 }
