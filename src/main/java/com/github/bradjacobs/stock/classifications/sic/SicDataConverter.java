@@ -22,6 +22,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,6 +149,9 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
                 }
             }
 
+            Map<String,String> currentPageIndustryIdToNameMap = new HashMap<>();
+
+            // now fetch all the industries.   note: these elements are _not_ nested inside the industryGroup elements.
             Elements industryLinkElements = industryGroupDoc.getElementsByAttributeValueStarting("title", majorGroupId);
             for (Element industryLinkElement : industryLinkElements)
             {
@@ -155,6 +159,26 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
                 String industryId = industryLinkTitle.substring(0, 4);
                 String industryName = cleanValue(industryLinkElement.text());
                 industryIdToNameMap.put(industryId, industryName);
+                currentPageIndustryIdToNameMap.put(industryId, industryName);
+            }
+
+            // extra trickery...
+            //   There are some cases where the industry group string was truncated incorrectly
+            //      (e.g. it actually looks incorrect on the original html page)
+            //      (example: "Industry Group 945: Administration Of Veteran's Affairs, Except", from https://www.osha.gov/data/sic-manual/major-group-94
+            //       note it abruptly ends w/ "Except")
+            // Thus will attempt to see if can create a better alternate name (if applicable and available)
+
+            Map<String,String> alternateIndustryGroupMap = createAlternateIndustryGroupTitleMap(currentPageIndustryIdToNameMap);
+            for (Map.Entry<String, String> entry : alternateIndustryGroupMap.entrySet())
+            {
+                String industryGroup = entry.getKey();
+                String industryGroupAlternateTitle = entry.getValue();
+                String industryGroupCurrentTiTle = industryGroupIdToNameMap.get(industryGroup);
+
+                if (industryGroupCurrentTiTle != null && industryGroupAlternateTitle != null && industryGroupAlternateTitle.length() > industryGroupCurrentTiTle.length()) {
+                    industryGroupIdToNameMap.put(industryGroup, industryGroupAlternateTitle);
+                }
             }
         }
 
@@ -189,6 +213,52 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
         }
 
         return sicRecords;
+    }
+
+
+    // todo: come back and refactor b/c even though the method below works, it's a little magical.
+    /**
+     * extra trickery...
+     *    There are some cases where the industry group string is incorrect on the original html page
+     *       (example: "Industry Group 945: Administration Of Veteran's Affairs, Except", from https://www.osha.gov/data/sic-manual/major-group-94
+     *     To partially handle this, observation has shown that if an industry group has EXACTLY ONE industry,
+     *      then the industry group and the industry should have the same name.
+     *     Thus use this fact to 'fix' some incorrect industry groups if possible.
+     *
+     * Given a map of industryIds/titles, return a map of CANDIDATE industryGroupId->title values
+     * @param industryIdToNameMap
+     * @return
+     */
+    private Map<String,String> createAlternateIndustryGroupTitleMap(Map<String,String> industryIdToNameMap)
+    {
+        // create a simple map of industryGroup -> list of its industries.
+        Map<String,List<String>> industryGroupToIndustryMap = new HashMap<>();
+        List<String> industryIds = new ArrayList<>(industryIdToNameMap.keySet());
+
+        for (String industryId : industryIds)
+        {
+            String industryGroup = industryId.substring(0, industryId.length()-1);
+            List<String> industryList = industryGroupToIndustryMap.computeIfAbsent(industryGroup, k -> new ArrayList<>());
+            industryList.add(industryId);
+        }
+
+        // now make a new map of industryGroupId -> title
+        //     which will ONLY be populated if there was only 1 industry for the group.
+        Map<String,String> resultMap = new HashMap<>();
+
+        for (Map.Entry<String, List<String>> entry : industryGroupToIndustryMap.entrySet())
+        {
+            String industryGroupId = entry.getKey();
+            List<String> industryIdList = entry.getValue();
+
+            if (industryIdList.size() == 1) {
+                String industryId = industryIdList.get(0);
+                String industryTitle = industryIdToNameMap.get(industryId);
+                resultMap.put(industryGroupId, industryTitle);
+            }
+        }
+
+        return resultMap;
     }
 
 }
