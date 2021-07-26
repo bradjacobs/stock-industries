@@ -21,6 +21,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,15 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
     private static final String INDUSTRY_GROUP_TITLE_PREFIX = "Industry Group ";
 
     private static final String BASE_URL = "https://www.osha.gov";
+
+
+    // NOTE:  found an actual 'typo' on one of the pages, which interferes w/ the parsing
+    //    specificially incorrect IndustryGroup title on https://www.osha.gov/data/sic-manual/major-group-94
+    //  thus the "fix" is do a special substitution (which is kludgy)
+    //
+    //  map KEY: incorrect string --> VALUE: correct string
+    private static final Map<String,String> INDUSTRY_GROUP_SUBSTITUTION_MAP =
+        Collections.singletonMap("9431 Administration of Public Health Programs", "Industry Group 944: Administration of Social, Human Resource and Income Maintenance Programs");
 
 
     @Override
@@ -106,11 +116,12 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
         {
             String majorGroupId = urlEntry.getKey();
 
+            String url = urlEntry.getValue();
+
             // slight pause to be kind.
             try { Thread.sleep(250L); }
             catch (InterruptedException e) { /* ignore */}
 
-            String url = urlEntry.getValue();
             //System.out.println("Fetching URL: " + url);
 
             String indusryGroupHtml = DownloadUtil.downloadFile(url);
@@ -121,6 +132,13 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
             for (Element pElement : pElements)
             {
                 String text = pElement.text();
+
+                // kludge!!  handling 'typo' on one of the webpages
+                String alternateText = INDUSTRY_GROUP_SUBSTITUTION_MAP.get(text);
+                if (alternateText != null) {
+                    text = alternateText;
+                }
+
                 if (text.startsWith(INDUSTRY_GROUP_TITLE_PREFIX))
                 {
                     int colonIndex = text.indexOf(":");
