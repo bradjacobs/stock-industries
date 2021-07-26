@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder( {
     "sectionId",
     "sectionName",
-    "subSectionid",
+    "subSectionId",
     "subSectionName",
     "divisionId",
     "divisionName",
@@ -26,7 +26,7 @@ public class NapcsRecord
     private String sectionId = "";
     private String sectionName = "";
 
-    private String subSectionid = "";
+    private String subSectionId = "";
     private String subSectionName = "";
 
     private String divisionId = "";
@@ -61,14 +61,14 @@ public class NapcsRecord
         this.sectionName = sectionName;
     }
 
-    public String getSubSectionid()
+    public String getSubSectionId()
     {
-        return subSectionid;
+        return subSectionId;
     }
 
-    public void setSubSectionid(String subSectionid)
+    public void setSubSectionId(String subSectionId)
     {
-        this.subSectionid = subSectionid;
+        this.subSectionId = subSectionId;
     }
 
     public String getSubSectionName()
@@ -169,7 +169,7 @@ public class NapcsRecord
             newRecord.sectionName = this.sectionName;
         }
         if (levelsToCopy >= 2) {
-            newRecord.subSectionid = this.subSectionid;
+            newRecord.subSectionId = this.subSectionId;
             newRecord.subSectionName = this.subSectionName;
         }
         if (levelsToCopy >= 3) {

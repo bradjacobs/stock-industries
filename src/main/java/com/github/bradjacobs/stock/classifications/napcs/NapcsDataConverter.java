@@ -59,7 +59,11 @@ public class NapcsDataConverter extends BaseDataConverter<NapcsRecord>
                 currentRecord.setSectionName(name);
             }
             else if (level == 2) {
-                currentRecord.setSubSectionid(id);
+                if (!currentRecord.getSubSectionId().isEmpty()) {
+                    recordList.add(currentRecord);
+                    currentRecord = currentRecord.copy(level);
+                }
+                currentRecord.setSubSectionId(id);
                 currentRecord.setSubSectionName(name);
             }
             else if (level == 3) {
