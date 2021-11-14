@@ -14,12 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-  NOTE: the 'CSV' file isn't true csv
- */
-
 /**
- *
+ *  NOTE1: the 'CSV' file isn't true csv
+ *  NOTE2: skipping the 'long description' b/c it's crazy long and not very useful.
  */
 public class NaceDataConverter extends BaseDataConverter<NaceRecord>
 {
@@ -75,7 +72,6 @@ public class NaceDataConverter extends BaseDataConverter<NaceRecord>
             else if (level == 4) {
                 currentRecord.setClassCode(code);
                 currentRecord.setClassName(name);
-                currentRecord.setDescription(null);  // todo
             }
         }
 

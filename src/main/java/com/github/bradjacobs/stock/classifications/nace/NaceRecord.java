@@ -23,8 +23,6 @@ public class NaceRecord
     private String classCode = "";
     private String className = "";
 
-    private String description = null;
-
     public String getSectionCode()
     {
         return sectionCode;
@@ -105,16 +103,6 @@ public class NaceRecord
         this.className = className;
     }
 
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
     public NaceRecord copy(int level)
     {
         NaceRecord newRecord = new NaceRecord();
@@ -133,7 +121,6 @@ public class NaceRecord
         if (level >= 4) {
             newRecord.classCode = this.classCode;
             newRecord.className = this.className;
-            newRecord.description = this.description;
         }
         return newRecord;
     }
