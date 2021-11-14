@@ -13,6 +13,7 @@ and/or intellectual property rights.
 
 |Abbreviation | Name/Website | Def'n Source | Def'n Format | 
 | :--- | :--- | :--- | :--- |
+| CPS | [Central Product Classification](https://unstats.un.org/unsd/classifications/Econ/CPC.cshtml) | [source](https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/CPC_Ver_2_1_english_structure.txt) | CSV |
 | GICS | [Global Industry Classification Standard](https://www.msci.com/gics) | [source](https://www.msci.com/documents/1296102/11185224/GICS_map+2018.xlsx) | Excel |
 | ICB | [Industry Classification Benchmark](https://www.ftserussell.com/data/industry-classification-benchmark-icb) | [source](https://content.ftserussell.com/sites/default/files/icb_structure_and_definitions.xlsx) | Excel |
 | ISIC | [International Standard Industrial Classification](https://unstats.un.org/home/) | [source](http://www.ilo.org/ilostat-files/Documents/ISIC.xlsx) | Excel |
@@ -20,7 +21,7 @@ and/or intellectual property rights.
 | NACE | [Statistical Classification of Economic Activities in the European Community](https://unstats.un.org/unsd/classifications) | [source](https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_CLS_DLD&StrNom=NACE_REV2&StrLanguageCode=EN&StrLayoutCode=HIERARCHIC) | CSV |
 | NAICS | [North American Industry Classification System](https://www.naics.com)<br>also see: [Census.gov/naics](https://www.census.gov/naics/) | [source](https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx) | Excel |
 | SASB | [Sustainable Industry Classification System](https://www.sasb.org/find-your-industry/) | [source](https://www.sasb.org/find-your-industry/) | HTML |
-| SIC | [Standard Industrial Classification](https://siccode.com) | [source](https://www.bls.gov/oes/special.requests/oessic87.pdf) | PDF |
+| SIC | [Standard Industrial Classification](https://siccode.com) | [source](https://www.osha.gov/data/sic-manual) | HTML |
 | TRBC | [The Refinitiv Business Classification](https://www.refinitiv.com) | [source](https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf) | PDF |
 | ZACKS | [Zacks Sector & Industry Classification](https://www.zacks.com) | [source](https://www.zacks.com/zrank/sector-industry-classification.php)<br>[alternate](http://www.zacksdata.com/app/download/247340904/Zacks+Sector+Industry+Mapping+Scheme.pdf) | HTML/PDF |
 

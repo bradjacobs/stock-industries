@@ -1,5 +1,6 @@
 package com.github.bradjacobs.stock.classifications;
 
+import com.github.bradjacobs.stock.classifications.cpc.CpcDataConverter;
 import com.github.bradjacobs.stock.classifications.gics.GicsDataConverter;
 import com.github.bradjacobs.stock.classifications.icb.IcbDataConverter;
 import com.github.bradjacobs.stock.classifications.isic.IsicDataConverter;
@@ -24,6 +25,8 @@ public class DataConverterFactory
         }
 
         switch (classification) {
+            case CPC:
+                return new CpcDataConverter();
             case GICS:
                 return new GicsDataConverter();
             case ICB:
@@ -52,6 +55,4 @@ public class DataConverterFactory
                 throw new IllegalArgumentException("Unrecognized classification type: " + classification);
         }
     }
-
-
 }

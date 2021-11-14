@@ -3,6 +3,7 @@ package com.github.bradjacobs.stock.classifications;
 public enum Classification
 {
     //BICS("bics", ""),  // < - can't seen to find definition hierarchy spec.
+    CPC("cpc", false,"https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/CPC_Ver_2_1_english_structure.txt"),
     GICS("gics", true,"https://www.msci.com/documents/1296102/11185224/GICS_map+2018.xlsx"),
     ICB("icb", true,"https://content.ftserussell.com/sites/default/files/icb_structure_and_definitions.xlsx"),
     ISIC("isic", false,"http://www.ilo.org/ilostat-files/Documents/ISIC.xlsx"),

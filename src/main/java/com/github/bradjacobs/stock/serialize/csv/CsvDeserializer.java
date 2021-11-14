@@ -31,15 +31,15 @@ public class CsvDeserializer extends BaseDeserializer
             data = csvFullSparseConverter.fillCsvData(data);
         }
 
-        CsvSchema schema = CsvSchema.emptySchema().withHeader();
-
-        CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
-
-        ObjectReader objReader = csvObjectMapper.readerFor(clazz).with(schema);
-
-        MappingIterator<T> iterator = objReader.readValues(data);
-
-        return iterator.readAll();
+        return csvToObjectList(clazz, data);
     }
 
+    public <T> List<T> csvToObjectList(Class<T> clazz, String csvDataString) throws IOException
+    {
+        CsvSchema schema = CsvSchema.emptySchema().withHeader();
+        CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
+        ObjectReader objReader = csvObjectMapper.readerFor(clazz).with(schema);
+        MappingIterator<T> iterator = objReader.readValues(csvDataString);
+        return iterator.readAll();
+    }
 }
