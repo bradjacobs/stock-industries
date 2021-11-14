@@ -34,7 +34,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
         // UPDATE:
         //    come to find out that specific whitespace placement can cause the PdfParser to mess up the line order.
-        //    thus each 'part' will be temporary saved, then everything reassmabled afterwards.
+        //    thus each 'part' will be temporarily saved, then everything reassmabled afterwards.
         Map<String, String> sectorNameMap = new HashMap<>();
         Map<String, String> groupNameMap = new HashMap<>();
         Map<String, MgecsRecord> industryToRecordMap = new TreeMap<>();  // keep keys sorted
@@ -83,7 +83,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
                             }
 
                             // note:  increment the 'current' i value,
-                            // then the futureLine is the next line after teh current line  (thus the +1)
+                            // then the futureLine is the next line after the current line  (thus the +1)
                             i++;
                             futureLine = pdfFileLines[i+1];
                         }
@@ -92,7 +92,6 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
 
                     // now finally can trim + clean value
                     name = cleanValue(name);
-
 
                     if (id.length() == SECTOR_ID_LENGTH)
                     {
@@ -126,7 +125,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
         {
             String industryId = record.getIndustryId();
 
-            // taking advantage that the sector & group ids are alwasy a substring of the industry id.
+            // taking advantage that the sector & group ids are always a substring of the industry id.
             String sectorId = industryId.substring(0, SECTOR_ID_LENGTH);
             String groupId = industryId.substring(0, GROUP_ID_LENGTH);
 
@@ -185,21 +184,17 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
         return line != null && line.toLowerCase().contains("morningstar");
     }
 
-
     @Override
     protected String cleanValue(String input)
     {
         String result = super.cleanValue(input);
 
-        // todo:   TBD
-//        // replace special 8212 dash w/ "normal" dash (if necessary)
-//        if (result.contains("—")) {
-//            result = result.replace('—', '-');
-//        }
-
+        // replace special 8212 dash w/ "normal" dash (if necessary)
+        if (result.contains("—")) {
+            result = result.replace('—', '-');
+        }
         return result;
     }
-
 
     private String getDescription(String[] pdfFileLines, int startingIndex)
     {
@@ -222,7 +217,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
             if (StringUtils.isNumeric(currentLine)) {
                 // if number is a sector/group etc, then hit next section, thus done reading current description
                 // if number is 'small', then it's probably a page number that can be skipped.
-                if (currentLine.length() >= 3) {
+                if (currentLine.length() >= SECTOR_ID_LENGTH) {
                     break;
                 }
                 else {
