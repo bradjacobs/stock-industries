@@ -2,8 +2,13 @@ package com.github.bradjacobs.stock.classifications.gics;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.serialize.csv.CsvFullSparseConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -13,7 +18,10 @@ import java.util.List;
 public class GicsDataConverter extends BaseDataConverter<GicsRecord>
 {
     private static final boolean SKIP_DISCONTINUED_RECORDS = true;
-    private static final String DISCONTINUED_IDENTIFIER = "discontinued";
+    private static final String DISCONTINUED_IDENTIFIER = "discontinued";  // substring identifier for deprecated records.
+
+    private static final int SRC_DESC_COLUMN = 7;
+    private static final int DEST_DESC_COLUMN = 8;
 
 
     @Override
@@ -28,31 +36,60 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
         String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
 
-        List<GicsRecord> recordList = new ArrayList<>();
-        GicsRecord prevRecord = createBlankRecord();
 
+        //   Step 1
+        // The 'problem' with the given data is the description value is actually on a separate line following the other data.
+        // Thus recreate the CSV such that the description is included with its related data on the same line.
         int startIndex = findFirstDataRowIndex(csvData);
-
-        int rowCount = csvData.length;
-        for (int i = startIndex; i < rowCount; i++)
-        {
+        List<String[]> rowDataList = new ArrayList<>();
+        for (int i = startIndex; i < csvData.length; i+=2) {
+            //  IMPORTANT NOTE:  the dataRow array actually has a length 1 greater than it should!
+            //    (this is a "lucky convenience", because this extra column exactly where the description value should go)
             String[] dataRow = csvData[i];
-
-            // the description is always on the following line.
-            String[] descriptionRow = csvData[++i];
-
-            GicsRecord rowRecord = generateRecord(dataRow, descriptionRow, prevRecord);
-
-            if (! shouldSkip(rowRecord))
-            {
-                recordList.add(rowRecord);
-            }
-
-            prevRecord = rowRecord;
+            String[] extraDescriptionRow = csvData[i+1];
+            String desc = extraDescriptionRow[SRC_DESC_COLUMN];
+            dataRow[DEST_DESC_COLUMN] = desc;
+            rowDataList.add(dataRow);
         }
 
-        return recordList;
+        //   Step 2
+        // Now generate a new CSV data string with desired format (all record data on the same row)
+        // IMPORTANT NOTE:  the regenerated CSV string will _NOT_ have a header row.
+        CsvMapper csvArrayMapper = MapperBuilder.csv().setArrayWrap(true).build();
+        String regeneratedCsvData = csvArrayMapper.writeValueAsString(rowDataList);
+
+        //   Step 3
+        // the current CSV string format is in 'sparse mode'  (meaning that a cell doesn't have a value
+        // if the column immediately above it has the same value.  So create a 'full' csv string,
+        // in which every cell is populated.
+        CsvFullSparseConverter csvFullSparseConverter = new CsvFullSparseConverter();
+        String fullCsvData = csvFullSparseConverter.fillCsvData(regeneratedCsvData);
+
+        //   Step 4
+        // Now convert the CSV string into a List<GicsRecord>
+        // IMPORANT NOTE:  remember that the csv string does NOT have a header row.
+        //   This can be worked around by ensuring that we know the order of each cell
+        //   _AND_ that the GicsRecord has 'JsonPropertyOrder' annotation set.
+        //   if the JsonPropertyOrder was not set then it would be arbitrary which values
+        //   map to which fields in the GicsRecord object.
+        //   (also note the objectReader built a little differently)
+        CsvMapper csvMapper = MapperBuilder.csv().build();
+        ObjectReader objReader = csvMapper.readerWithTypedSchemaFor(GicsRecord.class);
+        MappingIterator<GicsRecord> iterator = objReader.readValues(fullCsvData);
+        List<GicsRecord> gicsRecords = iterator.readAll();
+
+        //   Step 5
+        // Strip out any records that don't belong (discontinued)
+        List<GicsRecord> finalGicsRecords = new ArrayList<>();
+        for (GicsRecord gicsRecord : gicsRecords) {
+            if (! shouldSkip(gicsRecord)) {
+                finalGicsRecords.add(gicsRecord);
+            }
+        }
+
+        return finalGicsRecords;
     }
+
 
     private int findFirstDataRowIndex(String[][] csvData) {
         for (int i = 0; i < csvData.length; i++)
@@ -67,7 +104,6 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
     }
 
 
-
     private boolean shouldSkip(GicsRecord record)
     {
         return SKIP_DISCONTINUED_RECORDS && isDiscontinued(record);
@@ -77,65 +113,11 @@ public class GicsDataConverter extends BaseDataConverter<GicsRecord>
         if (record.getSectorName().contains(DISCONTINUED_IDENTIFIER) ||
             record.getGroupName().contains(DISCONTINUED_IDENTIFIER) ||
             record.getIndustryName().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getSubIndustryName().contains(DISCONTINUED_IDENTIFIER)) {
+            record.getSubIndustryName().contains(DISCONTINUED_IDENTIFIER) ||
+            record.getDescription().contains(DISCONTINUED_IDENTIFIER)) {
             return true;
         }
         return false;
     }
-
-    private GicsRecord generateRecord(String[] rowData, String[] rowDescription, GicsRecord previousRecord)
-    {
-        GicsRecord record = new GicsRecord();
-
-        record.setSectorId(getCellValueOrDefault(rowData, Column.COL_SECTOR_ID, previousRecord.getSectorId()));
-        record.setSectorName(getCellValueOrDefault(rowData, Column.COL_SECTOR_NAME, previousRecord.getSectorName()));
-        record.setGroupId(getCellValueOrDefault(rowData, Column.COL_GROUP_ID, previousRecord.getGroupId()));
-        record.setGroupName(getCellValueOrDefault(rowData, Column.COL_GROUP_NAME, previousRecord.getGroupName()));
-        record.setIndustryId(getCellValueOrDefault(rowData, Column.COL_INDUSTRY_ID, previousRecord.getIndustryId()));
-        record.setIndustryName(getCellValueOrDefault(rowData, Column.COL_INDUSTRY_NAME, previousRecord.getIndustryName()));
-        record.setSubIndustryId(getCellValueOrDefault(rowData, Column.COL_SUB_INDUSTRY_ID, previousRecord.getSubIndustryId()));
-        record.setSubIndustryName(getCellValueOrDefault(rowData, Column.COL_SUB_INDUSTRY_NAME, previousRecord.getSubIndustryName()));
-
-        record.setDescription(getCellValue(rowDescription, Column.COL_DESCRIPTION));
-
-        return record;
-    }
-
-    private String getCellValueOrDefault(String[] rowData, Column column, String defaultValue)
-    {
-        String cellValue = getCellValue(rowData, column);
-        return cellValue.length() > 0 ? cellValue : defaultValue;
-    }
-
-
-    private String getCellValue(String[] rowData, Column column)
-    {
-        return cleanValue(rowData[column.getColIndex()]);
-    }
-
-
-
-    private GicsRecord createBlankRecord() {
-        return new GicsRecord("","","","","","","","","");
-    }
-
-
-    // NOTE: the header row from the original source data is incomplete,
-    //   therefore have a simple enum to represent the column location for each value.
-    //   The order of these enums _DOES_ matter.
-    private enum Column
-    {
-        COL_SECTOR_ID, COL_SECTOR_NAME, COL_GROUP_ID, COL_GROUP_NAME, COL_INDUSTRY_ID, COL_INDUSTRY_NAME, COL_SUB_INDUSTRY_ID, COL_SUB_INDUSTRY_NAME, COL_DESCRIPTION;
-
-        private int getColIndex() {
-            // description in the original data file is in the same column as the subindustry name
-            //   (but happens to be on the next row)
-            if (this.equals(COL_DESCRIPTION)) {
-                return COL_SUB_INDUSTRY_NAME.getColIndex();
-            }
-            return this.ordinal();
-        }
-    }
-
 
 }
