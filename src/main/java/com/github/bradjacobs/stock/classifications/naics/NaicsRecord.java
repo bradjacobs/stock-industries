@@ -2,7 +2,6 @@ package com.github.bradjacobs.stock.classifications.naics;
 
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.github.bradjacobs.stock.classifications.napcs.NapcsRecord;
 
 @JsonPropertyOrder( {
     "sectorId",
