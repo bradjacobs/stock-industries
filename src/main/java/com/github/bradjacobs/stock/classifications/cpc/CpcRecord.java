@@ -34,6 +34,26 @@ public class CpcRecord
     private String subClassId = "";
     private String subClassName = "";
 
+    public CpcRecord()
+    {
+    }
+
+    public CpcRecord(GenericLevelRecordv2 genericRecord)
+    {
+        if (genericRecord != null) {
+            this.sectionId = genericRecord.getCodeId(1);
+            this.sectionName = genericRecord.getCodeName(1);
+            this.divisionId = genericRecord.getCodeId(2);
+            this.divisionName = genericRecord.getCodeName(2);
+            this.groupId = genericRecord.getCodeId(3);
+            this.groupName = genericRecord.getCodeName(3);
+            this.classId = genericRecord.getCodeId(4);
+            this.className = genericRecord.getCodeName(4);
+            this.subClassId = genericRecord.getCodeId(5);
+            this.subClassName = genericRecord.getCodeName(5);
+        }
+    }
+
     public String getSectionId() {
         return sectionId;
     }
@@ -139,5 +159,7 @@ public class CpcRecord
         }
         return newRecord;
     }
+
+
 
 }

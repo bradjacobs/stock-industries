@@ -1,12 +1,22 @@
 package com.github.bradjacobs.stock.classifications.cpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvParser;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 import com.github.bradjacobs.stock.util.DownloadUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +41,59 @@ public class CpcDataConverter extends BaseDataConverter<CpcRecord>
         @JsonProperty("CPC21title")
         private String title;
     }
+
+    public static void main(String[] args) throws IOException {
+        String filePath = "/Users/bradjacobs/git/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/cpc/cpc.txt";
+        String csv = FileUtils.readFileToString(new File(filePath));
+
+
+        CsvMapper mapper = new CsvMapper();
+        CsvSchema sclema = mapper.schemaFor(GenericRecord.class)
+                .withSkipFirstDataRow(true);
+
+        MappingIterator<GenericRecord> iterator = mapper
+                .readerFor(GenericRecord.class)
+                .with(sclema).readValues(csv);
+
+        List<GenericRecord> hotelSummaries = iterator.readAll();
+
+
+        CsvSchema.Builder csvSchemaBuilder = CsvSchema.builder();
+        csvSchemaBuilder.addColumn("CPC21code");
+        csvSchemaBuilder.addColumn("CPC21title");
+
+        CsvMapper.Builder builder = CsvMapper.builder()
+                .enable(CsvParser.Feature.SKIP_EMPTY_LINES)
+                .enable(CsvParser.Feature.TRIM_SPACES)
+                .enable(CsvParser.Feature.FAIL_ON_MISSING_COLUMNS)
+                .enable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING)
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY); // ALWAYS disable this (or it can change the column order)
+
+
+
+
+//        // grab first node to find the names for the columns
+//        JsonNode firstObject = jsonTree.elements().next();
+//        firstObject.fieldNames().forEachRemaining(csvSchemaBuilder::addColumn);
+        CsvSchema csvSchema = csvSchemaBuilder.build().withHeader();
+
+        CsvSchema schema = CsvSchema.emptySchema().withHeader();
+        CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
+        //ObjectReader objReader = csvObjectMapper.readerFor(GenericRecord.class).with(schema);
+        ObjectReader objReader = csvObjectMapper.readerFor(GenericRecord.class).with(csvSchema);
+      //  MappingIterator<GenericRecord> iterator = objReader.readValues(csv);
+        List<GenericRecord> records =  iterator.readAll();
+
+
+
+        CsvDeserializer csvDeserializer = new CsvDeserializer(null);
+        List<GenericRecord> rawRecords = csvDeserializer.csvToObjectList(GenericRecord.class, csv);
+
+        int kjkj = 33;
+
+    }
+
 
     @Override
     public List<CpcRecord> createDataRecords() throws IOException
