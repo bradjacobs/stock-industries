@@ -32,8 +32,17 @@ public class NasdaqDataConverter extends BaseDataConverter<NasdaqRecord>
     private static final String INDUSTRY_KEY = "industry";
     private static final String TICKER_KEY = "symbol"; // <- only need for diagnostic purposes.
 
-    private static final boolean PRINT_UNIQUE_TICKER_SECTOR_INDUSTRY = false;  // for debugging
+    // the following tickers had a "unique permutation" of Sector/Industry that _subjectively_ looked suspicious
+    //   thus suppressing for now.  There are other tickets with unique Sector/Industry that look correct
+    //   and have been left in.
+    private static final Set<String> SKIPPABLE_TICKERS = new HashSet<>(Arrays.asList(
+            "USLM", // Sector: Energy             Industry: Other Metals and Minerals
+            "WOR",  // Sector: Consumer Durables  Industry: Aerospace
+            "YGMZ", // Sector: Consumer Services  Industry: Transportation Services
+            "ZTO"   // Sector: Transportation     Industry: Advertising
+    ));
 
+    private static final boolean PRINT_UNIQUE_TICKER_SECTOR_INDUSTRY = true;  // for debugging only
 
     @Override
     public Classification getClassification()
@@ -118,15 +127,6 @@ public class NasdaqDataConverter extends BaseDataConverter<NasdaqRecord>
         return recordList;
     }
 
-
-    // the following tickers had a "unique permutation" of Sector/Industry that _subjectively_ looked suspicious
-    //   thus suppressing for now there are other tickets with unique Sector/Industry that look correct
-    //   and have been left in.
-    private static final Set<String> SKIPPABLE_TICKERS = new HashSet<>(Arrays.asList(
-        "USLM", // Sector: Energy             Industry: Consumer Electronics/Appliances
-        "WOR",  // Sector: Consumer Durables  Industry: Aerospace
-        "ZTO"   // Sector: Transportation     Industry: Advertising
-    ));
 
     // REFERENCE ONLY:
     //   as of 06/10/2021, all the Sector/Industry combinations that match
