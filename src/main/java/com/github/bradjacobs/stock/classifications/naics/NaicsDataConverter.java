@@ -61,7 +61,7 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
     {
         List<NaicsRecord> recordList = new ArrayList<>();
 
-        NaicsRecord currentRecord = new NaicsRecord();;
+        NaicsRecord currentRecord = new NaicsRecord();
 
         // important note:  code assumes the data input is formatted and sorted
         //   in a very specific way (or it'll blow up)
@@ -182,14 +182,14 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
             return "";
         }
 
-        // the "illustative examples" are usually more clutter than they are worth,
+        // the "illustrative examples" are usually more clutter than they are worth,
         //   BUT, may change decision on this at a later time.
         int examplesIndex = description.indexOf("Illustrative Examples");
         if (examplesIndex > 0) {
             description = description.substring(0, examplesIndex);
         }
 
-        // the downloaded file dosn't actually have any information after "Cross-References"
+        // the downloaded file doesn't actually have any information after "Cross-References"
         //  so just remove that key word, if exists
         int crossReferencesIndex = description.indexOf("Cross-References");
         if (crossReferencesIndex > 0) {
