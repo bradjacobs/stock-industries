@@ -9,4 +9,6 @@ public interface DataConverter<T>
     // create data records
     List<T> createDataRecords() throws IOException;
 
+    Classification getClassification();
+
 }

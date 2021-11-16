@@ -5,18 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.BaseDataConverter;
@@ -29,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.management.LockInfo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -60,7 +54,7 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
         @JsonProperty("CPC21title")
         private String title;
     }
-    private static abstract class SpecialGenericRecord extends GenericRecord {
+    private static abstract class SpecialCodeTitleRecord extends CodeTitleRecordObj {
         @Override
         @JsonAlias("CPC21code")
         abstract public String getCode();
@@ -70,53 +64,60 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
         abstract public String getTitle();
     }
 
-    private abstract class ZZZGenericRecord extends GenericRecord {
+    private abstract class ZZZCodeTitleRecord extends CodeTitleRecordObj {
         @JsonAlias("code")  @Override abstract public String getCode();
         @JsonAlias("title") @Override abstract public String getTitle();
     }
 
-    private static class MyJsonSerializer2 extends JsonSerializer<GenericLevelRecordv2> {
-        public void serialize(GenericLevelRecordv2 value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+    private static class MyJsonSerializer2 extends JsonSerializer<AllLevelsRecord> {
+        public void serialize(AllLevelsRecord value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
             //  NO... this won't work
 
             jgen.writeStartObject();
             jgen.writeStringField("my1Id", value.getCodeId(1));
-            jgen.writeStringField("my1Name", value.getCodeName(1));
+            jgen.writeStringField("my1Name", value.getCodeTitle(1));
             jgen.writeStringField("my2Id", value.getCodeId(2));
-            jgen.writeStringField("my2Name", value.getCodeName(2));
+            jgen.writeStringField("my2Name", value.getCodeTitle(2));
             jgen.writeStringField("my3Id", value.getCodeId(3));
-            jgen.writeStringField("my3Name", value.getCodeName(3));
+            jgen.writeStringField("my3Name", value.getCodeTitle(3));
             jgen.writeStringField("my4Id", value.getCodeId(4));
-            jgen.writeStringField("my4Name", value.getCodeName(4));
+            jgen.writeStringField("my4Name", value.getCodeTitle(4));
             jgen.writeEndObject();
         }
     }
 
 
-    public static class MyJsonSerializer extends StdSerializer<GenericLevelRecordv2>
+    public static class MyJsonSerializer extends StdSerializer<AllLevelsRecord>
     {
         public MyJsonSerializer() {
-            super(GenericLevelRecordv2.class);
+            super(AllLevelsRecord.class);
         }
 
         @Override
-        public void serialize(GenericLevelRecordv2 value, JsonGenerator gen, SerializerProvider provider) throws IOException
+        public void serialize(AllLevelsRecord value, JsonGenerator gen, SerializerProvider provider) throws IOException
         {
             //  NO... this won't work
             gen.writeStartObject();
             gen.writeStringField("my1Id", value.getCodeId(1));
-            gen.writeStringField("my1Name", value.getCodeName(1));
+            gen.writeStringField("my1Name", value.getCodeTitle(1));
             gen.writeStringField("my2Id", value.getCodeId(2));
-            gen.writeStringField("my2Name", value.getCodeName(2));
+            gen.writeStringField("my2Name", value.getCodeTitle(2));
             gen.writeStringField("my3Id", value.getCodeId(3));
-            gen.writeStringField("my3Name", value.getCodeName(3));
+            gen.writeStringField("my3Name", value.getCodeTitle(3));
             gen.writeStringField("my4Id", value.getCodeId(4));
-            gen.writeStringField("my4Name", value.getCodeName(4));
+            gen.writeStringField("my4Name", value.getCodeTitle(4));
             gen.writeEndObject();
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    protected <R extends CodeTitleLevelRecord> void doConvertToObjects(List<R> codeTitleRecords)
+            throws JsonProcessingException
+    {
+
+    }
+
+
+        public static void main(String[] args) throws Exception {
 
         String filePath = "/Users/bradjacobs/git/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/cpc/cpc.txt";
         String csv = FileUtils.readFileToString(new File(filePath));
@@ -128,17 +129,17 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
 
         if (testit)
         {
-            Class clazz = ZZZGenericRecord.class;
+            Class clazz = ZZZCodeTitleRecord.class;
 
             generateMixin(clazz);
             generateMixin(clazz);
 
             CsvSchema schema = CsvSchema.emptySchema().withHeader();
             CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
-            csvObjectMapper = (CsvMapper) csvObjectMapper.addMixIn(GenericRecord.class, SpecialGenericRecord.class);
-            ObjectReader objReader = csvObjectMapper.readerFor(GenericRecord.class).with(schema);
-            MappingIterator<GenericRecord> iterator = objReader.readValues(csv);
-            List<GenericRecord> fooo = iterator.readAll();
+            csvObjectMapper = (CsvMapper) csvObjectMapper.addMixIn(CodeTitleRecordObj.class, SpecialCodeTitleRecord.class);
+            ObjectReader objReader = csvObjectMapper.readerFor(CodeTitleRecordObj.class).with(schema);
+            MappingIterator<CodeTitleRecordObj> iterator = objReader.readValues(csv);
+            List<CodeTitleRecordObj> fooo = iterator.readAll();
 
             int kjkj = 333;
         }
@@ -147,22 +148,22 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
 
 
         CsvMapper mapper = new CsvMapper();
-        CsvSchema sclema = mapper.schemaFor(GenericRecord.class)
+        CsvSchema sclema = mapper.schemaFor(CodeTitleRecordObj.class)
                 .withSkipFirstDataRow(true);
 
-        MappingIterator<GenericRecord> iterator = mapper
-                .readerFor(GenericRecord.class)
+        MappingIterator<CodeTitleRecordObj> iterator = mapper
+                .readerFor(CodeTitleRecordObj.class)
                 .with(sclema).readValues(csv);
 
-        List<GenericRecord> hotelSummaries = iterator.readAll();
+        List<CodeTitleRecordObj> hotelSummaries = iterator.readAll();
 
         GenericLevelRecord currentRecord = new GenericLevelRecord();
-        GenericLevelRecordv2 currentRecordv2 = new GenericLevelRecordv2();
+        AllLevelsRecord currentRecordv2 = new AllLevelsRecord();
 
         List<GenericLevelRecord> recordList = new ArrayList<>();
-        List<GenericLevelRecordv2> recordListv2 = new ArrayList<>();
+        List<AllLevelsRecord> recordListv2 = new ArrayList<>();
 
-        for (GenericRecord pairRecord : hotelSummaries) {
+        for (CodeTitleRecordObj pairRecord : hotelSummaries) {
             String codeId = pairRecord.getCode();
             String name = pairRecord.getTitle();
 
@@ -178,24 +179,24 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
                 recordListv2.add(currentRecordv2);
                 currentRecordv2 = currentRecordv2.copy(level);
             }
-            currentRecordv2.setLevelIdName(level, codeId, name);
+            currentRecordv2.setLevelIdTitle(level, codeId, name);
         }
 
 
-        List<GenericLevelRecordv2> subZList = recordListv2.subList(0,4);
+        List<AllLevelsRecord> subZList = recordListv2.subList(0,4);
 
         List<Map<String,String>> listOfMaps = new ArrayList<>();
 
-        for (GenericLevelRecordv2 recordv2 : subZList) {
+        for (AllLevelsRecord recordv2 : subZList) {
             Map<String,String> valueMap = new LinkedHashMap<>();
             valueMap.put("sectionId", recordv2.getCodeId(1));
-            valueMap.put("sectionName", recordv2.getCodeName(1));
+            valueMap.put("sectionName", recordv2.getCodeTitle(1));
             valueMap.put("divisionId", recordv2.getCodeId(2));
-            valueMap.put("divisionName", recordv2.getCodeName(2));
+            valueMap.put("divisionName", recordv2.getCodeTitle(2));
             valueMap.put("groupId", recordv2.getCodeId(3));
-            valueMap.put("groupName", recordv2.getCodeName(3));
+            valueMap.put("groupName", recordv2.getCodeTitle(3));
             valueMap.put("classId", recordv2.getCodeId(4));
-            valueMap.put("className", recordv2.getCodeName(4));
+            valueMap.put("className", recordv2.getCodeTitle(4));
             listOfMaps.add(valueMap);
         }
 
@@ -224,7 +225,7 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
 //        CsvSchema schema = csvObjectMapper.schemaFor(GenericLevelRecordv2.class).withHeader();
 //        String csvData = csvObjectMapper.writer(schema).writeValueAsString(subZList);
 
-        CsvSchema schema2 = csvObjectMapper2.schemaFor(GenericLevelRecordv2.class).withHeader();
+        CsvSchema schema2 = csvObjectMapper2.schemaFor(AllLevelsRecord.class).withHeader();
         String csvData2 = csvObjectMapper2.writer(schema2).writeValueAsString(subZList);
 
 
@@ -232,7 +233,7 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
 
     }
 
-    public static List<Map<String,String>> generateListOfMaps(List<GenericLevelRecordv2> recordList, Map<Integer, String> levelFieldMap) throws JsonProcessingException {
+    public static List<Map<String,String>> generateListOfMaps(List<AllLevelsRecord> recordList, Map<Integer, String> levelFieldMap) throws JsonProcessingException {
         List<Map<String,String>> listOfMaps = new ArrayList<>();
 
         int maxLevels = 8;
@@ -253,14 +254,14 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
             }
         }
 
-        for (GenericLevelRecordv2 record : recordList)
+        for (AllLevelsRecord record : recordList)
         {
             Map<String,String> valueMap = new LinkedHashMap<>();
 
             for (int level = 1; level <= maxLevels; level++)
             {
                 String levelIdValue = record.getCodeId(level);
-                String levelNameValue = record.getCodeName(level);
+                String levelNameValue = record.getCodeTitle(level);
                 String levelIdLabel = codeIdTitleArray[level];
                 String levelNameLabel = codeNameTitleArray[level];
 
@@ -285,7 +286,7 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
     }
 
 
-    public static String generateJsonString(List<GenericLevelRecordv2> recordList, Map<Integer, String> levelFieldMap) throws JsonProcessingException {
+    public static String generateJsonString(List<AllLevelsRecord> recordList, Map<Integer, String> levelFieldMap) throws JsonProcessingException {
 
         List<Map<String,String>> listOfMaps = generateListOfMaps(recordList, levelFieldMap);
 
@@ -368,7 +369,7 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
 
 
 
-    private static Class<GenericRecord> generateMixin(Class clazz) throws NoSuchMethodException {
+    private static Class<CodeTitleRecordObj> generateMixin(Class clazz) throws NoSuchMethodException {
 //        ZZZGenericRecord instance = new ZZZGenericRecord();
 
         Method[] methods = clazz.getDeclaredMethods();

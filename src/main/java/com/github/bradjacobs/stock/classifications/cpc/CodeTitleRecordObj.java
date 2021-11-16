@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "code",
         "title",
 })
-public class GenericRecord {
+public class CodeTitleRecordObj {
     private String code;
     private String title;
 
