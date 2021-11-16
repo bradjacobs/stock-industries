@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "groupId",
     "groupName",
     "subGroupId",
-    "subGroupdName",
+    "subGroupName",
     "trilateralProductId",
     "trilateralProductName",
 })
@@ -36,7 +36,7 @@ public class NapcsRecord
     private String groupName = "";
 
     private String subGroupId = "";
-    private String subGroupdName = "";
+    private String subGroupName = "";
 
     private String trilateralProductId = "";
     private String trilateralProductName = "";
@@ -131,14 +131,14 @@ public class NapcsRecord
         this.subGroupId = subGroupId;
     }
 
-    public String getSubGroupdName()
+    public String getSubGroupName()
     {
-        return subGroupdName;
+        return subGroupName;
     }
 
-    public void setSubGroupdName(String subGroupdName)
+    public void setSubGroupName(String subGroupName)
     {
-        this.subGroupdName = subGroupdName;
+        this.subGroupName = subGroupName;
     }
 
     public String getTrilateralProductId()
@@ -182,7 +182,7 @@ public class NapcsRecord
         }
         if (levelsToCopy >= 5) {
             newRecord.subGroupId = this.subGroupId;
-            newRecord.subGroupdName = this.subGroupdName;
+            newRecord.subGroupName = this.subGroupName;
         }
         if (levelsToCopy >= 6) {
             newRecord.trilateralProductId = this.trilateralProductId;

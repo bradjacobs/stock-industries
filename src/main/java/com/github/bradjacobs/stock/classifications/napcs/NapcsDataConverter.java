@@ -2,11 +2,16 @@ package com.github.bradjacobs.stock.classifications.napcs;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
+import com.github.bradjacobs.stock.classifications.cpc.AbstractCodeTitleConverter;
+import com.github.bradjacobs.stock.classifications.cpc.CodeTitleLevelRecord;
+import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,20 +20,14 @@ import java.util.Map;
  * https://www.census.gov/naics/napcs
  * https://www.census.gov/eos/www/napcs/structure.html
  */
-public class NapcsDataConverter implements DataConverter<NapcsRecord>
+public class NapcsDataConverter extends AbstractCodeTitleConverter implements DataConverter<NapcsRecord>
 {
-    private static final int ID_COL_INDEX = 1;
-    private static final int TITLE_COL_INDEX = 2;
+    private static final String[] LEVEL_LABELS =
+            new String[]{"section", "subSection", "division", "group", "subGroup", "trilateralProduct"};
 
-    // map to determine the depth level based on the length of the id.
-    private static final Map<Integer,Integer> LENGTH_TO_LEVEL_MAP =  new HashMap<Integer, Integer>() {{
-        put( 2, 1);
-        put( 3, 2);
-        put( 5, 3);
-        put( 7, 4);
-        put( 9, 5);
-        put(11, 6);
-    }};
+    public NapcsDataConverter() {
+        super(LEVEL_LABELS, "Id", "Name");
+    }
 
     @Override
     public Classification getClassification()
@@ -36,73 +35,68 @@ public class NapcsDataConverter implements DataConverter<NapcsRecord>
         return Classification.NAPCS;
     }
 
+
     @Override
     public List<NapcsRecord> createDataRecords() throws IOException
     {
-        ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
-        String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
+        ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.LENIENT).setSkipEmptyRows(true).build();
 
-        List<NapcsRecord> recordList = new ArrayList<>();
-        NapcsRecord currentRecord = new NapcsRecord();
+        String filePath = "/Users/bradjacobs/git/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/napcs/2017NAPCSStructure-1.xlsx";
 
-        // Note: skipping first (header) row
-        for (int i = 1; i < csvData.length; i++)
-        {
-            String[] row = csvData[i];
-            String id = row[ID_COL_INDEX];
-            String name = row[TITLE_COL_INDEX];
+//        String csvData = excelReader.createCsvText(getClassification().getSourceFileLocation());
+        String csvData = excelReader.createCsvText(filePath);
 
-            int level = LENGTH_TO_LEVEL_MAP.get(id.length());
+        CsvDeserializer csvDeserializer = new CsvDeserializer(null);
+        List<RawNapcsRecord> rawRecords = csvDeserializer.csvToObjectList(RawNapcsRecord.class, csvData);
 
-            if (level == 1) {
-                currentRecord.setSectionId(id);
-                currentRecord.setSectionName(name);
+        return doConvertToObjects(NapcsRecord.class, rawRecords);
+    }
+
+    private static class RawNapcsRecord implements CodeTitleLevelRecord
+    {
+        // map to determine the depth level based on the length of the id.
+        private static final Map<Integer,Integer> LENGTH_TO_LEVEL_MAP =  new HashMap<Integer, Integer>() {{
+            put( 2, 1);
+            put( 3, 2);
+            put( 5, 3);
+            put( 7, 4);
+            put( 9, 5);
+            put(11, 6);
+        }};
+
+        @JsonProperty("2017 NAPCS Code")
+        private String code;
+        @JsonProperty("Title")
+        private String title;
+        @JsonIgnore
+        private final Map<String, Object> additionalProperties = new HashMap<>();
+
+
+        @Override
+        public String getCodeId() {
+            return code; }
+
+        @Override
+        public String getCodeTitle() { return title; }
+
+        @Override
+        @JsonIgnore
+        public int getCodeLevel() {
+            Integer level = LENGTH_TO_LEVEL_MAP.get(this.code.length());
+            if (level != null) {
+                return level;
             }
-            else if (level == 2) {
-                if (!currentRecord.getSubSectionId().isEmpty()) {
-                    recordList.add(currentRecord);
-                    currentRecord = currentRecord.copy(level);
-                }
-                currentRecord.setSubSectionId(id);
-                currentRecord.setSubSectionName(name);
-            }
-            else if (level == 3) {
-                if (!currentRecord.getDivisionId().isEmpty()) {
-                    recordList.add(currentRecord);
-                    currentRecord = currentRecord.copy(level);
-                }
-                currentRecord.setDivisionId(id);
-                currentRecord.setDivisionName(name);
-            }
-            else if (level == 4) {
-                if (!currentRecord.getGroupId().isEmpty()) {
-                    recordList.add(currentRecord);
-                    currentRecord = currentRecord.copy(level);
-                }
-                currentRecord.setGroupId(id);
-                currentRecord.setGroupName(name);
-            }
-            else if (level == 5) {
-                if (!currentRecord.getSubGroupId().isEmpty()) {
-                    recordList.add(currentRecord);
-                    currentRecord = currentRecord.copy(level);
-                }
-                currentRecord.setSubGroupId(id);
-                currentRecord.setSubGroupdName(name);
-            }
-            else if (level == 6) {
-                if (!currentRecord.getTrilateralProductId().isEmpty()) {
-                    recordList.add(currentRecord);
-                    currentRecord = currentRecord.copy(level);
-                }
-                currentRecord.setTrilateralProductId(id);
-                currentRecord.setTrilateralProductName(name);
-            }
+            return 0;
         }
 
-        recordList.add(currentRecord);
-
-        return recordList;
+        @JsonIgnore
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+        @JsonAnySetter
+        public void setAdditionalProperty(String name, Object value) {
+            this.additionalProperties.put(name, value);
+        }
     }
 
 }

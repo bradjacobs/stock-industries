@@ -16,6 +16,8 @@ import java.util.Map;
 // https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/CPC_Ver_2_1_english_structure.txt
 
 /**
+ * Abstract class for converters in which the 'raw data' is usually given in 2 columns
+ * (one for the Ids, one for the titles)
  */
 abstract public class AbstractCodeTitleConverter
 {
