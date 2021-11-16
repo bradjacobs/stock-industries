@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
-import com.github.bradjacobs.stock.classifications.gics.GicsRecord;
+import com.github.bradjacobs.stock.classifications.common.AbstractCodeTitleConverter;
+import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
+import com.github.bradjacobs.stock.util.DownloadUtil;
 import com.github.bradjacobs.stock.util.StringUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -34,13 +34,10 @@ public class CpcDataConverter extends AbstractCodeTitleConverter implements Data
         return Classification.CPC;
     }
 
-
     @Override
     public List<CpcRecord> createDataRecords() throws IOException
     {
-        String filePath = "/Users/bradjacobs/git/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/cpc/cpc.txt";
-        String csvData = FileUtils.readFileToString(new File(filePath));
-        //String csvData = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
+        String csvData = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
 
         CsvDeserializer csvDeserializer = new CsvDeserializer(null);
         List<RawCpcRecord> rawRecords = csvDeserializer.csvToObjectList(RawCpcRecord.class, csvData);
@@ -60,21 +57,15 @@ public class CpcDataConverter extends AbstractCodeTitleConverter implements Data
 
     private static class RawCpcRecord implements CodeTitleLevelRecord
     {
+        @JsonProperty("CPC21code")
         private String code;
+        @JsonProperty("CPC21title")
         private String title;
 
         @Override
-        public String getCodeId() {
-            return code; }
-        @JsonProperty("CPC21code")
-        public void setCode(String code) { this.code = code; }
-
+        public String getCodeId() { return code; }
         @Override
         public String getCodeTitle() { return title; }
-
-        @JsonProperty("CPC21title")
-        public void setTitle(String title) { this.title = title; }
-
         @Override
         @JsonIgnore
         public int getCodeLevel() {

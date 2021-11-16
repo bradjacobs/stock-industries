@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
-import com.github.bradjacobs.stock.classifications.cpc.AbstractCodeTitleConverter;
-import com.github.bradjacobs.stock.classifications.cpc.CodeTitleLevelRecord;
+import com.github.bradjacobs.stock.classifications.common.AbstractCodeTitleConverter;
+import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 
 import java.io.IOException;

@@ -10,24 +10,19 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
-import com.github.bradjacobs.stock.classifications.cpc.AbstractCodeTitleConverter;
-import com.github.bradjacobs.stock.classifications.cpc.CodeTitleLevelRecord;
-import com.github.bradjacobs.stock.classifications.cpc.CpcRecord;
-import org.apache.commons.io.FileUtils;
+import com.github.bradjacobs.stock.classifications.common.AbstractCodeTitleConverter;
+import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
+import com.github.bradjacobs.stock.util.DownloadUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
- *  NOTE1: the 'CSV' file isn't true csv
+ *  NOTE1: the 'CSV' file isn't true csv ??
  *  NOTE2: skipping the 'long description' b/c it's crazy long and not very useful.
  */
-
-//public class NaceDataConverter extends BaseDataConverter<NaceRecord>
 public class NaceDataConverter extends AbstractCodeTitleConverter implements DataConverter<NaceRecord>
 {
     // ***** NOTE *****
@@ -53,11 +48,7 @@ public class NaceDataConverter extends AbstractCodeTitleConverter implements Dat
         CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
 
         ObjectReader objReader = csvObjectMapper.readerFor(RawNacoRecord.class).with(schema);
-
-        String filePath = "/Users/bradjacobs/git/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/nace/NACE_REV2_20211116_040803.csv";
-        String csvData = FileUtils.readFileToString(new File(filePath));
-
-//        String csvData = DownloadUtil.downloadFile(this.getClassification().getSourceFileLocation());
+        String csvData = DownloadUtil.downloadFile(this.getClassification().getSourceFileLocation());
 
         MappingIterator<RawNacoRecord> iterator = objReader.readValues(csvData);
         List<RawNacoRecord> pojoList = iterator.readAll();

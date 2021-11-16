@@ -1,4 +1,4 @@
-package com.github.bradjacobs.stock.classifications.cpc;
+package com.github.bradjacobs.stock.classifications.common;
 
 public interface CodeTitleLevelRecord
 {

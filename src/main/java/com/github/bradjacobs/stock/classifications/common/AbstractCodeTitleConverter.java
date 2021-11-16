@@ -1,4 +1,4 @@
-package com.github.bradjacobs.stock.classifications.cpc;
+package com.github.bradjacobs.stock.classifications.common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-// https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/CPC_Ver_2_1_english_structure.txt
 
 /**
  * Abstract class for converters in which the 'raw data' is usually given in 2 columns
@@ -36,7 +34,6 @@ abstract public class AbstractCodeTitleConverter
         this.maxLevels = levelLabels.length;
         this.codeIdSuffic = codeIdSuffix;
         this.codeLabelSuffix = codeLabelSuffix;
-
     }
 
     protected <T, R extends CodeTitleLevelRecord> List<T> doConvertToObjects(
