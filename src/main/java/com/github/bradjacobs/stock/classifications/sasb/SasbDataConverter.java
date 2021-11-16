@@ -1,8 +1,9 @@
 package com.github.bradjacobs.stock.classifications.sasb;
 
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SasbDataConverter extends BaseDataConverter<SasbRecord>
+public class SasbDataConverter implements DataConverter<SasbRecord>
 {
     private static final String PANELS_CLASS = "vc_tta-panels";
 
@@ -92,7 +93,7 @@ public class SasbDataConverter extends BaseDataConverter<SasbRecord>
 
 
     private String getCellTextOrDefault(Element cellElement, String defaultValue) {
-        String value = cleanValue(cellElement.text());
+        String value = StringUtil.cleanWhitespace(cellElement.text());
         if (StringUtils.isEmpty(value)) {
             value = defaultValue;
         }
@@ -118,7 +119,7 @@ public class SasbDataConverter extends BaseDataConverter<SasbRecord>
         int industryCount = industryLabelElements.size();
         for (int i = 0; i < industryCount; i++)
         {
-            String industryName = cleanValue( industryLabelElements.get(i).text() );
+            String industryName = StringUtil.cleanWhitespace(industryLabelElements.get(i).text());
             String description = industryDescriptionElements.get(i).text().trim();
             descriptionLookupMap.put(industryName.toLowerCase(), description);
         }

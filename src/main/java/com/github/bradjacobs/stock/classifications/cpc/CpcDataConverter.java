@@ -3,22 +3,23 @@ package com.github.bradjacobs.stock.classifications.cpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
+import com.github.bradjacobs.stock.classifications.gics.GicsRecord;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/CPC_Ver_2_1_english_structure.txt
 
 /**
  */
-public class CpcDataConverter extends AbstractCodeTitleConverter<CpcRecord>
+public class CpcDataConverter extends AbstractCodeTitleConverter implements DataConverter<CpcRecord>
 {
     private static final List<String> TAGS_TO_REMOVE = Arrays.asList("<i>", "</i>");
 
@@ -33,11 +34,6 @@ public class CpcDataConverter extends AbstractCodeTitleConverter<CpcRecord>
         return Classification.CPC;
     }
 
-    @Override
-    protected Class<CpcRecord> getClassType() {
-        return CpcRecord.class;
-    }
-
 
     @Override
     public List<CpcRecord> createDataRecords() throws IOException
@@ -49,17 +45,16 @@ public class CpcDataConverter extends AbstractCodeTitleConverter<CpcRecord>
         CsvDeserializer csvDeserializer = new CsvDeserializer(null);
         List<RawCpcRecord> rawRecords = csvDeserializer.csvToObjectList(RawCpcRecord.class, csvData);
 
-        return doConvertToObjects(rawRecords);
+        return doConvertToObjects(CpcRecord.class, rawRecords);
     }
 
-    @Override
     protected String cleanValue(String input)
     {
         String cleanValue = input;
         for (String tag : TAGS_TO_REMOVE) {
             cleanValue = StringUtils.replace(cleanValue, tag, "");
         }
-        return super.cleanValue(cleanValue);
+        return StringUtil.cleanWhitespace(cleanValue);
     }
 
 
@@ -86,5 +81,4 @@ public class CpcDataConverter extends AbstractCodeTitleConverter<CpcRecord>
             return code.length();
         }
     }
-
 }

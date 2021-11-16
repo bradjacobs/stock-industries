@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.github.bradjacobs.stock.MapperBuilder;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.serialize.csv.CsvFullSparseConverter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GicsDataConverter extends BaseDataConverter<GicsRecord>
+public class GicsDataConverter implements DataConverter<GicsRecord>
 {
     private static final boolean SKIP_DISCONTINUED_RECORDS = true;
     private static final String DISCONTINUED_IDENTIFIER = "discontinued";  // substring identifier for deprecated records.

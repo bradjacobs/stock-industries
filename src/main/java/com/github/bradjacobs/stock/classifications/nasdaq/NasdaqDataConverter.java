@@ -3,8 +3,8 @@ package com.github.bradjacobs.stock.classifications.nasdaq;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.bradjacobs.stock.MapperBuilder;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,7 +26,7 @@ import java.util.TreeSet;
  *   2. these sector/industries show up on many other places (not just Nasdaq)
  *
  */
-public class NasdaqDataConverter extends BaseDataConverter<NasdaqRecord>
+public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
 {
     private static final String SECTOR_KEY = "sector";
     private static final String INDUSTRY_KEY = "industry";

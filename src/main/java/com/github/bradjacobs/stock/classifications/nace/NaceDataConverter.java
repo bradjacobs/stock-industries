@@ -8,18 +8,15 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.MapperBuilder;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.classifications.cpc.AbstractCodeTitleConverter;
 import com.github.bradjacobs.stock.classifications.cpc.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.classifications.cpc.CpcRecord;
-import com.github.bradjacobs.stock.util.DownloadUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +28,7 @@ import java.util.TreeMap;
  */
 
 //public class NaceDataConverter extends BaseDataConverter<NaceRecord>
-public class NaceDataConverter extends AbstractCodeTitleConverter<NaceRecord>
+public class NaceDataConverter extends AbstractCodeTitleConverter implements DataConverter<NaceRecord>
 {
     // ***** NOTE *****
     //   when downloading the file with a GET (instead of a POST), seems to use semicolon ';' instead of comma ',' for separator
@@ -47,12 +44,6 @@ public class NaceDataConverter extends AbstractCodeTitleConverter<NaceRecord>
     public Classification getClassification()
     {
         return Classification.NACE;
-    }
-
-
-    @Override
-    protected Class<NaceRecord> getClassType() {
-        return NaceRecord.class;
     }
 
     @Override
@@ -71,7 +62,7 @@ public class NaceDataConverter extends AbstractCodeTitleConverter<NaceRecord>
         MappingIterator<RawNacoRecord> iterator = objReader.readValues(csvData);
         List<RawNacoRecord> pojoList = iterator.readAll();
 
-        return doConvertToObjects(pojoList);
+        return doConvertToObjects(NaceRecord.class, pojoList);
     }
 
 
@@ -83,6 +74,8 @@ public class NaceDataConverter extends AbstractCodeTitleConverter<NaceRecord>
         private String title;
         @JsonProperty("Level")
         private int level;
+        @JsonIgnore
+        private final Map<String, Object> additionalProperties = new HashMap<>();
 
         @Override
         public String getCodeId() { return code; }
@@ -92,9 +85,6 @@ public class NaceDataConverter extends AbstractCodeTitleConverter<NaceRecord>
         public int getCodeLevel() {
             return level;
         }
-
-        @JsonIgnore
-        private final Map<String, Object> additionalProperties = new TreeMap<>();
         @JsonIgnore
         public Map<String, Object> getAdditionalProperties() {
             return this.additionalProperties;

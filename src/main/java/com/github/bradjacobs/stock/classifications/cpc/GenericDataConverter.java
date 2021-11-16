@@ -14,10 +14,11 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.MapperBuilder;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 import com.github.bradjacobs.stock.util.DownloadUtil;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,7 +39,7 @@ import java.util.Map;
 
 /**
  */
-public class GenericDataConverter extends BaseDataConverter<CpcRecord>
+public class GenericDataConverter implements DataConverter<CpcRecord>
 {
     private static final List<String> TAGS_TO_REMOVE = Arrays.asList("<i>", "</i>");
 
@@ -357,14 +358,13 @@ public class GenericDataConverter extends BaseDataConverter<CpcRecord>
         return recordList;
     }
 
-    @Override
     protected String cleanValue(String input)
     {
         String cleanValue = input;
         for (String tag : TAGS_TO_REMOVE) {
             cleanValue = StringUtils.replace(cleanValue, tag, "");
         }
-        return super.cleanValue(cleanValue);
+        return StringUtil.cleanWhitespace(cleanValue);
     }
 
 

@@ -1,7 +1,6 @@
 package com.github.bradjacobs.stock.classifications.cpc;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.github.bradjacobs.stock.classifications.napcs.NapcsRecord;
 
 
 @JsonPropertyOrder({

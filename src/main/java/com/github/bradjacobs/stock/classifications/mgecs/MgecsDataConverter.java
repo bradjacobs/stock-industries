@@ -1,8 +1,9 @@
 package com.github.bradjacobs.stock.classifications.mgecs;
 
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
+public class MgecsDataConverter implements DataConverter<MgecsRecord>
 {
     private static final int SECTOR_ID_LENGTH = 3;
     private static final int GROUP_ID_LENGTH = 5;
@@ -87,7 +88,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
                             i++;
                             futureLine = pdfFileLines[i+1];
                         }
-                        name = cleanWhitespace(name);
+                        name = StringUtil.cleanWhitespace(name);
                     }
 
                     // now finally can trim + clean value
@@ -184,10 +185,9 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
         return line != null && line.toLowerCase().contains("morningstar");
     }
 
-    @Override
     protected String cleanValue(String input)
     {
-        String result = super.cleanValue(input);
+        String result = StringUtil.cleanWhitespace(input);
 
         // replace special 8212 dash w/ "normal" dash (if necessary)
         if (result.contains("—")) {
@@ -228,7 +228,7 @@ public class MgecsDataConverter extends BaseDataConverter<MgecsRecord>
             sb.append(' ').append(currentLine);
         }
 
-        return cleanWhitespace(sb.toString());
+        return StringUtil.cleanWhitespace(sb.toString());
     }
 
 }

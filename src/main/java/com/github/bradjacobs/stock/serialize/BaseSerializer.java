@@ -1,6 +1,5 @@
 package com.github.bradjacobs.stock.serialize;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.bradjacobs.stock.classifications.Classification;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +67,7 @@ abstract public class BaseSerializer
             throw new IllegalArgumentException("Must provide 1 or more objects to be serialized");
         }
 
-        // check for nulls in list  (never want to worry about this scenrio ever again)
+        // check for nulls in list  (never want to worry about this scenario ever again)
         for (T object : objectList) {
             if (object == null) {
                 throw new IllegalArgumentException("ObjectList contains 1 or more 'null' object values");

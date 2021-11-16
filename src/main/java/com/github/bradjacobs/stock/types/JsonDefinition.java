@@ -14,7 +14,7 @@ public class JsonDefinition implements DataDefinition
     private static final String DOT_EXTENSION = "." + EXTENSION;
 
 
-    //   todo - come back and reorginize a little better.
+    //   todo - come back and reorganize a little better.
     // substrings included as part of the fileName specifc format
     private static final String LONG_DESC_FILE_NAME_ID = "_w_desc";  // includes long descriptions (if available, n/a for tree)
     private static final String TREE_FILE_NAME_ID = "_tree";  // indicates hierarchical tree

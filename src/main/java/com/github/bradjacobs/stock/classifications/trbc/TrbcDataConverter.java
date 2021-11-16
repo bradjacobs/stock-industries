@@ -1,15 +1,16 @@
 package com.github.bradjacobs.stock.classifications.trbc;
 
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrbcDataConverter extends BaseDataConverter<TrbcRecord>
+public class TrbcDataConverter implements DataConverter<TrbcRecord>
 {
     private static final int ECONOMIC_SECTOR_ID_LENGTH = 2;
     private static final int BUSINESS_SECTOR_ID_LENGTH = 4;
@@ -87,11 +88,10 @@ public class TrbcDataConverter extends BaseDataConverter<TrbcRecord>
         return recordList;
     }
 
-    @Override
     protected String cleanValue(String input)
     {
         // todo - some minor upper/lower case fixes.
-        return super.cleanValue(input);
+        return StringUtil.cleanWhitespace(input);
     }
 
 

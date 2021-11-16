@@ -1,17 +1,14 @@
 package com.github.bradjacobs.stock.classifications.cpc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.bradjacobs.stock.MapperBuilder;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
-import com.github.bradjacobs.stock.classifications.DataConverter;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +17,9 @@ import java.util.Map;
 
 /**
  */
-abstract public class AbstractCodeTitleConverter<T> extends BaseDataConverter<T>
+abstract public class AbstractCodeTitleConverter
 {
     private static final JsonMapper JSON_MAPPER = MapperBuilder.json().build();
-
-    abstract protected Class<T> getClassType();
 
     private final String[] levelLabelLookup;
     private final int maxLevels;
@@ -42,11 +37,12 @@ abstract public class AbstractCodeTitleConverter<T> extends BaseDataConverter<T>
 
     }
 
-    protected <R extends CodeTitleLevelRecord> List<T> doConvertToObjects(List<R> codeTitleRecords) throws JsonProcessingException {
+    protected <T, R extends CodeTitleLevelRecord> List<T> doConvertToObjects(
+            Class<T> clazz, List<R> codeTitleRecords) throws JsonProcessingException {
         List<AllLevelsRecord> allLevelsRecords = doConvert(codeTitleRecords);
         List<Map<String,String>> listOfMaps = generateListOfMaps(allLevelsRecords);
 
-        JavaType javaType = JSON_MAPPER.getTypeFactory().constructParametricType(List.class, this.getClassType());
+        JavaType javaType = JSON_MAPPER.getTypeFactory().constructParametricType(List.class, clazz);
         return JSON_MAPPER.convertValue(listOfMaps, javaType);
     }
 
@@ -58,7 +54,7 @@ abstract public class AbstractCodeTitleConverter<T> extends BaseDataConverter<T>
         for (R pairRecord : codeTitleRecords) {
             String codeId = pairRecord.getCodeId();
             String title = pairRecord.getCodeTitle();
-            title = cleanValue(title);  // todo - dumb location for this line.
+            title = StringUtil.cleanWhitespace(title);  // todo - dumb location for this line.
             int level = pairRecord.getCodeLevel();
 
             if (currentRecord.isLevelIdSet(level)) {

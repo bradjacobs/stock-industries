@@ -2,9 +2,10 @@ package com.github.bradjacobs.stock.classifications.zacks;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.bradjacobs.stock.MapperBuilder;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
+import com.github.bradjacobs.stock.util.StringUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
+public class ZacksDataConverter implements DataConverter<ZacksRecord>
 {
     @Override
     public Classification getClassification()
@@ -58,7 +59,7 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
 
     // todo - revisit a better way
     protected String cleanValue(String input) {
-        String result = super.cleanValue(input);
+        String result = StringUtil.cleanWhitespace(input);
 
         result = capitalizeLetterAfterDash(result);
         result = result.replace("Exploration&production", "Exploration & Production");  // z
@@ -84,7 +85,7 @@ public class ZacksDataConverter extends BaseDataConverter<ZacksRecord>
         result = result.replace(" It ", " IT ");
 
         // redo the super in case our replacements messed up whitespace (cautious/pedantic)
-        result = super.cleanValue(result);
+        result = StringUtil.cleanWhitespace(result);
 
         return result;
     }

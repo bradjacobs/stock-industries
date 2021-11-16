@@ -2,8 +2,9 @@ package com.github.bradjacobs.stock.classifications.naics;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.Map;
  *      https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx
  *      https://www.census.gov/naics/2017NAICS/2017_NAICS_Descriptions.xlsx
  */
-public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
+public class NaicsDataConverter implements DataConverter<NaicsRecord>
 {
     private static final int SECTOR_ID_LENGTH = 2;
     private static final int SUB_SECTOR_ID_LENGTH = 3;
@@ -165,10 +166,9 @@ public class NaicsDataConverter extends BaseDataConverter<NaicsRecord>
     }
 
 
-    @Override
     protected String cleanValue(String input)
     {
-        String cleanedValue = super.cleanValue(input);
+        String cleanedValue = StringUtil.cleanWhitespace(input);
 
         // remove any trailing capital 'T' (if exists)
         if (cleanedValue.endsWith("T")) {

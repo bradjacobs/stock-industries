@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.MapperBuilder;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @see <a href="https://ilostat.ilo.org/resources/concepts-and-definitions/classification-economic-activities/">https://ilostat.ilo.org/resources/concepts-and-definitions/classification-economic-activities/</a>
  */
-public class IsicDataConverter extends BaseDataConverter<IsicRecord>
+public class IsicDataConverter implements DataConverter<IsicRecord>
 {
     // explicit tab name in the Excel file
     private static final String EXCEL_TAB_NAME = "ISIC_Rev_4";

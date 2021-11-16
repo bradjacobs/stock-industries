@@ -2,8 +2,8 @@ package com.github.bradjacobs.stock.classifications.napcs;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Map;
  * https://www.census.gov/naics/napcs
  * https://www.census.gov/eos/www/napcs/structure.html
  */
-public class NapcsDataConverter extends BaseDataConverter<NapcsRecord>
+public class NapcsDataConverter implements DataConverter<NapcsRecord>
 {
     private static final int ID_COL_INDEX = 1;
     private static final int TITLE_COL_INDEX = 2;

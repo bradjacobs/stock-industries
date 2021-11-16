@@ -11,9 +11,10 @@ package com.github.bradjacobs.stock.classifications.sic;
 //
 // https://www.dietrich-direct.com/SIC-Code-Reference-Access.htm
 
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SicDataConverter extends BaseDataConverter<SicRecord>
+public class SicDataConverter implements DataConverter<SicRecord>
 {
     private static final String DIVISION_TITLE_PREFIX = "Division ";
     private static final String MAJOR_GROUP_TITLE_PREFIX = "Major Group ";
@@ -259,6 +260,10 @@ public class SicDataConverter extends BaseDataConverter<SicRecord>
         }
 
         return resultMap;
+    }
+
+    private String cleanValue(String input) {
+        return StringUtil.cleanWhitespace(input);
     }
 
 }

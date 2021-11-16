@@ -7,13 +7,13 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.MapperBuilder;
-import com.github.bradjacobs.stock.classifications.BaseDataConverter;
 import com.github.bradjacobs.stock.classifications.Classification;
+import com.github.bradjacobs.stock.classifications.DataConverter;
 
 import java.io.IOException;
 import java.util.List;
 
-public class IcbDataConverter extends BaseDataConverter<IcbRecord>
+public class IcbDataConverter implements DataConverter<IcbRecord>
 {
     @Override
     public Classification getClassification()
