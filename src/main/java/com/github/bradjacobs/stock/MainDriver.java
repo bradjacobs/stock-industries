@@ -8,10 +8,8 @@ import com.github.bradjacobs.stock.serialize.SerializerFactory;
 import com.github.bradjacobs.stock.types.CsvDefinition;
 import com.github.bradjacobs.stock.types.DataDefinition;
 import com.github.bradjacobs.stock.types.JsonDefinition;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,58 +17,12 @@ import java.util.List;
 
 public class MainDriver
 {
-    // todo - add in the permid column for the TRBC for the csv.
-
-
     public static void main(String[] args) throws Exception
     {
         // still in demo-mode.....
         MainDriver driver = new MainDriver();
         driver.generateAllSources();
-
-        String dir1 = "/Users/bradjacobs/git/bradjacobs/stock-industries/output/";
-        String dir2 = "/Users/bradjacobs/git/bradjacobs/stock-industries/output2/";
-
-        List<File> files = getFiles(dir1);
-        for (File file : files) {
-            String fileName = file.getName();
-
-            File matchFile = new File(dir2 + fileName);
-
-            String data1 = FileUtils.readFileToString(file, Charset.defaultCharset());
-            String data2 = FileUtils.readFileToString(matchFile,Charset.defaultCharset());
-
-            String[] lines1 = data1.split("\n");
-            String[] lines2 = data1.split("\n");
-
-            boolean mismatchLine = false;
-            boolean mismatchTotal = (lines1.length != lines2.length);
-
-            int minCount = Math.min(lines1.length, lines2.length);
-            for (int i = 0; i < minCount; i++)
-            {
-                String lineA = lines1[i];
-                String lineB = lines2[i];
-
-                if (! lineA.equals(lineB)) {
-                    mismatchLine = true;
-                }
-            }
-
-            if (mismatchTotal || mismatchLine) {
-                System.out.println(fileName + "  NO MATCH");
-            }
-            else {
-                System.out.println(fileName + "  MATCH");
-            }
-
-
-        }
-
-
-
     }
-
 
     // set to true if want to create 'long description' output files, even if the data source doesn't have any.
     private final boolean serializeEmptyLongDescriptionFiles;
@@ -82,7 +34,6 @@ public class MainDriver
     public MainDriver(boolean serializeEmptyLongDescriptionFiles) {
         this.serializeEmptyLongDescriptionFiles = serializeEmptyLongDescriptionFiles;
     }
-
 
 
     public void generateAllSources() throws Exception
