@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.bradjacobs.stock.MapperBuilder;
+import com.github.bradjacobs.stock.serialize.json.HeaderFieldDataExtractor;
 import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,30 +16,18 @@ import java.util.Map;
 
 /**
  * converts 'tuple data'  (each record has it's own codeId ant title) to a pojo
+ *
+ * TODO -- this needs major commenting!
  */
 public class TupleToPojoConverter
 {
     private static final JsonMapper JSON_MAPPER = MapperBuilder.json().build();
-
-    private final String[] levelLabelLookup;
-    private final int maxLevels;
-    private final String codeIdSuffic;
-    private final String codeLabelSuffix;
-
-    public TupleToPojoConverter(String[] levelLabels, String codeIdSuffix, String codeLabelSuffix)
-    {
-        this.levelLabelLookup = new String[levelLabels.length + 1];
-        System.arraycopy(levelLabels, 0, this.levelLabelLookup, 1, levelLabels.length);
-
-        this.maxLevels = levelLabels.length;
-        this.codeIdSuffic = codeIdSuffix;
-        this.codeLabelSuffix = codeLabelSuffix;
-    }
+    private static final HeaderFieldDataExtractor headerFieldDataExtractor = new HeaderFieldDataExtractor();
 
     public <T, R extends CodeTitleLevelRecord> List<T> doConvertToObjects(
             Class<T> clazz, List<R> codeTitleRecords) throws JsonProcessingException {
         List<AllLevelsRecord> allLevelsRecords = doConvert(codeTitleRecords);
-        List<Map<String,String>> listOfMaps = generateListOfMaps(allLevelsRecords);
+        List<Map<String,String>> listOfMaps = generateListOfMaps(clazz, allLevelsRecords);
 
         JavaType javaType = JSON_MAPPER.getTypeFactory().constructParametricType(List.class, clazz);
         return JSON_MAPPER.convertValue(listOfMaps, javaType);
@@ -66,8 +55,12 @@ public class TupleToPojoConverter
         return resultList;
     }
 
-    public List<Map<String,String>> generateListOfMaps(List<AllLevelsRecord> recordList)
+    public <T> List<Map<String,String>> generateListOfMaps(Class<T> clazz, List<AllLevelsRecord> recordList)
     {
+        String[] headerFieldNames = headerFieldDataExtractor.getHeaderFields(clazz);
+
+        int maxLevels = headerFieldNames.length / 2;
+
         List<Map<String,String>> listOfMaps = new ArrayList<>();
 
         String[] codeIdTitleArray = new String[maxLevels+1];
@@ -76,14 +69,15 @@ public class TupleToPojoConverter
         Arrays.fill(codeNameTitleArray, "");
 
         for (int level = 1; level <= maxLevels; level++) {
-            String levelFieldName = levelLabelLookup[level];
-            if (levelFieldName != null) {
-                codeIdTitleArray[level] = levelFieldName + codeIdSuffic;
-                codeNameTitleArray[level] = levelFieldName + codeLabelSuffix;
-            }
-            else {
-                break;
-            }
+            // todo - refactor and comment this
+            //  level 1 --> index 0
+            //  level 2 --> index 2
+            //  level 3 --> index 4
+            int codeIdFieldIndex = (level - 1) * 2;
+            int titleFieldIndex = codeIdFieldIndex + 1;
+
+            codeIdTitleArray[level] = headerFieldNames[codeIdFieldIndex];
+            codeNameTitleArray[level] = headerFieldNames[titleFieldIndex];
         }
 
         for (AllLevelsRecord record : recordList)

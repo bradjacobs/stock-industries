@@ -22,11 +22,7 @@ import java.util.List;
 public class CpcDataConverter implements DataConverter<CpcRecord>
 {
     private static final List<String> TAGS_TO_REMOVE = Arrays.asList("<i>", "</i>");
-
-    private static final String[] LEVEL_LABELS = new String[]{"section", "division", "group", "class", "subClass"};
-
-    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter(LEVEL_LABELS, "Id", "Name");
-
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter();
 
     @Override
     public Classification getClassification() {

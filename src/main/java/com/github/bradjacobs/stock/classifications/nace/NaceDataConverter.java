@@ -29,8 +29,7 @@ public class NaceDataConverter implements DataConverter<NaceRecord>
     //   when downloading the file with a GET (instead of a POST), seems to use semicolon ';' instead of comma ',' for separator
     private static final Character COLUMN_SEPARATOR = ';';
 
-    private static final String[] LEVEL_LABELS = new String[]{"section", "division", "group", "class"};
-    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter(LEVEL_LABELS, "Code", "Name");
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter();
 
 
     @Override

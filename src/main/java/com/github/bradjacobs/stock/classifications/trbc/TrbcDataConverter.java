@@ -15,8 +15,7 @@ import java.util.List;
 
 public class TrbcDataConverter implements DataConverter<TrbcRecord>
 {
-    private static final String[] LEVEL_LABELS = new String[]{"economicSector", "businessSector", "industryGroup", "industry", "activity"};
-    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter(LEVEL_LABELS, "Id", "Name");
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter();
 
     @Override
     public Classification getClassification()

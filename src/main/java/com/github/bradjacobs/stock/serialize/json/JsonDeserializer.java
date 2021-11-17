@@ -19,6 +19,7 @@ public class JsonDeserializer extends BaseDeserializer
 {
     private final JsonDefinition jsonDefinition;
     private final JsonMapper mapper;
+    private final HeaderFieldDataExtractor headerFieldDataExtractor = new HeaderFieldDataExtractor();
 
     public JsonDeserializer(JsonDefinition jsonDefinition)
     {
@@ -52,7 +53,7 @@ public class JsonDeserializer extends BaseDeserializer
         // read in a generic form of the map data   (if it's something else, then convert to generic node form)
         String genericTreeJson = convertToGenericTreeJson(clazz, json);
 
-        String[] headerFields = getHeaderFields(clazz);
+        String[] headerFields = headerFieldDataExtractor.getHeaderFields(clazz);
         GenericNode[] genericNodes = mapper.readValue(genericTreeJson, GenericNode[].class);
         GenericNodeToFlatListOfMapsConverter converter = new GenericNodeToFlatListOfMapsConverter(headerFields);
         List<Map<String, String>> listOfMaps = converter.createFlatMapList(genericNodes);
@@ -63,7 +64,7 @@ public class JsonDeserializer extends BaseDeserializer
     // todo - fix naming
     private <T> String convertToGenericTreeJson(Class<T> clazz, String json)
     {
-        String[] headerFields = getHeaderFields(clazz);
+        String[] headerFields = headerFieldDataExtractor.getHeaderFields(clazz);
         JsonDefinition.JsonKeyName jsonTreeType = this.jsonDefinition.getJsonKeyName();
         CanonicalHeaderUpdater canonicalHeaderUpdater = new CanonicalHeaderUpdater(headerFields);
 
@@ -86,30 +87,6 @@ public class JsonDeserializer extends BaseDeserializer
         else {
             throw new InternalError("Unhandled jsonTreeType: " + jsonTreeType);
         }
-    }
-
-
-
-
-    protected <T> String[] getHeaderFields(Class<T> clazz)
-    {
-        String[] headerValues = null;
-        JsonPropertyOrder propOrderAnnotation = clazz.getAnnotation(JsonPropertyOrder.class);
-        if (propOrderAnnotation != null)
-        {
-            boolean isAlphabetic = propOrderAnnotation.alphabetic();
-            if (isAlphabetic) {
-                // currently not supported
-                throw new IllegalArgumentException("'JsonPropertyOrder.alphabetic = true' is currently unsupported.");
-            }
-            headerValues = propOrderAnnotation.value();
-        }
-
-        if (headerValues == null || headerValues.length == 0) {
-            throw new IllegalArgumentException("class is missing 'JsonPropertyOrder' annotation: " + clazz.getCanonicalName());
-        }
-
-        return headerValues;
     }
 
 

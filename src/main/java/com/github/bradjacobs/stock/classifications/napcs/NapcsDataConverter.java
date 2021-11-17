@@ -22,9 +22,7 @@ import java.util.Map;
  */
 public class NapcsDataConverter implements DataConverter<NapcsRecord>
 {
-    private static final String[] LEVEL_LABELS =
-            new String[]{"section", "subSection", "division", "group", "subGroup", "trilateralProduct"};
-    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter(LEVEL_LABELS, "Id", "Name");
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter();
 
     @Override
     public Classification getClassification()
