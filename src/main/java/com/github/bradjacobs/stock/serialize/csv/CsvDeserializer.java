@@ -17,6 +17,10 @@ public class CsvDeserializer extends BaseDeserializer
 
     private final CsvDefinition csvDefinition;
 
+    public CsvDeserializer()
+    {
+        this(null);
+    }
     public CsvDeserializer(CsvDefinition csvDefinition)
     {
         this.csvDefinition = csvDefinition;
@@ -27,7 +31,7 @@ public class CsvDeserializer extends BaseDeserializer
     {
         // if the incoming data is 'sparse', then populate it.
         //     todo: fix naming b/c it's confusing
-        if (this.csvDefinition.isSparsely()) {
+        if (this.csvDefinition != null && this.csvDefinition.isSparsely()) {
             data = csvFullSparseConverter.fillCsvData(data);
         }
 

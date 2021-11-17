@@ -2,13 +2,9 @@ package com.github.bradjacobs.stock.classifications.isic;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
+import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,12 +31,8 @@ public class IsicDataConverter implements DataConverter<IsicRecord>
 
         String csvText = excelReader.createCsvText(getClassification().getSourceFileLocation());
 
-        CsvSchema schema = CsvSchema.emptySchema().withHeader();
-        CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
-        ObjectReader objReader = csvObjectMapper.readerFor(IsicRecord.class).with(schema);
-
-        MappingIterator<IsicRecord> iterator = objReader.readValues(csvText);
-        return iterator.readAll();
+        CsvDeserializer csvDeserializer = new CsvDeserializer();
+        return csvDeserializer.deserializeObjects(IsicRecord.class, csvText);
     }
 
 }
