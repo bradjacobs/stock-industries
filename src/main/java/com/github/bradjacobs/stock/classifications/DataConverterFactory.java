@@ -19,7 +19,7 @@ public class DataConverterFactory
     private DataConverterFactory() { }
 
 
-    public static DataConverter createDataConverter(Classification classification) {
+    public static DataConverter<?> createDataConverter(Classification classification) {
         if (classification == null) {
             throw new IllegalArgumentException("Must provide a classificaiton!");
         }

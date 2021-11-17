@@ -50,16 +50,9 @@ public class MainDriver
 
         for (Classification classification : Classification.values())
         {
-            //if (!classification.equals(Classification.CPC)) {
-            if (!classification.equals(Classification.NACE)) {
-                System.out.println("skip!");
-                continue;
-            }
-
-
             System.out.println("Creating files for: " + classification);
 
-            DataConverter converter = DataConverterFactory.createDataConverter(classification);
+            DataConverter<?> converter = DataConverterFactory.createDataConverter(classification);
             List<?> recordList = converter.createDataRecords();
 
             for (DataDefinition dataDefinition : dataDefinitions)
