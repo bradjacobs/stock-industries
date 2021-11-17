@@ -39,8 +39,8 @@ public class SicDataConverter implements DataConverter<SicRecord>
 
 
     // NOTE:  found an actual 'typo' on one of the pages, which interferes w/ the parsing
-    //    specificially incorrect IndustryGroup title on https://www.osha.gov/data/sic-manual/major-group-94
-    //  thus the "fix" is do a special substitution (which is kludgy)
+    //    specifically incorrect IndustryGroup title on https://www.osha.gov/data/sic-manual/major-group-94
+    //  thus the "fix" is to do a special substitution (which is kludgy)
     //
     //  map KEY: incorrect string --> VALUE: correct string
     private static final Map<String,String> INDUSTRY_GROUP_SUBSTITUTION_MAP =
@@ -60,7 +60,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
         //   (but it's not hurting leaving all the same here)
         Map<String,String> divisionIdToNameMap = new TreeMap<>();
         Map<String,String> majorGroupIdToNameMap = new TreeMap<>();
-        Map<String,String> majorGroupIdDivsionIdMap = new TreeMap<>();
+        Map<String,String> majorGroupIdDivisionIdMap = new TreeMap<>();
         Map<String,String> industryGroupIdToNameMap = new TreeMap<>();
         Map<String,String> industryIdToNameMap = new TreeMap<>();
 
@@ -77,9 +77,9 @@ public class SicDataConverter implements DataConverter<SicRecord>
 
         Elements divisionLinkElements = oshaDoc.getElementsByAttributeValueStarting("title", DIVISION_TITLE_PREFIX);
 
-        for (Element divsionLinkElement : divisionLinkElements)
+        for (Element divisionLinkElement : divisionLinkElements)
         {
-            String divisionLinkTitle = divsionLinkElement.attr("title");
+            String divisionLinkTitle = divisionLinkElement.attr("title");
 
             int divisionColonIndex = divisionLinkTitle.indexOf(":");
             String divisionId = divisionLinkTitle.substring(DIVISION_TITLE_PREFIX.length(), divisionColonIndex);
@@ -88,7 +88,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
 
             // now from the 'division link', go up 2 levels, then fetch all the links in scope.
             //  this will be all the major groups to be affiliated w/ the division.
-            Element parentParent = divsionLinkElement.parent().parent();
+            Element parentParent = divisionLinkElement.parent().parent();
 
             Elements majorGroupLinkElements = parentParent.getElementsByAttributeValueStarting("title", MAJOR_GROUP_TITLE_PREFIX);
             for (Element majorGroupLinkElement : majorGroupLinkElements)
@@ -105,12 +105,12 @@ public class SicDataConverter implements DataConverter<SicRecord>
                 majorGroupUrlMap.put(majorGroupId, fullUrl);
 
                 // also need to track majorgroup - division b/c can't tell based on the naming structure.
-                majorGroupIdDivsionIdMap.put(majorGroupId, divisionId);
+                majorGroupIdDivisionIdMap.put(majorGroupId, divisionId);
             }
         }
 
 
-        // now.... visit each link and capture all the industry group + inudstry info
+        // now.... visit each link and capture all the industry group + industry info
         //    side note:  would have to dive another level of web pages in order to
         //       grab full description of the industryId/Name  (not really worth it at present)
 
@@ -126,9 +126,9 @@ public class SicDataConverter implements DataConverter<SicRecord>
 
             //System.out.println("Fetching URL: " + url);
 
-            String indusryGroupHtml = DownloadUtil.downloadFile(url);
+            String industryGroupHtml = DownloadUtil.downloadFile(url);
 
-            Document industryGroupDoc = Jsoup.parse(indusryGroupHtml);
+            Document industryGroupDoc = Jsoup.parse(industryGroupHtml);
 
             Elements pElements = industryGroupDoc.getElementsByTag("p");
             for (Element pElement : pElements)
@@ -206,7 +206,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
             record.setMajorGroupId(majorGroupId);
             record.setMajorGroupName(majorGroupName);
 
-            String divisionId = majorGroupIdDivsionIdMap.get(majorGroupId);
+            String divisionId = majorGroupIdDivisionIdMap.get(majorGroupId);
             String divisionName = divisionIdToNameMap.get(divisionId);
             record.setDivisionId(divisionId);
             record.setDivisionName(divisionName);

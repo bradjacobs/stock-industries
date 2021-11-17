@@ -15,7 +15,7 @@ public class JsonDefinition implements DataDefinition
 
 
     //   todo - come back and reorganize a little better.
-    // substrings included as part of the fileName specifc format
+    // substrings included as part of the fileName specific format
     private static final String LONG_DESC_FILE_NAME_ID = "_w_desc";  // includes long descriptions (if available, n/a for tree)
     private static final String TREE_FILE_NAME_ID = "_tree";  // indicates hierarchical tree
     private static final String CANONICAL_FILE_NAME_ID = "_canonical";  // indicates canonical form (i.e. 'common header names regardless of customer)

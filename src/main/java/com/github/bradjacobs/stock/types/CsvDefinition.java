@@ -16,7 +16,7 @@ public class CsvDefinition implements DataDefinition
     private static final String SPARSE_FILE_NAME_ID = "_sparse";
 
     // included as part of the fileName to indicate includes 'long descriptions'
-    //   will be n/a if no long descriptions available
+    //   will be N/A if no long descriptions available
     private static final String LONG_DESC_FILE_NAME_ID = "_w_desc";
 
 
@@ -42,7 +42,7 @@ public class CsvDefinition implements DataDefinition
     public String generateFileName(Classification classification)
     {
         if (classification == null) {
-            throw new IllegalArgumentException("Must provide a classificaiton");
+            throw new IllegalArgumentException("Must provide a classification");
         }
         StringBuilder sb = new StringBuilder();
         sb.append(classification.getPrefix());

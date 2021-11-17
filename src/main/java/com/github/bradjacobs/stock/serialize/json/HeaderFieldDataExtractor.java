@@ -12,7 +12,6 @@ public class HeaderFieldDataExtractor
         {
             boolean isAlphabetic = propOrderAnnotation.alphabetic();
             if (isAlphabetic) {
-                // currently not supported
                 throw new IllegalArgumentException("'JsonPropertyOrder.alphabetic = true' is currently unsupported.");
             }
             headerValues = propOrderAnnotation.value();

@@ -35,7 +35,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
 
         // UPDATE:
         //    come to find out that specific whitespace placement can cause the PdfParser to mess up the line order.
-        //    thus each 'part' will be temporarily saved, then everything reassmabled afterwards.
+        //    thus each 'part' will be temporarily saved, then everything reassembled afterwards.
         Map<String, String> sectorNameMap = new HashMap<>();
         Map<String, String> groupNameMap = new HashMap<>();
         Map<String, MgecsRecord> industryToRecordMap = new TreeMap<>();  // keep keys sorted
@@ -70,7 +70,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
                     {
                         // SIDE: this is squirrelly
                         //   Problem is that sometimes text goes to next line and the '\n' is the ONLY space character b/w 2 words.
-                        //   Thus have to take extra caution so that 2 seperate words don't get concatenated into 1.
+                        //   Thus have to take extra caution so that 2 separate words don't get concatenated into 1.
 
 
                         // temporarily add back new line and don't trim
@@ -104,7 +104,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
                     }
                     else if (id.length() == INDUSTRY_ID_LENGTH)
                     {
-                        // NOTE: sub-optimal soln b/c future lines are examined in getDescription method as well as this loop.
+                        // NOTE: sub-optimal solution b/c future lines are examined in getDescription method as well as this loop.
                         //   (even though problem exists, not worth addressing at present)
                         String desc = getDescription(pdfFileLines, i+1);
 

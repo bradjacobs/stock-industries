@@ -28,7 +28,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         // download html page..
         String html = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
 
-        // grab the nextes json within the page
+        // grab the neested json within the page
         String json = extractNestedJson(html);
 
         // convert the JSON to ZacksRecords  (the 'ZacksRecord' has the header alias definitions)

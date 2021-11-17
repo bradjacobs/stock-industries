@@ -59,7 +59,7 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
         String regeneratedCsvData = csvArrayMapper.writeValueAsString(rowDataList);
 
         //   Step 3
-        // the current CSV string format is in 'sparse mode'  (meaning that a cell doesn't have a value
+        // the current CSV string format is in 'sparse mode'  (meaning that a cell doesn't have a value)
         // if the column immediately above it has the same value.  So create a 'full' csv string,
         // in which every cell is populated.
         CsvFullSparseConverter csvFullSparseConverter = new CsvFullSparseConverter();
@@ -67,7 +67,7 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
 
         //   Step 4
         // Now convert the CSV string into a List<GicsRecord>
-        // IMPORANT NOTE:  remember that the csv string does NOT have a header row.
+        // IMPORTANT NOTE:  remember that the csv string does NOT have a header row.
         //   This can be worked around by ensuring that we know the order of each cell
         //   _AND_ that the GicsRecord has 'JsonPropertyOrder' annotation set.
         //   if the JsonPropertyOrder was not set then it would be arbitrary which values

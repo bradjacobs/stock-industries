@@ -21,7 +21,7 @@ public class DataConverterFactory
 
     public static DataConverter<?> createDataConverter(Classification classification) {
         if (classification == null) {
-            throw new IllegalArgumentException("Must provide a classificaiton!");
+            throw new IllegalArgumentException("Must provide a classification!");
         }
 
         switch (classification) {

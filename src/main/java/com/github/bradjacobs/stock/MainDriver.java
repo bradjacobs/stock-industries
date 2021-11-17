@@ -24,7 +24,7 @@ public class MainDriver
         driver.generateAllSources();
     }
 
-    // set to true if want to create 'long description' output files, even if the data source doesn't have any.
+    // set to true to create 'long description' output files, even if the data source doesn't have any.
     private final boolean serializeEmptyLongDescriptionFiles;
 
     public MainDriver() {
@@ -61,7 +61,7 @@ public class MainDriver
 
                 String fileName = serializer.generateFileName(classification);
 
-                if (shouldSerialzeFile(classification, fileName))
+                if (shouldSerializeFile(classification, fileName))
                 {
                     File outFile = new File(outputDirectory, fileName);
                     serializer.serializeToFile(outFile, recordList);
@@ -72,7 +72,7 @@ public class MainDriver
 
 
     // a little kludgy...  come back to this
-    private boolean shouldSerialzeFile(Classification classification, String fileName)
+    private boolean shouldSerializeFile(Classification classification, String fileName)
     {
         // for the case of
         //   1. classification doesn't have long descriptions available

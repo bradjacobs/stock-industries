@@ -55,7 +55,7 @@ public class MapperBuilder
                 mapper.enable(SerializationFeature.INDENT_OUTPUT);
             }
             if (suppressNullArrays) {
-                // avoid marshalling out an null array.
+                // avoid marshalling out a null array.
                 mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             }
 

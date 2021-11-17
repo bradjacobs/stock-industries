@@ -44,17 +44,17 @@ public class NaceDataConverter implements DataConverter<NaceRecord>
         CsvSchema schema = CsvSchema.emptySchema().withHeader().withColumnSeparator(COLUMN_SEPARATOR);
         CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
 
-        ObjectReader objReader = csvObjectMapper.readerFor(RawNacoRecord.class).with(schema);
+        ObjectReader objReader = csvObjectMapper.readerFor(RawNaceRecord.class).with(schema);
         String csvData = DownloadUtil.downloadFile(this.getClassification().getSourceFileLocation());
 
-        MappingIterator<RawNacoRecord> iterator = objReader.readValues(csvData);
-        List<RawNacoRecord> pojoList = iterator.readAll();
+        MappingIterator<RawNaceRecord> iterator = objReader.readValues(csvData);
+        List<RawNaceRecord> pojoList = iterator.readAll();
 
         return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(NaceRecord.class, pojoList);
     }
 
 
-    private static class RawNacoRecord implements CodeTitleLevelRecord
+    private static class RawNaceRecord implements CodeTitleLevelRecord
     {
         @JsonProperty("Code")
         private String code;

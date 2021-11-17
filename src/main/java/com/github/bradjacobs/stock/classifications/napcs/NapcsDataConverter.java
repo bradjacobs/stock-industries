@@ -36,10 +36,7 @@ public class NapcsDataConverter implements DataConverter<NapcsRecord>
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.LENIENT).setSkipEmptyRows(true).build();
 
-        String filePath = "/Users/bradjacobs/git/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/napcs/2017NAPCSStructure-1.xlsx";
-
-//        String csvData = excelReader.createCsvText(getClassification().getSourceFileLocation());
-        String csvData = excelReader.createCsvText(filePath);
+        String csvData = excelReader.createCsvText(getClassification().getSourceFileLocation());
 
         CsvDeserializer csvDeserializer = new CsvDeserializer(null);
         List<RawNapcsRecord> rawRecords = csvDeserializer.csvToObjectList(RawNapcsRecord.class, csvData);

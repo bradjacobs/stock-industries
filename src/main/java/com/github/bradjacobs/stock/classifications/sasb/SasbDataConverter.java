@@ -44,11 +44,11 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
             throw new InternalError("Unable to find primary class name: " + PANELS_CLASS);
         }
 
-        Element panelElemements = panelsElementsCollection.get(0);
+        Element panelElements = panelsElementsCollection.get(0);
 
         List<SasbRecord> recordList = new ArrayList<>();
 
-        for (Element childSectorElement : panelElemements.children())
+        for (Element childSectorElement : panelElements.children())
         {
             // note: assuming there's only ONE table for the child sector element
             Elements innerTableRowElements = childSectorElement.getElementsByTag("tr");

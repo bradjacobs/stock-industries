@@ -9,7 +9,7 @@ import java.util.Arrays;
 //   3 add javadocs to explain this class
 public class CsvFullSparseConverter
 {
-    private static final CsvMatrixValidator csvMatrixValiator = new CsvMatrixValidator();
+    private static final CsvMatrixValidator csvMatrixValidator = new CsvMatrixValidator();
 
     public String sparseifyCsvData(String csvData) throws IOException {
         return convertCsvData(csvData, true);
@@ -37,7 +37,7 @@ public class CsvFullSparseConverter
 
     private String[][] convertMatrix(String[][] dataArray, boolean makeSparse)
     {
-        csvMatrixValiator.validateMatrix(dataArray);
+        csvMatrixValidator.validateMatrix(dataArray);
 
         int rowCount = dataArray.length;
         int colCount = dataArray[0].length;
@@ -51,7 +51,7 @@ public class CsvFullSparseConverter
         // Note: starting at index 1
         for (int i = 1; i < rowCount; i++)
         {
-            // the previous row to compare against depends if we are making sparse or making full
+            // the previous row to compare against will depend if we are making sparse or making full
             //  tend the need the one that has the 'more' data, so depends which way we're going.
             String[] previousRow;
             if (makeSparse) {

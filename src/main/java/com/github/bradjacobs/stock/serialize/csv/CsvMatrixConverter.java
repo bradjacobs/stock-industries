@@ -12,7 +12,7 @@ import java.io.IOException;
 public class CsvMatrixConverter
 {
     private static final CsvMapper csvArrayMapper = MapperBuilder.csv().setArrayWrap(true).build();
-    private static final CsvMatrixValidator csvMatrixValiator = new CsvMatrixValidator();
+    private static final CsvMatrixValidator csvMatrixValidator = new CsvMatrixValidator();
 
     public static String[][] convertToMatrix(String csv) throws IOException
     {
@@ -24,7 +24,7 @@ public class CsvMatrixConverter
 
     public static String convertToCsv(String[][] csvMatrix) throws IOException
     {
-        csvMatrixValiator.validateMatrix(csvMatrix);
+        csvMatrixValidator.validateMatrix(csvMatrix);
 
         if (csvMatrix.length == 0) {
             return "";  // tbd to allow this

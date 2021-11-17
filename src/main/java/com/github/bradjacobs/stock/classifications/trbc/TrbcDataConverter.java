@@ -55,7 +55,7 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
 
             String[] lineElements = line.split(" ");
 
-            // if have exactly 2 elements and the last is a number
+            // if there are exactly 2 elements and the last is a number
             //   then this is a result of a pdf multi-line parse issue
             //     thus prepend the previous 2 lines to create a 'new' line
             if (lineElements.length == 2) {
