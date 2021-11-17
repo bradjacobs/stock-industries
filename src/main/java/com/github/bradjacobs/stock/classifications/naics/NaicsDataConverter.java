@@ -8,17 +8,13 @@ import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.classifications.common.TupleToPojoConverter;
-import com.github.bradjacobs.stock.classifications.napcs.NapcsDataConverter;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -42,11 +38,8 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
     @Override
     public List<NaicsRecord> createDataRecords() throws IOException
     {
-        String filePath = "/Users/bradjacobs/git/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/naics/2017_NAICS_Descriptions-2.xlsx";
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.LENIENT).setSkipEmptyRows(true).build();
-
-        //String csvData = excelReader.createCsvText(getClassification().getSourceFileLocation());
-        String csvData = excelReader.createCsvText(filePath);
+        String csvData = excelReader.createCsvText(getClassification().getSourceFileLocation());
 
         CsvDeserializer csvDeserializer = new CsvDeserializer();
         List<RawNaicsRecord> rawRecords = csvDeserializer.csvToObjectList(RawNaicsRecord.class, csvData);
