@@ -42,9 +42,11 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
     @Override
     public List<NaicsRecord> createDataRecords() throws IOException
     {
+        String filePath = "/Users/bradjacobs/git/bradjacobs/stock-industries/src/main/java/com/github/bradjacobs/stock/classifications/naics/2017_NAICS_Descriptions-2.xlsx";
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.LENIENT).setSkipEmptyRows(true).build();
 
-        String csvData = excelReader.createCsvText(getClassification().getSourceFileLocation());
+        //String csvData = excelReader.createCsvText(getClassification().getSourceFileLocation());
+        String csvData = excelReader.createCsvText(filePath);
 
         CsvDeserializer csvDeserializer = new CsvDeserializer();
         List<RawNaicsRecord> rawRecords = csvDeserializer.csvToObjectList(RawNaicsRecord.class, csvData);
@@ -66,7 +68,7 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
     private List<RawNaicsRecord> sanitizeList(List<RawNaicsRecord> inputRecords)
     {
         List<RawNaicsRecord> filteredList = inputRecords.stream().sequential()
-                .filter(r -> r.getCodeId().length() != IGNORABLE_ID_LENGTH)
+                .filter(r -> (r.getCodeId().length() != IGNORABLE_ID_LENGTH || !StringUtils.isNumeric(r.getCodeId())))
                 .collect(Collectors.toList());
 
         filteredList.forEach(r -> {
@@ -78,7 +80,13 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
 
     protected String cleanValue(String input)
     {
-        return StringUtil.cleanWhitespace(input);
+        String cleanedValue = StringUtil.cleanWhitespace(input);
+
+        // remove any trailing capital 'T' (if exists)
+        if (cleanedValue.endsWith("T")) {
+            cleanedValue = cleanedValue.substring(0, cleanedValue.length() - 1);
+        }
+        return cleanedValue;
     }
 
     protected String cleanDescriptionValue(String description) {
@@ -124,8 +132,18 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         @Override
         @JsonIgnore
         public int getCodeLevel() {
-            // length 6 means level 4...  all others levels are length-1  (i.e. "1111" --> level 3)
-            return (this.code.length() == 6 ? 4 : code.length()-1);
+            // NOTE: there are some code value 'exceptions' that are actually ranges for sectors:
+            //   e.g.    31-33  Manufacturing,   44-45  Retail Trade,   etc
+            if (code.contains("-")) {
+                return 1;  // top level
+            }
+            else if (code.length() == 6) {
+                return 4;  // special case length 6 is level 4
+            }
+            else {
+                // all others levels are length-1  (i.e. "1111" --> level 3)
+                return code.length() - 1;
+            }
         }
     }
 }
