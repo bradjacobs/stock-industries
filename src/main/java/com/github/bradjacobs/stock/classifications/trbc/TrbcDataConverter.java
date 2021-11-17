@@ -1,7 +1,10 @@
 package com.github.bradjacobs.stock.classifications.trbc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
+import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
+import com.github.bradjacobs.stock.classifications.common.TupleToPojoConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -12,11 +15,8 @@ import java.util.List;
 
 public class TrbcDataConverter implements DataConverter<TrbcRecord>
 {
-    private static final int ECONOMIC_SECTOR_ID_LENGTH = 2;
-    private static final int BUSINESS_SECTOR_ID_LENGTH = 4;
-    private static final int INDUSTRY_GROUP_ID_LENGTH = 6;
-    private static final int INDUSTRY_ID_LENGTH = 8;
-    private static final int ACTIVITY_ID_LENGTH = 10;
+    private static final String[] LEVEL_LABELS = new String[]{"economicSector", "businessSector", "industryGroup", "industry", "activity"};
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter(LEVEL_LABELS, "Id", "Name");
 
     @Override
     public Classification getClassification()
@@ -28,83 +28,24 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
     public List<TrbcRecord> createDataRecords() throws IOException
     {
         String[] pdfFileLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
-
         return parseLines(pdfFileLines);
     }
 
-    private List<TrbcRecord> parseLines(String[] lines)
+    private List<TrbcRecord> parseLines(String[] lines) throws JsonProcessingException
     {
-        List<TrbcRecord> recordList = new ArrayList<>();
-
-        String economicSectorName = "";
-        String businessSectorName = "";
-        String industryGroupName = "";
-        String industryName = "";
-        String activityName = "";
-
-        String economicSectorId = "";
-        String businessSectorId = "";
-        String industryGroupId = "";
-        String industryId = "";
-        String activityId = "";
-
-        List<String[]> lineElementList = getParsableLineChunks(lines);
-        for (String[] lineElements : lineElementList)
-        {
-            String name = cleanValue(lineElements[0]);
-            String trbcId = lineElements[1];
-
-            if (trbcId.length() == ECONOMIC_SECTOR_ID_LENGTH) {
-                economicSectorId = trbcId;
-                economicSectorName = name;
-            }
-            else if (trbcId.length() == BUSINESS_SECTOR_ID_LENGTH) {
-                businessSectorId = trbcId;
-                businessSectorName = name;
-            }
-            else if (trbcId.length() == INDUSTRY_GROUP_ID_LENGTH) {
-                industryGroupId = trbcId;
-                industryGroupName = name;
-            }
-            else if (trbcId.length() == INDUSTRY_ID_LENGTH) {
-                industryId = trbcId;
-                industryName = name;
-            }
-            else if (trbcId.length() == ACTIVITY_ID_LENGTH) {
-                activityId = trbcId;
-                activityName = name;
-
-                TrbcRecord record = new TrbcRecord(
-                    economicSectorId, economicSectorName,
-                    businessSectorId, businessSectorName,
-                    industryGroupId, industryGroupName,
-                    industryId, industryName,
-                    activityId, activityName);
-
-                recordList.add(record);
-            }
-        }
-
-        return recordList;
+        List<TrbcEntry> entryList = getEntryRecords(lines);
+        return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(TrbcRecord.class, entryList);
     }
-
-    protected String cleanValue(String input)
-    {
-        // todo - some minor upper/lower case fixes.
-        return StringUtil.cleanWhitespace(input);
-    }
-
 
     /**
-     * Return a list of 'valid' line pairs
-     *   each String[] has length == 2
-     *       String[0] = name,   String[1] = trbcId
-     * @param lines
-     * @return
+     * Grabs all the data in the form of codeId/Title entries.
+     *   (taking advantage of the fact that each value is one its own line)
+     * @param lines lines to parse
+     * @return List<TrbcEntry>
      */
-    private List<String[]> getParsableLineChunks(String[] lines)
+    private List<TrbcEntry> getEntryRecords(String[] lines)
     {
-        List<String[]> resultList = new ArrayList<>();
+        List<TrbcEntry> resultList = new ArrayList<>();
 
         for (int i = 0; i < lines.length; i++)
         {
@@ -119,15 +60,13 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
             //   then this is a result of a pdf multi-line parse issue
             //     thus prepend the previous 2 lines to create a 'new' line
             if (lineElements.length == 2) {
-
                 if (StringUtils.isNumeric(lineElements[1])) {
                     line = String.join(" ", lines[i-2], lines[i-1], line);
                     lineElements = line.split(" ");
                 }
             }
 
-            if (lineElements.length > 2)
-            {
+            if (lineElements.length > 2) {
                 String trbcId = lineElements[lineElements.length-1];
                 if (! StringUtils.isNumeric(trbcId)) {
                     continue;
@@ -139,13 +78,21 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
 
                 // name is immediately before the permId
                 String name = line.substring(0, permIdIndex-1);
-                resultList.add(new String[]{name, trbcId});
+
+                name = cleanValue(name);
+                TrbcEntry trbcEntry = new TrbcEntry(trbcId, name);
+                resultList.add(trbcEntry);
             }
         }
 
         return resultList;
     }
 
+    protected String cleanValue(String input)
+    {
+        // todo - some minor upper/lower case fixes.
+        return StringUtil.cleanWhitespace(input);
+    }
 
     private boolean isSkipableLine(String line)
     {
@@ -167,6 +114,26 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
     private boolean isTableColumnHeaderRow(String line)
     {
         return line.startsWith("Economic");
+    }
+
+    private static class TrbcEntry implements CodeTitleLevelRecord
+    {
+        private final String code;
+        private final String title;
+
+        public TrbcEntry(String code, String title) {
+            this.code = code;
+            this.title = title;
+        }
+
+        @Override
+        public String getCodeId() { return code; }
+        @Override
+        public String getCodeTitle() { return title; }
+        @Override
+        public int getCodeLevel() {
+            return code.length() / 2;
+        }  // level is always 1/2 the size of the id.
     }
 
 }

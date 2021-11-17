@@ -14,10 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Abstract class for converters in which the 'raw data' is usually given in 2 columns
- * (one for the Ids, one for the titles)
+ * converts 'tuple data'  (each record has it's own codeId ant title) to a pojo
  */
-abstract public class AbstractCodeTitleConverter
+public class TupleToPojoConverter
 {
     private static final JsonMapper JSON_MAPPER = MapperBuilder.json().build();
 
@@ -26,7 +25,7 @@ abstract public class AbstractCodeTitleConverter
     private final String codeIdSuffic;
     private final String codeLabelSuffix;
 
-    public AbstractCodeTitleConverter(String[] levelLabels, String codeIdSuffix, String codeLabelSuffix)
+    public TupleToPojoConverter(String[] levelLabels, String codeIdSuffix, String codeLabelSuffix)
     {
         this.levelLabelLookup = new String[levelLabels.length + 1];
         System.arraycopy(levelLabels, 0, this.levelLabelLookup, 1, levelLabels.length);
@@ -36,7 +35,7 @@ abstract public class AbstractCodeTitleConverter
         this.codeLabelSuffix = codeLabelSuffix;
     }
 
-    protected <T, R extends CodeTitleLevelRecord> List<T> doConvertToObjects(
+    public <T, R extends CodeTitleLevelRecord> List<T> doConvertToObjects(
             Class<T> clazz, List<R> codeTitleRecords) throws JsonProcessingException {
         List<AllLevelsRecord> allLevelsRecords = doConvert(codeTitleRecords);
         List<Map<String,String>> listOfMaps = generateListOfMaps(allLevelsRecords);

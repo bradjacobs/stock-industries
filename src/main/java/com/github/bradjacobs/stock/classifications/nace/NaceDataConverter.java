@@ -10,7 +10,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
-import com.github.bradjacobs.stock.classifications.common.AbstractCodeTitleConverter;
+import com.github.bradjacobs.stock.classifications.common.TupleToPojoConverter;
 import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 
@@ -23,17 +23,15 @@ import java.util.Map;
  *  NOTE1: the 'CSV' file isn't true csv ??
  *  NOTE2: skipping the 'long description' b/c it's crazy long and not very useful.
  */
-public class NaceDataConverter extends AbstractCodeTitleConverter implements DataConverter<NaceRecord>
+public class NaceDataConverter implements DataConverter<NaceRecord>
 {
     // ***** NOTE *****
     //   when downloading the file with a GET (instead of a POST), seems to use semicolon ';' instead of comma ',' for separator
     private static final Character COLUMN_SEPARATOR = ';';
 
     private static final String[] LEVEL_LABELS = new String[]{"section", "division", "group", "class"};
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter(LEVEL_LABELS, "Code", "Name");
 
-    public NaceDataConverter() {
-        super(LEVEL_LABELS, "Code", "Name");
-    }
 
     @Override
     public Classification getClassification()
@@ -53,7 +51,7 @@ public class NaceDataConverter extends AbstractCodeTitleConverter implements Dat
         MappingIterator<RawNacoRecord> iterator = objReader.readValues(csvData);
         List<RawNacoRecord> pojoList = iterator.readAll();
 
-        return doConvertToObjects(NaceRecord.class, pojoList);
+        return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(NaceRecord.class, pojoList);
     }
 
 

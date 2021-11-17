@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
-import com.github.bradjacobs.stock.classifications.common.AbstractCodeTitleConverter;
+import com.github.bradjacobs.stock.classifications.common.TupleToPojoConverter;
 import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 import com.github.bradjacobs.stock.util.DownloadUtil;
@@ -19,15 +19,14 @@ import java.util.List;
 
 /**
  */
-public class CpcDataConverter extends AbstractCodeTitleConverter implements DataConverter<CpcRecord>
+public class CpcDataConverter implements DataConverter<CpcRecord>
 {
     private static final List<String> TAGS_TO_REMOVE = Arrays.asList("<i>", "</i>");
 
     private static final String[] LEVEL_LABELS = new String[]{"section", "division", "group", "class", "subClass"};
 
-    public CpcDataConverter() {
-        super(LEVEL_LABELS, "Id", "Name");
-    }
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter(LEVEL_LABELS, "Id", "Name");
+
 
     @Override
     public Classification getClassification() {
@@ -42,7 +41,7 @@ public class CpcDataConverter extends AbstractCodeTitleConverter implements Data
         CsvDeserializer csvDeserializer = new CsvDeserializer(null);
         List<RawCpcRecord> rawRecords = csvDeserializer.csvToObjectList(RawCpcRecord.class, csvData);
 
-        return doConvertToObjects(CpcRecord.class, rawRecords);
+        return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(CpcRecord.class, rawRecords);
     }
 
     protected String cleanValue(String input)

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
-import com.github.bradjacobs.stock.classifications.common.AbstractCodeTitleConverter;
+import com.github.bradjacobs.stock.classifications.common.TupleToPojoConverter;
 import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 
@@ -20,14 +20,11 @@ import java.util.Map;
  * https://www.census.gov/naics/napcs
  * https://www.census.gov/eos/www/napcs/structure.html
  */
-public class NapcsDataConverter extends AbstractCodeTitleConverter implements DataConverter<NapcsRecord>
+public class NapcsDataConverter implements DataConverter<NapcsRecord>
 {
     private static final String[] LEVEL_LABELS =
             new String[]{"section", "subSection", "division", "group", "subGroup", "trilateralProduct"};
-
-    public NapcsDataConverter() {
-        super(LEVEL_LABELS, "Id", "Name");
-    }
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter(LEVEL_LABELS, "Id", "Name");
 
     @Override
     public Classification getClassification()
@@ -49,7 +46,7 @@ public class NapcsDataConverter extends AbstractCodeTitleConverter implements Da
         CsvDeserializer csvDeserializer = new CsvDeserializer(null);
         List<RawNapcsRecord> rawRecords = csvDeserializer.csvToObjectList(RawNapcsRecord.class, csvData);
 
-        return doConvertToObjects(NapcsRecord.class, rawRecords);
+        return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(NapcsRecord.class, rawRecords);
     }
 
     private static class RawNapcsRecord implements CodeTitleLevelRecord
