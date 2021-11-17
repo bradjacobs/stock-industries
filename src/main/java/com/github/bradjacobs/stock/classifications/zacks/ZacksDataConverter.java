@@ -6,6 +6,7 @@ import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import com.github.bradjacobs.stock.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +48,12 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         }
 
         Collections.sort(resultList);
+
+        // remove a "0" record if it exists
+        ZacksRecord firstRecord = resultList.get(0);
+        if (firstRecord.getSectorCode().equals("0")) {
+            resultList.remove(0);
+        }
 
         return resultList;
     }
@@ -108,54 +115,37 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
 
     private String extractTitleFromSpanTag(String str)
     {
-        int titleIndex = str.indexOf("title=\"");
-        if (titleIndex > 0)
-        {
-            int startQuote = str.indexOf("\"", titleIndex);
-            int endQuote = str.indexOf("\"", startQuote+1);
-
-            return str.substring(startQuote+1, endQuote);
+        String extractedTitle = StringUtils.substringBetween(str, "title=\"", "\"");
+        if (extractedTitle == null) {
+            extractedTitle = str;
         }
-        else {
-            return str;
-        }
+        return extractedTitle;
     }
 
+    private static final String NESTED_JSON_PREFIX = "\"data\" ";
 
     public String extractNestedJson(String html)
     {
         String[] lines = html.split("\n");
-
-        String magicLine = null;
+        String json = null;
 
         for (String line : lines) {
             line = line.trim();
 
-            if (line.startsWith("\"data\" ") && line.contains("Sector Group"))
+            if (line.startsWith(NESTED_JSON_PREFIX) && line.contains("Sector Group"))
             {
-                magicLine = line;
+                json = line.substring(NESTED_JSON_PREFIX.length()).trim();
+                if (json.startsWith(":")) {
+                    json = json.substring(1).trim();
+                }
                 break;
             }
         }
 
-        String json = magicLine;
         if (json == null) {
             throw new InternalError("Unable to find data within file.");
         }
 
-        int firstBracketIndex = json.indexOf('[');
-        if (firstBracketIndex > 0)
-        {
-            json = json.substring(firstBracketIndex);
-        }
-
-        int lastBracketIndex = json.lastIndexOf(']');
-        if (lastBracketIndex > 0)
-        {
-            json = json.substring(0, lastBracketIndex+1);
-        }
-
         return json;
     }
-
 }
