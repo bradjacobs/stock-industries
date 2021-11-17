@@ -2,8 +2,14 @@ package com.github.bradjacobs.stock.classifications.naics;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
+import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
+import com.github.bradjacobs.stock.classifications.common.TupleToPojoConverter;
+import com.github.bradjacobs.stock.classifications.napcs.NapcsDataConverter;
+import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
 import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -22,25 +30,8 @@ import java.util.Map;
  */
 public class NaicsDataConverter implements DataConverter<NaicsRecord>
 {
-    private static final int SECTOR_ID_LENGTH = 2;
-    private static final int SUB_SECTOR_ID_LENGTH = 3;
-    private static final int INDUSTRY_GROUP_ID_LENGTH = 4;
-    private static final int INDUSTRY_ID_LENGTH = 6;
-
+    private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter();
     private static final int IGNORABLE_ID_LENGTH = 5; // ignore all codes of this length
-
-    private static final int CODE_COLUMN_INDEX = 0;
-    private static final int TITLE_COLUMN_INDEX = 1;
-    private static final int DESCRIPTION_COLUMN_INDEX = 2;
-
-    // map to determine the depth level based on the length of the id.
-    private static final Map<Integer,Integer> LENGTH_TO_LEVEL_MAP =  new HashMap<Integer, Integer>() {{
-        put(SECTOR_ID_LENGTH, 1);
-        put(SUB_SECTOR_ID_LENGTH, 2);
-        put(INDUSTRY_GROUP_ID_LENGTH, 3);
-        put(INDUSTRY_ID_LENGTH, 4);
-    }};
-
 
     @Override
     public Classification getClassification()
@@ -51,130 +42,43 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
     @Override
     public List<NaicsRecord> createDataRecords() throws IOException
     {
-        ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
-        String[][] csvData = excelReader.createCsvMatrix(getClassification().getSourceFileLocation());
-        return generateRecords(csvData);
+        ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.LENIENT).setSkipEmptyRows(true).build();
+
+        String csvData = excelReader.createCsvText(getClassification().getSourceFileLocation());
+
+        CsvDeserializer csvDeserializer = new CsvDeserializer();
+        List<RawNaicsRecord> rawRecords = csvDeserializer.csvToObjectList(RawNaicsRecord.class, csvData);
+        List<RawNaicsRecord> claanRecords = sanitizeList(rawRecords);
+
+        List<NaicsRecord> resultRecords = TUPLE_TO_POJO_CONVERTER.doConvertToObjects(NaicsRecord.class, claanRecords);
+
+        // the final step it to 'tack on' the long descriptions
+        Map<String, String> lookupMap = claanRecords.stream()
+                .collect(Collectors.toMap(RawNaicsRecord::getCodeId, RawNaicsRecord::getDescription));
+        for (NaicsRecord fullRecord : resultRecords) {
+            fullRecord.setDescription(lookupMap.get(fullRecord.getIndustryId()));
+        }
+
+        return resultRecords;
     }
 
 
-    public List<NaicsRecord> generateRecords(String[][] csvData)
+    private List<RawNaicsRecord> sanitizeList(List<RawNaicsRecord> inputRecords)
     {
-        List<NaicsRecord> recordList = new ArrayList<>();
+        List<RawNaicsRecord> filteredList = inputRecords.stream().sequential()
+                .filter(r -> r.getCodeId().length() != IGNORABLE_ID_LENGTH)
+                .collect(Collectors.toList());
 
-        NaicsRecord currentRecord = new NaicsRecord();
-
-        // important note:  code assumes the data input is formatted and sorted
-        //   in a very specific way (or it'll blow up)
-
-        // NOTE: starting at index 1 (skip header row)
-        for (int i = 1; i < csvData.length; i++)
-        {
-            String[] rowData = csvData[i];
-
-            String code = rowData[CODE_COLUMN_INDEX];
-            String title = rowData[TITLE_COLUMN_INDEX];
-            String description = rowData[DESCRIPTION_COLUMN_INDEX];
-
-            if (StringUtils.isEmpty(code) || StringUtils.isEmpty(title)) {
-                continue;
-            }
-
-            int codeLength = code.length();
-
-            if (codeLength == IGNORABLE_ID_LENGTH && StringUtils.isNumeric(code)) {
-                continue;
-            }
-
-            Integer level = LENGTH_TO_LEVEL_MAP.get(codeLength);
-
-            // NOTE: there are some code value 'exceptions' that are actually ranges for sectors:
-            //   e.g.    31-33  Manufacturing,   44-45  Retail Trade,   etc
-            if (code.contains("-")) {
-                level = LENGTH_TO_LEVEL_MAP.get(SECTOR_ID_LENGTH);
-            }
-
-            if (level == null) {
-                throw new RuntimeException("Unexpected code id: " + code);
-            }
-
-            title = cleanValue(title);
-
-            if (level == 1) {
-                if (! currentRecord.getSectorId().isEmpty()) {
-                    recordList.add(currentRecord);
-                }
-                currentRecord = new NaicsRecord();
-                currentRecord.setSectorId(code);
-                currentRecord.setSectorName(title);
-            }
-            else if (level == 2)
-            {
-                if (! currentRecord.getSubSectorId().isEmpty()) {
-                    recordList.add(currentRecord);
-                    currentRecord = currentRecord.copy(level);
-                }
-                currentRecord.setSubSectorId(code);
-                currentRecord.setSubSectorName(title);
-            }
-            else if (level == 3)
-            {
-                if (! currentRecord.getIndustryGroupId().isEmpty()) {
-                    recordList.add(currentRecord);
-                    currentRecord = currentRecord.copy(level);
-                }
-                currentRecord.setIndustryGroupId(code);
-                currentRecord.setIndustryGroupName(title);
-            }
-            else if (level == 4)
-            {
-                description = cleanDescriptionValue(description);  // desc gets special cleanup logic.
-
-                if (! currentRecord.getIndustryId().isEmpty()) {
-                    recordList.add(currentRecord);
-                    currentRecord = currentRecord.copy(level);
-                }
-
-                currentRecord.setIndustryId(code);
-                currentRecord.setIndustryName(title);
-                currentRecord.setDescription(description);
-            }
-            else {
-                throw new RuntimeException("Unexpected code value: " + code);
-            }
-        }
-
-        recordList.add(currentRecord);
-
-        // sanity check
-        for (NaicsRecord naicsRecord : recordList)
-        {
-            if (StringUtils.isEmpty(naicsRecord.getSectorId())) {
-                throw new RuntimeException("empty sectorId detected");
-            }
-            else if (StringUtils.isEmpty(naicsRecord.getSubSectorId())) {
-                throw new RuntimeException("empty subsectorId detected");
-            }
-            else if (StringUtils.isEmpty(naicsRecord.getIndustryGroupId())) {
-                throw new RuntimeException("empty industrygroupid detected");
-            }
-            else if (StringUtils.isEmpty(naicsRecord.getIndustryId())) {
-                throw new RuntimeException("empty industryid detected");
-            }
-        }
-
-        return recordList;
+        filteredList.forEach(r -> {
+            r.setCodeTitle(cleanValue(r.getCodeTitle()));
+            r.setDescription(cleanDescriptionValue(r.getDescription()));
+        });
+        return filteredList;
     }
-
 
     protected String cleanValue(String input)
     {
-        String cleanedValue = StringUtil.cleanWhitespace(input);
-
-        // remove any trailing capital 'T' (if exists)
-        if (cleanedValue.endsWith("T")) {
-            cleanedValue = cleanedValue.substring(0, cleanedValue.length() - 1);
-        }
-        return cleanedValue;
+        return StringUtil.cleanWhitespace(input);
     }
 
     protected String cleanDescriptionValue(String description) {
@@ -199,4 +103,29 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         return cleanValue(description);
     }
 
+    private static class RawNaicsRecord implements CodeTitleLevelRecord
+    {
+        @JsonProperty("Code")
+        private String code;
+        @JsonProperty("Title")
+        private String title;
+        @JsonProperty("Description")
+        private String description;
+
+        @Override
+        public String getCodeId() { return code; }
+        @Override
+        public String getCodeTitle() { return title; }
+        public String getDescription() { return description; }
+
+        public void setCodeTitle(String title) { this.title = title; }
+        public void setDescription(String description) { this.description = description; }
+
+        @Override
+        @JsonIgnore
+        public int getCodeLevel() {
+            // length 6 means level 4...  all others levels are length-1  (i.e. "1111" --> level 3)
+            return (this.code.length() == 6 ? 4 : code.length()-1);
+        }
+    }
 }
