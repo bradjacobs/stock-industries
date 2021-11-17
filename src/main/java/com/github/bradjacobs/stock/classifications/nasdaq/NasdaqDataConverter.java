@@ -42,7 +42,7 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
             "ZTO"   // Sector: Transportation     Industry: Advertising
     ));
 
-    private static final boolean PRINT_UNIQUE_TICKER_SECTOR_INDUSTRY = true;  // for debugging only
+    private static final boolean PRINT_UNIQUE_TICKER_SECTOR_INDUSTRY = false;  // for debugging only
 
     @Override
     public Classification getClassification()
