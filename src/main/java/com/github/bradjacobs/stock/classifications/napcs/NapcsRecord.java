@@ -160,36 +160,4 @@ public class NapcsRecord
     {
         this.trilateralProductName = trilateralProductName;
     }
-
-    public NapcsRecord copy(int levelsToCopy)
-    {
-        NapcsRecord newRecord = new NapcsRecord();
-        if (levelsToCopy >= 1) {
-            newRecord.sectionId = this.sectionId;
-            newRecord.sectionName = this.sectionName;
-        }
-        if (levelsToCopy >= 2) {
-            newRecord.subSectionId = this.subSectionId;
-            newRecord.subSectionName = this.subSectionName;
-        }
-        if (levelsToCopy >= 3) {
-            newRecord.divisionId = this.divisionId;
-            newRecord.divisionName = this.divisionName;
-        }
-        if (levelsToCopy >= 4) {
-            newRecord.groupId = this.groupId;
-            newRecord.groupName = this.groupName;
-        }
-        if (levelsToCopy >= 5) {
-            newRecord.subGroupId = this.subGroupId;
-            newRecord.subGroupName = this.subGroupName;
-        }
-        if (levelsToCopy >= 6) {
-            newRecord.trilateralProductId = this.trilateralProductId;
-            newRecord.trilateralProductName = this.trilateralProductName;
-        }
-        return newRecord;
-    }
-
-
 }

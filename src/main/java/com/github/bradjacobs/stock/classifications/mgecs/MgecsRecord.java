@@ -82,20 +82,4 @@ public class MgecsRecord
     {
         this.description = description;
     }
-
-    public MgecsRecord copy()
-    {
-        MgecsRecord newRecord = new MgecsRecord();
-        newRecord.sectorId = this.sectorId;
-        newRecord.sectorName = this.sectorName;
-        newRecord.industryGroupId = this.industryGroupId;
-        newRecord.industryGroupName = this.industryGroupName;
-        newRecord.industryId = this.industryId;
-        newRecord.industryName = this.industryName;
-        newRecord.description = this.description;
-
-        return newRecord;
-    }
-
-
 }

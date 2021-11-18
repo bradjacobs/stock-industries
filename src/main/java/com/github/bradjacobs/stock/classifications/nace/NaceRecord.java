@@ -102,27 +102,4 @@ public class NaceRecord
     {
         this.className = className;
     }
-
-    public NaceRecord copy(int level)
-    {
-        NaceRecord newRecord = new NaceRecord();
-        if (level >= 1) {
-            newRecord.sectionCode = this.sectionCode;
-            newRecord.sectionName = this.sectionName;
-        }
-        if (level >= 2) {
-            newRecord.divisionCode = this.divisionCode;
-            newRecord.divisionName = this.divisionName;
-        }
-        if (level >= 3) {
-            newRecord.groupCode = this.groupCode;
-            newRecord.groupName = this.groupName;
-        }
-        if (level >= 4) {
-            newRecord.classCode = this.classCode;
-            newRecord.className = this.className;
-        }
-        return newRecord;
-    }
-
 }

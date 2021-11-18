@@ -119,31 +119,4 @@ public class NaicsRecord
     {
         this.description = description;
     }
-
-    public NaicsRecord copy(int levelsToCopy)
-    {
-        NaicsRecord newRecord = new NaicsRecord();
-        if (levelsToCopy >= 1) {
-            newRecord.sectorId = this.sectorId;
-            newRecord.sectorName = this.sectorName;
-        }
-        if (levelsToCopy >= 2) {
-            newRecord.subSectorId = this.subSectorId;
-            newRecord.subSectorName = this.subSectorName;
-        }
-        if (levelsToCopy >= 3) {
-            newRecord.industryGroupId = this.industryGroupId;
-            newRecord.industryGroupName = this.industryGroupName;
-        }
-        if (levelsToCopy >=4) {
-            newRecord.industryId = this.industryId;
-            newRecord.industryName = this.industryName;
-
-            // note: only care about the long description at the bottom level
-            newRecord.description = this.description;
-        }
-
-        return newRecord;
-    }
-
 }

@@ -118,33 +118,4 @@ public class CpcRecord
     public void setSubClassName(String subClassName) {
         this.subClassName = subClassName;
     }
-
-    public CpcRecord copy(int levelsToCopy)
-    {
-        CpcRecord newRecord = new CpcRecord();
-        if (levelsToCopy >= 1) {
-            newRecord.sectionId = this.sectionId;
-            newRecord.sectionName = this.sectionName;
-        }
-        if (levelsToCopy >= 2) {
-            newRecord.divisionId = this.divisionId;
-            newRecord.divisionName = this.divisionName;
-        }
-        if (levelsToCopy >= 3) {
-            newRecord.groupId = this.groupId;
-            newRecord.groupName = this.groupName;
-        }
-        if (levelsToCopy >= 4) {
-            newRecord.classId = this.classId;
-            newRecord.className = this.className;
-        }
-        if (levelsToCopy >= 5) {
-            newRecord.subClassId = this.subClassId;
-            newRecord.subClassName = this.subClassName;
-        }
-        return newRecord;
-    }
-
-
-
 }

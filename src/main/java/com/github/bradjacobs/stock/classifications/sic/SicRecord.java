@@ -121,19 +121,4 @@ public class SicRecord
     {
         this.industryName = industryName;
     }
-
-    public SicRecord copy()
-    {
-        SicRecord newRecord = new SicRecord();
-        newRecord.divisionId = this.divisionId;
-        newRecord.divisionName = this.divisionName;
-        newRecord.majorGroupId = this.majorGroupId;
-        newRecord.majorGroupName = this.majorGroupName;
-        newRecord.industryGroupId = this.industryGroupId;
-        newRecord.industryGroupName = this.industryGroupName;
-        newRecord.industryId = this.industryId;
-        newRecord.industryName = this.industryName;
-        return newRecord;
-    }
-
 }
