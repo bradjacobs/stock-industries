@@ -47,74 +47,59 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         for (int i = firstDataLineIndex; i < pdfFileLines.length; i++)
         {
             String line = pdfFileLines[i].trim();
-
-            if (StringUtils.isEmpty(line)) {
-                continue;
-            }
-            else if (isMorningstarLine(line)) {
-                continue;
-            }
-
-            if (StringUtils.isNumeric(line))
+            if (isValidCodeId(line))
             {
                 String id = line;
-                String name = "";
+                String name = pdfFileLines[++i];  // don't trim (..yet)
 
-                // note:  page numbers are example of case that would pass 'isNumeric' check, but not pass if-check below
-                if (isValidIdLength(id))
+                // note: the name affiliated w/ the group category can be split across multiple lines
+                if (id.length() == SECTOR_ID_LENGTH || id.length() == GROUP_ID_LENGTH)
                 {
-                    name = pdfFileLines[++i];  // don't trim (..yet)
+                    // SIDE: this is squirrelly
+                    //   Problem is that sometimes text goes to next line and the '\n' is the ONLY space character b/w 2 words.
+                    //   Thus have to take extra caution so that 2 separate words don't get concatenated into 1.
 
-                    // note: the name affiliated w/ the group category can be split across multiple lines
-                    if (id.length() == SECTOR_ID_LENGTH || id.length() == GROUP_ID_LENGTH)
+                    // temporarily add back new line and don't trim
+                    //  b/c spacing can get messed up.
+                    String futureLine = pdfFileLines[i+1];
+
+                    while (! StringUtils.isNumeric(futureLine.trim()))
                     {
-                        // SIDE: this is squirrelly
-                        //   Problem is that sometimes text goes to next line and the '\n' is the ONLY space character b/w 2 words.
-                        //   Thus have to take extra caution so that 2 separate words don't get concatenated into 1.
-
-
-                        // temporarily add back new line and don't trim
-                        //  b/c spacing can get messed up.
-                        String futureLine = pdfFileLines[i+1];
-
-                        while (! StringUtils.isNumeric(futureLine.trim()))
-                        {
-                            if (StringUtils.isNotEmpty(futureLine.trim())) {
-                                name = name + futureLine;
-                            }
-
-                            // note:  increment the 'current' i value,
-                            // then the futureLine is the next line after the current line  (thus the +1)
-                            i++;
-                            futureLine = pdfFileLines[i+1];
+                        // TODO - review / refactor / fix this logic
+                        if (StringUtils.isNotEmpty(futureLine.trim())) {
+                            name = name + futureLine;
                         }
-                        name = StringUtil.cleanWhitespace(name);
-                    }
 
-                    // now finally can trim + clean value
-                    name = cleanValue(name);
-
-                    if (id.length() == SECTOR_ID_LENGTH)
-                    {
-                        sectorNameMap.put(id, name);
+                        // note:  increment the 'current' i value,
+                        // then the futureLine is the next line after the current line  (thus the +1)
+                        i++;
+                        futureLine = pdfFileLines[i+1];
                     }
-                    else if (id.length() == GROUP_ID_LENGTH)
-                    {
-                        groupNameMap.put(id, name);
-                    }
-                    else if (id.length() == INDUSTRY_ID_LENGTH)
-                    {
-                        // NOTE: sub-optimal solution b/c future lines are examined in getDescription method as well as this loop.
-                        //   (even though problem exists, not worth addressing at present)
-                        String desc = getDescription(pdfFileLines, i+1);
+                }
 
-                        MgecsRecord record = new MgecsRecord();
-                        record.setDescription(desc);
-                        record.setIndustryId(id);
-                        record.setIndustryName(name);
+                // now finally can trim + clean value
+                name = cleanValue(name);
 
-                        industryToRecordMap.put(id, record);
-                    }
+                if (id.length() == SECTOR_ID_LENGTH)
+                {
+                    sectorNameMap.put(id, name);
+                }
+                else if (id.length() == GROUP_ID_LENGTH)
+                {
+                    groupNameMap.put(id, name);
+                }
+                else if (id.length() == INDUSTRY_ID_LENGTH)
+                {
+                    // NOTE: sub-optimal solution b/c future lines are examined in getDescription method as well as this loop.
+                    //   (even though problem exists, not worth addressing at present)
+                    String desc = getDescription(pdfFileLines, i+1);
+
+                    MgecsRecord record = new MgecsRecord();
+                    record.setDescription(desc);
+                    record.setIndustryId(id);
+                    record.setIndustryName(name);
+
+                    industryToRecordMap.put(id, record);
                 }
             }
         }
@@ -136,7 +121,6 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
             record.setIndustryGroupName(groupNameMap.get(groupId));
         }
 
-
         // sanity check
         for (MgecsRecord naicsRecord : recordList)
         {
@@ -154,14 +138,14 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         return recordList;
     }
 
-    private boolean isValidIdLength(String id) {
-        int idLength = id.length();
-        if (idLength == SECTOR_ID_LENGTH || idLength == GROUP_ID_LENGTH || idLength == INDUSTRY_ID_LENGTH) {
-            return true;
+    private boolean isValidCodeId(String str)
+    {
+        if (StringUtils.isNumeric(str)) {
+            int idLength = str.length();
+            return idLength == SECTOR_ID_LENGTH || idLength == GROUP_ID_LENGTH || idLength == INDUSTRY_ID_LENGTH;
         }
         return false;
     }
-
 
     private int findFirstDataRowIndex(String[] fileLines)
     {
@@ -228,7 +212,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
             sb.append(' ').append(currentLine);
         }
 
-        return StringUtil.cleanWhitespace(sb.toString());
+        return cleanValue(sb.toString());
     }
 
 }
