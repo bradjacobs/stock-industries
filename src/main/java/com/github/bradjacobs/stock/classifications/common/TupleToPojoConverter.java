@@ -25,7 +25,7 @@ public class TupleToPojoConverter
     private static final HeaderFieldDataExtractor headerFieldDataExtractor = new HeaderFieldDataExtractor();
 
     public <T, R extends CodeTitleLevelRecord> List<T> doConvertToObjects(
-            Class<T> clazz, List<R> codeTitleRecords) throws JsonProcessingException {
+            Class<T> clazz, List<R> codeTitleRecords) {
         List<AllLevelsRecord> allLevelsRecords = doConvert(codeTitleRecords);
         List<Map<String,String>> listOfMaps = generateListOfMaps(clazz, allLevelsRecords);
 
