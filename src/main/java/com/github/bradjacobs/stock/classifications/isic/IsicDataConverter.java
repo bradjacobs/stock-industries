@@ -29,7 +29,7 @@ public class IsicDataConverter implements DataConverter<IsicRecord>
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NORMAL).setSkipEmptyRows(true).setSheetName(EXCEL_TAB_NAME).build();
 
-        String csvText = excelReader.createCsvText(getClassification().getSourceFileLocation());
+        String csvText = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 
         CsvDeserializer csvDeserializer = new CsvDeserializer();
         return csvDeserializer.deserializeObjects(IsicRecord.class, csvText);

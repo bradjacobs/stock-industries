@@ -1,7 +1,6 @@
 package com.github.bradjacobs.stock.util;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -20,35 +19,26 @@ public class DownloadUtil
 
     private DownloadUtil() { }
 
-    public static String downloadFile(String urlPath) throws IOException
+    public static String downloadFile(URL url) throws IOException
     {
-        try (InputStream in = createInputStream(urlPath))
+        try (InputStream in = createInputStream(url))
         {
             return IOUtils.toString(in, StandardCharsets.UTF_8.name());
         }
     }
 
-    public static String[] downloadPdfFile(String urlPath) throws IOException
+    public static String[] downloadPdfFile(URL url) throws IOException
     {
-        if (urlPath != null && !urlPath.endsWith(".pdf")) {
-            throw new IllegalArgumentException("Must provide a file location ending with '.pdf'");
-        }
-
-        try (InputStream in = createInputStream(urlPath))
+        try (InputStream in = createInputStream(url))
         {
             return PdfUtil.getPdfFileLines(in);
         }
     }
 
-
     // **** NOTE *****:
     //    would be 'better' to use an htmlClient, but will only worry about that iff necessary.
-    private static InputStream createInputStream(String urlPath) throws IOException
+    private static InputStream createInputStream(URL url) throws IOException
     {
-        if (StringUtils.isEmpty(urlPath)) {
-            throw new IllegalArgumentException("Must provide a urlPath");
-        }
-        URL url = new URL(urlPath);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(CONNECTION_TIMEOUT);
         connection.setReadTimeout(READ_TIMEOUT);
@@ -60,7 +50,5 @@ public class DownloadUtil
 
         return new BufferedInputStream(connection.getInputStream());
     }
-
-
 
 }

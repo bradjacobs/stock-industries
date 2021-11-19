@@ -22,7 +22,7 @@ public class IcbDataConverter implements DataConverter<IcbRecord>
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NORMAL).setSkipEmptyRows(true).build();
 
-        String csvText = excelReader.createCsvText(getClassification().getSourceFileLocation());
+        String csvText = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 
         CsvDeserializer csvDeserializer = new CsvDeserializer();
         return csvDeserializer.deserializeObjects(IcbRecord.class, csvText);

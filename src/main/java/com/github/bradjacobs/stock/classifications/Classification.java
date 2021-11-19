@@ -1,5 +1,10 @@
 package com.github.bradjacobs.stock.classifications;
 
+import com.github.bradjacobs.stock.util.UrlUtil;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public enum Classification
 {
     //BICS("bics", ""),  // < - can't seen to find definition hierarchy spec.
@@ -20,13 +25,13 @@ public enum Classification
 
     private final String prefix;
     private final boolean longDescriptionAvailable;
-    private final String sourceFileLocation;
+    private final URL sourceFileLocation;
 
     Classification(String prefix, boolean longDescriptionAvailable, String sourceFileLocation)
     {
         this.prefix = prefix;
         this.longDescriptionAvailable = longDescriptionAvailable;
-        this.sourceFileLocation = sourceFileLocation;
+        this.sourceFileLocation = UrlUtil.createURL(sourceFileLocation);
     }
 
     public String getPrefix()
@@ -38,7 +43,7 @@ public enum Classification
         return longDescriptionAvailable;
     }
 
-    public String getSourceFileLocation()
+    public URL getSourceFileLocation()
     {
         return sourceFileLocation;
     }

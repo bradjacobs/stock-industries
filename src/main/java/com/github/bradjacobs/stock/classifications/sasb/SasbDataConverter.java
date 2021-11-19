@@ -4,6 +4,8 @@ import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import com.github.bradjacobs.stock.util.StringUtil;
+import com.github.bradjacobs.stock.util.UrlUtil;
+import com.sun.javafx.fxml.builder.URLBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,6 +13,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +24,7 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
 {
     private static final String PANELS_CLASS = "vc_tta-panels";
 
-    private static final String DESCRIPTION_FILE = "https://www.sasb.org/standards/download/";
+    private static final URL DESCRIPTION_URL = UrlUtil.createURL("https://www.sasb.org/standards/download/");
     private static final String DESCRIPTION_LABEL_CLASS = "hs-form-booleancheckbox-display";
     private static final String DESCRIPTION_CLASS = "single-company-description";
 
@@ -103,7 +107,7 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
 
     private void appendDescriptions(List<SasbRecord> recordList) throws IOException
     {
-        String htmlData = DownloadUtil.downloadFile(DESCRIPTION_FILE);
+        String htmlData = DownloadUtil.downloadFile(DESCRIPTION_URL);
 
         Document doc = Jsoup.parse(htmlData);
 

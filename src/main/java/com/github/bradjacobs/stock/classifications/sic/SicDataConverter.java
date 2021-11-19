@@ -15,12 +15,15 @@ import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import com.github.bradjacobs.stock.util.StringUtil;
+import com.github.bradjacobs.stock.util.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -118,7 +121,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
         {
             String majorGroupId = urlEntry.getKey();
 
-            String url = urlEntry.getValue();
+            URL url = UrlUtil.createURL(urlEntry.getValue());
 
             // slight pause to be kind.
             try { Thread.sleep(250L); }
