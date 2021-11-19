@@ -15,17 +15,10 @@ abstract public class BaseSerializer
 
     abstract public String generateFileName(Classification classification);
 
-    @SuppressWarnings("unchecked")
     public <T> String serialize(List<T> objectList) throws IOException
     {
         validateObjectList(objectList);
         return serializeObjects(objectList);
-    }
-
-    public <T> void serializeToFile(String filePath, List<T> objectList) throws IOException
-    {
-        validateFilePath(filePath);
-        serializeToFile(new File(filePath), objectList);
     }
 
     public <T> void serializeToFile(File file, List<T> objectList) throws IOException
