@@ -34,7 +34,7 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
     public List<GicsRecord> createDataRecords() throws IOException
     {
         ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NEVER).setSkipEmptyRows(true).build();
-        String[][] csvData = excelReader.createDataMatrix(getClassification().getSourceFileLocation());
+        String[][] csvData = excelReader.convertToDataMatrix(getClassification().getSourceFileLocation());
 
 
         //   Step 1
