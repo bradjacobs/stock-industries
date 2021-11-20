@@ -33,8 +33,7 @@ public class CpcDataConverter implements DataConverter<CpcRecord>
     public List<CpcRecord> createDataRecords() throws IOException
     {
         String csvData = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
-
-        CsvDeserializer csvDeserializer = new CsvDeserializer(null);
+        CsvDeserializer csvDeserializer = new CsvDeserializer();
         List<RawCpcRecord> rawRecords = csvDeserializer.csvToObjectList(RawCpcRecord.class, csvData);
 
         return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(CpcRecord.class, rawRecords);

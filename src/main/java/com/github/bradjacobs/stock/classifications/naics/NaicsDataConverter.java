@@ -38,7 +38,7 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
     @Override
     public List<NaicsRecord> createDataRecords() throws IOException
     {
-        ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.LENIENT).setSkipEmptyRows(true).build();
+        ExcelReader excelReader = ExcelReader.builder().build();
         String csvData = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 
         CsvDeserializer csvDeserializer = new CsvDeserializer();

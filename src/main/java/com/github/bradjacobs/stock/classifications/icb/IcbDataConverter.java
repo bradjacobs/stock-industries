@@ -20,7 +20,7 @@ public class IcbDataConverter implements DataConverter<IcbRecord>
     @Override
     public List<IcbRecord> createDataRecords() throws IOException
     {
-        ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.NORMAL).setSkipEmptyRows(true).build();
+        ExcelReader excelReader = ExcelReader.builder().build();
 
         String csvText = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 

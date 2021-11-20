@@ -17,12 +17,10 @@ public class CsvDeserializer extends BaseDeserializer
 
     private final CsvDefinition csvDefinition;
 
-    public CsvDeserializer()
-    {
+    public CsvDeserializer() {
         this(null);
     }
-    public CsvDeserializer(CsvDefinition csvDefinition)
-    {
+    public CsvDeserializer(CsvDefinition csvDefinition) {
         this.csvDefinition = csvDefinition;
     }
 

@@ -34,11 +34,11 @@ public class NapcsDataConverter implements DataConverter<NapcsRecord>
     @Override
     public List<NapcsRecord> createDataRecords() throws IOException
     {
-        ExcelReader excelReader = ExcelReader.builder().setQuoteMode(QuoteMode.LENIENT).setSkipEmptyRows(true).build();
+        ExcelReader excelReader = ExcelReader.builder().build();
 
         String csvData = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 
-        CsvDeserializer csvDeserializer = new CsvDeserializer(null);
+        CsvDeserializer csvDeserializer = new CsvDeserializer();
         List<RawNapcsRecord> rawRecords = csvDeserializer.csvToObjectList(RawNapcsRecord.class, csvData);
 
         return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(NapcsRecord.class, rawRecords);
