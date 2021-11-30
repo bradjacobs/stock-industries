@@ -12,6 +12,7 @@ import com.github.bradjacobs.stock.classifications.nasdaq.NasdaqDataConverter;
 import com.github.bradjacobs.stock.classifications.sasb.SasbDataConverter;
 import com.github.bradjacobs.stock.classifications.sic.SicDataConverter;
 import com.github.bradjacobs.stock.classifications.trbc.TrbcDataConverter;
+import com.github.bradjacobs.stock.classifications.unspsc.UnspscDataConverter;
 import com.github.bradjacobs.stock.classifications.zacks.ZacksDataConverter;
 
 public class DataConverterFactory
@@ -49,6 +50,8 @@ public class DataConverterFactory
                 return new SicDataConverter();
             case TRBC:
                 return new TrbcDataConverter();
+            case UNSPSC:
+                return new UnspscDataConverter();
             case ZACKS:
                 return new ZacksDataConverter();
             default:

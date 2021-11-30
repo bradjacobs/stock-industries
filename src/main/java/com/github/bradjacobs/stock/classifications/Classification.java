@@ -2,7 +2,6 @@ package com.github.bradjacobs.stock.classifications;
 
 import com.github.bradjacobs.stock.util.UrlUtil;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum Classification
@@ -21,6 +20,7 @@ public enum Classification
     SASB("sasb", true,"https://www.sasb.org/find-your-industry/"), // **
     SIC("sic", false,"https://www.osha.gov/data/sic-manual"),
     TRBC("trbc", false,"https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf"),  // aka Refinitiv
+    UNSPSC("unspsc", false,"https://www.ungm.org/Public/UNSPSC/Excel"),
     ZACKS("zacks", false,"https://www.zacks.com/zrank/sector-industry-classification.php");
 
     private final String prefix;
