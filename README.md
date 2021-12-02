@@ -23,7 +23,7 @@ and/or intellectual property rights.
 | NACE | [Statistical Classification of Economic Activities in the European Community](https://unstats.un.org/unsd/classifications) | [source](https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_CLS_DLD&StrNom=NACE_REV2&StrLanguageCode=EN&StrLayoutCode=HIERARCHIC) | CSV |
 | NAICS | [North American Industry Classification System](https://www.naics.com)<br>also see: [Census.gov/naics](https://www.census.gov/naics/) | [source](https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx) | Excel |
 | NAPCS | [North American Product Classification System](https://www.census.gov/naics/napcs/) | [source](https://www.census.gov/naics/napcs/structure/2017NAPCSStructure.xlsx) | Excel |
-| RBICS<sup>(2)</sup> | [Revere Business Industry Classification System](https://www.sasb.org/find-your-industry/) (ake FactSet) | (N/A) | |
+| RBICS<sup>(2)</sup> | [Revere Business Industry Classification System](https://www.sasb.org/find-your-industry/) (aka FactSet) | (N/A) | |
 | SASB | [Sustainable Industry Classification System](https://www.sasb.org/find-your-industry/) | [source](https://www.sasb.org/find-your-industry/) | HTML |
 | SIC | [Standard Industrial Classification](https://siccode.com) | [source](https://www.osha.gov/data/sic-manual) | HTML |
 | TRBC | [The Refinitiv Business Classification](https://www.refinitiv.com) | [source](https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf) | PDF |
