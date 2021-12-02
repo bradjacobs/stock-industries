@@ -9,6 +9,7 @@ import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.serialize.csv.CsvFullSparseConverter;
+import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -49,6 +50,12 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
             String[] extraDescriptionRow = csvData[i+1];
             String desc = extraDescriptionRow[SRC_DESC_COLUMN];
             dataRow[DEST_DESC_COLUMN] = desc;
+
+            // clean up newlines and weird spaces for all the values.
+            for (int j = 0; j < dataRow.length; j++) {
+                dataRow[j] = StringUtil.cleanWhitespace(dataRow[j]);
+            }
+
             rowDataList.add(dataRow);
         }
 
