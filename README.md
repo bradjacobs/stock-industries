@@ -16,7 +16,7 @@ and/or intellectual property rights.
 | BICS<sup>(1)</sup> | [Bloomberg Industry Classification Standard](https://www.bloomberg.com/professional/product/reference-data/) | (N/A) | |
 | CPC | [Central Product Classification](https://unstats.un.org/unsd/classifications/Econ/CPC.cshtml) | [source](https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/CPC_Ver_2_1_english_structure.txt) | CSV |
 | GICS | [Global Industry Classification Standard](https://www.msci.com/gics) (aka MSCI) | [source](https://www.msci.com/documents/1296102/11185224/GICS_map+2018.xlsx) | Excel |
-| IBBICS<sup>(1)</sup> | [Industry Building Blocks Industry Classification Benchmark](http://industrybuildingblocks.com/) | (N/A) | |
+| IBBICS<sup>(1)</sup> | [Industry Building Blocks Industry Classification System](http://industrybuildingblocks.com/) | (N/A) | |
 | ICB | [Industry Classification Benchmark](https://www.ftserussell.com/data/industry-classification-benchmark-icb) | [source](https://content.ftserussell.com/sites/default/files/icb_structure_and_definitions.xlsx) | Excel |
 | ISIC | [International Standard Industrial Classification](https://unstats.un.org/home/) | [source](http://www.ilo.org/ilostat-files/Documents/ISIC.xlsx) | Excel |
 | MGECS | [Morningstar Global Equity Classification System](https://advisor.morningstar.com) | [source](https://advisor.morningstar.com/Enterprise/VTC/MorningstarGlobalEquityClassStructure2019v3.pdf) | PDF |
