@@ -116,28 +116,21 @@ public class ZacksRecord implements Comparable<ZacksRecord>
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (!(o instanceof ZacksRecord))
-        {
+        if (!(o instanceof ZacksRecord)) {
             return false;
         }
         ZacksRecord that = (ZacksRecord) o;
         return sectorCode == that.sectorCode &&
             mediumIndustryCode == that.mediumIndustryCode &&
-            expandedIndustryCode == that.expandedIndustryCode &&
-            sectorName.equals(that.sectorName) &&
-            mediumIndustryName.equals(that.mediumIndustryName) &&
-            expandedIndustryName.equals(that.expandedIndustryName);
+            expandedIndustryCode == that.expandedIndustryCode;
     }
 
     @Override
-    public int hashCode()
-    {
-        return Objects.hash(sectorCode, sectorName, mediumIndustryCode, mediumIndustryName, expandedIndustryCode, expandedIndustryName);
+    public int hashCode() {
+        return Objects.hash(sectorCode, mediumIndustryCode, expandedIndustryCode);
     }
 }
