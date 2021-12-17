@@ -32,6 +32,8 @@ import java.util.regex.Pattern;
 //  SIDE NODE:
 //     record '180' (Textile - Apparel) has a different sector depending upon the data source
 //        i.e.   1-Consumer Staples   vs  2-Consumer Discretionary
+
+// TODO - source data bug... 234 should be "Wireline - Regional - Rural" .... but can get value of WIRELESS
 public class ZacksDataConverter implements DataConverter<ZacksRecord>
 {
     private static final String NESTED_JSON_PREFIX = "\"data\"  : ";
@@ -110,6 +112,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         put(" Rv ", " RV ");                  // adjust caps on acronym
         put(" Hmos", " HMOs");                // adjust caps on acronym
         put(" It ", " IT ");                  // adjust caps on acronym
+        put(" Sbic ", " SBIC ");              // adjust caps on acronym
         put(" Mlb", " MLP");                  // adjust caps on acronym (and fix typo)
         put(" Master Limited Partnerships", " MLP");  // use acroynm instead
 
