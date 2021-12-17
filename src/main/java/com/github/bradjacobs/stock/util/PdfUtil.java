@@ -4,6 +4,9 @@ package com.github.bradjacobs.stock.util;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -29,6 +32,20 @@ public class PdfUtil
         }
 
         return lines;
+    }
+
+    public static String[] getPdfFileLines(File file) throws IOException
+    {
+        try (InputStream in = createInputStream(file))
+        {
+            return PdfUtil.getPdfFileLines(in);
+        }
+    }
+
+    private static InputStream createInputStream(File file) throws IOException
+    {
+        FileInputStream fis = new FileInputStream(file);
+        return new BufferedInputStream(fis);
     }
 
 }
