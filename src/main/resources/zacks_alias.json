@@ -1,0 +1,1527 @@
+{
+  "sector" : {
+    "0" : [
+      "Index"
+    ],
+    "1" : [
+      "Consumer Staples"
+    ],
+    "2" : [
+      "Consumer Discretionary"
+    ],
+    "3" : [
+      "Retail & Wholesale",
+      "Retail And Wholesale",
+      "Retail-Wholesale",
+      "Retail/Wholesale"
+    ],
+    "4" : [
+      "Medical"
+    ],
+    "5" : [
+      "Auto, Tires & Trucks",
+      "Auto, Tires And Trucks",
+      "Auto-Tires-Trucks"
+    ],
+    "6" : [
+      "Basic Materials"
+    ],
+    "7" : [
+      "Industrial Products"
+    ],
+    "8" : [
+      "Construction"
+    ],
+    "9" : [
+      "Multi - Sector Conglomerates",
+      "Multi-sector Conglomerates",
+      "Multi-Sector Conglomerates"
+    ],
+    "10" : [
+      "Computer & Technology",
+      "Computer And Technology",
+      "Computer and Technology"
+    ],
+    "11" : [
+      "Aerospace"
+    ],
+    "12" : [
+      "Oils & Energy",
+      "Oils And Energy",
+      "Oils-Energy",
+      "Oils/Energy"
+    ],
+    "13" : [
+      "Finance"
+    ],
+    "14" : [
+      "Utilities"
+    ],
+    "15" : [
+      "Transportation"
+    ],
+    "16" : [
+      "Business Services"
+    ],
+    "17" : [
+      "Unclassified"
+    ]
+  },
+  "mediumIndustry" : {
+    "0" : [
+      "Indices"
+    ],
+    "1" : [
+      "Apparel",
+      "APPAREL"
+    ],
+    "2" : [
+      "Beverages",
+      "BEVERAGES"
+    ],
+    "3" : [
+      "Food",
+      "FOOD"
+    ],
+    "4" : [
+      "Publishing",
+      "PUBLISHING"
+    ],
+    "5" : [
+      "Soaps - Cosmetics",
+      "Soaps-cosmetics",
+      "SOAPS-COSMETICS"
+    ],
+    "6" : [
+      "Tobacco",
+      "TOBACCO"
+    ],
+    "7" : [
+      "Cons Prod - Misc Staples",
+      "Cons Prod-misc Staples",
+      "CONS PROD-MISC STAPLES"
+    ],
+    "8" : [
+      "Home Furnishing - Appliance",
+      "Home Furnishing-appliance",
+      "HOME FURNISHING-APPLIANCE"
+    ],
+    "9" : [
+      "Leisure Service",
+      "LEISURE SERVICES"
+    ],
+    "10" : [
+      "Media",
+      "MEDIA"
+    ],
+    "12" : [
+      "Other Consumer Discretionary",
+      "OTHER CONSUMER DISCRETIONARY",
+      "OTHER CONS DISC"
+    ],
+    "13" : [
+      "Food/Drug - Retail/Wholesale",
+      "Food/drug-retail/wholesale",
+      "FOOD/DRUG-RETAIL/WHOLESALE",
+      "FOOD/DRUG-RTL/WHL"
+    ],
+    "14" : [
+      "Nonfood Retail - Wholesale",
+      "Nonfood Retail-wholesale",
+      "NONFOOD RETAIL-WHOLESALE",
+      "NONFOOD RETAIL/WH"
+    ],
+    "15" : [
+      "Drugs",
+      "DRUGS"
+    ],
+    "16" : [
+      "Medical Care",
+      "MEDICAL CARE"
+    ],
+    "17" : [
+      "Medical Products",
+      "MED PRODS"
+    ],
+    "18" : [
+      "Autos - Tires - Trucks",
+      "Autos-tires-trucks",
+      "AUTOS-TIRES-TRUCKS"
+    ],
+    "19" : [
+      "Chemicals & Fertilizer",
+      "CHEMICALS"
+    ],
+    "20" : [
+      "Metals - Non-Ferrous",
+      "Metals-non Ferrous",
+      "METALS-NON FERROUS",
+      "METALS-NON FERR"
+    ],
+    "21" : [
+      "Steel",
+      "STEEL"
+    ],
+    "22" : [
+      "Paper",
+      "PAPER"
+    ],
+    "23" : [
+      "Containers & Glass",
+      "CONTAINERS & GLASS"
+    ],
+    "24" : [
+      "Industrial Products - Services",
+      "Industrial Products-services",
+      "INDUSTRIAL PRODUCTS-SERVICES",
+      "IND PRODS/SVC"
+    ],
+    "25" : [
+      "Machinery - Electrical",
+      "Machinery-electrical",
+      "MACHINERY-ELECTRICAL"
+    ],
+    "26" : [
+      "Machinery",
+      "MACHINERY"
+    ],
+    "27" : [
+      "Pollution Control",
+      "POLLUTION CONTROL"
+    ],
+    "28" : [
+      "Building Products",
+      "BUILDING PRODUCTS"
+    ],
+    "29" : [
+      "Construction - Building Services",
+      "Construction-building Services",
+      "CONSTRUCTION-BUILDING SERVICES"
+    ],
+    "30" : [
+      "Conglomerates",
+      "CONGLOMERATES"
+    ],
+    "31" : [
+      "Computer - Office Equipment",
+      "Computer-office Equipment",
+      "COMPUTER-OFFICE EQUIPMENT"
+    ],
+    "32" : [
+      "Computer Software - Services",
+      "Computer Software-services",
+      "COMPUTER SOFTWARE-SERVICES",
+      "COMPUTER SOFT/SERV"
+    ],
+    "33" : [
+      "Electronic - Semiconductors",
+      "Electronic-semiconductors",
+      "ELECTRONIC-SEMICONDUCTORS"
+    ],
+    "34" : [
+      "Electronics",
+      "ELECTRONICS"
+    ],
+    "35" : [
+      "Misc Technology",
+      "MISC TECHNOLOGY"
+    ],
+    "36" : [
+      "Telecommunications Equipment",
+      "TELECOMM EQUIP"
+    ],
+    "37" : [
+      "Telecommunications Services",
+      "TELECOMM SVCS"
+    ],
+    "38" : [
+      "Aerospace - Defense",
+      "Aerospace-defense",
+      "AEROSPACE-DEFENSE"
+    ],
+    "39" : [
+      "Coal",
+      "COAL"
+    ],
+    "40" : [
+      "Energy - Alternate Sources",
+      "Energy-alternate Sources",
+      "ENERGY-ALTERNATE SOURCES"
+    ],
+    "41" : [
+      "Oil Machinery - Services - Drilling",
+      "Oil Machinery-services-drilling",
+      "OIL MACHINERY-SERVICES-DRILLING"
+    ],
+    "42" : [
+      "Oil - Exploration & Production",
+      "Oil-exploration&production",
+      "OIL-EXPLORATION&PRODUCTION"
+    ],
+    "43" : [
+      "Oil - Misc",
+      "Oil-misc",
+      "OIL-MISC"
+    ],
+    "44" : [
+      "Oil - Integrated",
+      "Oil-integrated",
+      "OIL-INTEGRATED"
+    ],
+    "45" : [
+      "Oil & Gas Production - Pipeline",
+      "Oil&gas Production-pipeline",
+      "OIL&GAS PRODUCTION-PIPELINE",
+      "OIL/GAS PROD/PIPEL"
+    ],
+    "46" : [
+      "Banks - Major",
+      "Banks-major",
+      "BANKS-MAJOR"
+    ],
+    "47" : [
+      "Banks & Thrifts",
+      "BANKS & THRIFTS"
+    ],
+    "48" : [
+      "Finance",
+      "FINANCE"
+    ],
+    "49" : [
+      "Insurance",
+      "INSURANCE"
+    ],
+    "50" : [
+      "Invest Bankers - Managers",
+      "Invest Bkrs-mgrs",
+      "INVEST BKRS-MGRS",
+      "INVEST BKRS/MGMT"
+    ],
+    "51" : [
+      "Investment Fund",
+      "INVESTMENT FUNDS"
+    ],
+    "52" : [
+      "Real Estate",
+      "REAL ESTATE"
+    ],
+    "53" : [
+      "Utility - Electric Power",
+      "Utility-elec Pwr",
+      "UTILITY-ELEC PWR",
+      "UTIL-ELEC PWR"
+    ],
+    "54" : [
+      "Utility - Gas Distribution",
+      "Utility-gas Distr",
+      "UTILITY-GAS DISTR"
+    ],
+    "55" : [
+      "Utility - Telephone",
+      "Utility-telephone",
+      "UTILITY-TELEPHONE",
+      "UTIL-TELEPHONE"
+    ],
+    "56" : [
+      "Utility - Water Supply",
+      "Utility-water Supply",
+      "UTILITY-WATER SUPPLY",
+      "UTIL-WATER SPLY"
+    ],
+    "57" : [
+      "Transportation - Air",
+      "Transportation-air",
+      "TRANSPORTATION-AIR"
+    ],
+    "58" : [
+      "Transportation",
+      "TRANSPORTATION"
+    ],
+    "59" : [
+      "Business Service",
+      "BUSINESS SERVICES"
+    ],
+    "60" : [
+      "Agribusiness",
+      "AGRIBUSINESS"
+    ],
+    "61" : [
+      "Consumer Electronics",
+      "CONSUMER ELECTRONICS"
+    ],
+    "62" : [
+      "Business Products",
+      "BUSINESS PRODUCTS"
+    ],
+    "63" : [
+      "Metal Fabricating",
+      "METAL FABRICATING"
+    ],
+    "70" : [
+      "Unclassified"
+    ]
+  },
+  "expandedIndustry" : {
+    "1" : [
+      "Advertising & Marketing",
+      "Advertising And Marketing",
+      "ADVERTISING/MKTG SVCS",
+      "Advertising and Marketing Services"
+    ],
+    "2" : [
+      "Aerospace - Defense",
+      "AEROSPACE/DEFENSE"
+    ],
+    "3" : [
+      "Aerospace - Defense Equipment",
+      "AEROSPACE/DEFENSE EQUIP"
+    ],
+    "4" : [
+      "Agriculture - Operations",
+      "AGRICULTURAL OPERATIONS"
+    ],
+    "5" : [
+      "Household Appliances",
+      "APPLIANCES-HOUSEHOLD"
+    ],
+    "6" : [
+      "Audio Video Production",
+      "AUDIO/VIDEO HOME PROD"
+    ],
+    "7" : [
+      "Automotive - Domestic",
+      "AUTO MFRS-DOMESTIC"
+    ],
+    "8" : [
+      "Automotive - Foreign",
+      "AUTO MFRS-FOREIGN"
+    ],
+    "9" : [
+      "Automotive - Retail & Wholesale - Parts",
+      "Automotive - Retail And Wholesale - Parts",
+      "RETAIL/WHLSLE-AUTO PARTS"
+    ],
+    "10" : [
+      "Automotive - Original Equipment",
+      "AUTO/TRUCK-ORIGINAL EQP"
+    ],
+    "11" : [
+      "Automotive - Replacement Parts",
+      "AUTO/TRUCK-REPLACE PRTS"
+    ],
+    "12" : [
+      "Banks - Foreign",
+      "BANKS-FOREIGN"
+    ],
+    "13" : [
+      "Banks - Midwest",
+      "BANKS-MIDWEST"
+    ],
+    "15" : [
+      "Banks - Northeast",
+      "BANKS-NORTHEAST"
+    ],
+    "16" : [
+      "Banks - Southeast",
+      "BANKS-SOUTHEAST"
+    ],
+    "17" : [
+      "Banks - Southwest",
+      "BANKS-SOUTHWEST"
+    ],
+    "18" : [
+      "Banks - West",
+      "BANKS-WEST"
+    ],
+    "19" : [
+      "Beverages - Alcohol",
+      "BEVERAGES-ALCOHOLIC",
+      "Alcoholic Beverages"
+    ],
+    "20" : [
+      "Beverages - Soft Drinks",
+      "BEVERAGES-SOFT DRINKS"
+    ],
+    "21" : [
+      "Building Products - Miscellaneous",
+      "BLDG & CONST PROD-MISC"
+    ],
+    "22" : [
+      "Building Products - Air Conditioner & Heating",
+      "Building Products - Air Conditioner And Heating",
+      "BLDG PROD-AIR COND/HEAT"
+    ],
+    "24" : [
+      "Building Products - Lighting",
+      "BLDG PROD-LIGHTING FIXT"
+    ],
+    "25" : [
+      "Building Products - Retail",
+      "BLDG PROD-RETAIL/WHLSLE"
+    ],
+    "26" : [
+      "Building Products - Wood",
+      "BLDG PROD-WOOD"
+    ],
+    "27" : [
+      "Building Products - Concrete & Aggregates",
+      "Building Products - Concrete And Aggregates",
+      "BLDG-CEMENT/CONCRT/AG"
+    ],
+    "28" : [
+      "Building Products - Heavy Construction",
+      "BLDG-HEAVY CONST"
+    ],
+    "29" : [
+      "Building Products - Maintenance Service",
+      "BLDG-MAINTENANCE & SVC"
+    ],
+    "30" : [
+      "Building Products - Mobile Homes & RV Builders",
+      "Building Products - Mobile Homes And Rv Builders",
+      "BLDG-MOBILE/MFG & RV"
+    ],
+    "31" : [
+      "Building Products - Home Builders",
+      "BLDG-RESIDENT/COMMRCL"
+    ],
+    "32" : [
+      "Broadcast Radio & Television",
+      "Broadcast Radio And Television",
+      "BROADCASTING-RADIO/TV",
+      "Broadcasting - Radio & TV"
+    ],
+    "33" : [
+      "Cable Television",
+      "CABLE TV"
+    ],
+    "34" : [
+      "Chemical - Diversified",
+      "CHEMICALS-DIVERSIFIED",
+      "Chemicals - Diversified"
+    ],
+    "35" : [
+      "Chemical - Fibers",
+      "Chem - Fibers",
+      "CHEMICALS-FIBERS"
+    ],
+    "36" : [
+      "Chemical - Plastic",
+      "CHEMICALS-PLASTICS"
+    ],
+    "37" : [
+      "Chemical - Specialty",
+      "CHEMICALS-SPECIALTY",
+      "Chemicals - Specialty"
+    ],
+    "38" : [
+      "Coal",
+      "COAL"
+    ],
+    "39" : [
+      "Computer - Graphics",
+      "COMPUTER-GRAPHICS"
+    ],
+    "40" : [
+      "Computer - Mainframe",
+      "COMPUTER-MAINFRAMES"
+    ],
+    "41" : [
+      "Computer - Micro Computers",
+      "COMPUTER-MICRO"
+    ],
+    "42" : [
+      "Computer - Peripheral Equipment",
+      "COMPUTER-PERIPHERAL EQ"
+    ],
+    "43" : [
+      "Computer - Services",
+      "COMPUTER-SERVICES"
+    ],
+    "44" : [
+      "Computer - Software",
+      "COMPUTER-SOFTWARE",
+      "Computer Software"
+    ],
+    "45" : [
+      "Containers - Metal & Glass",
+      "Containers - Metal And Glass",
+      "CONTAINERS-METAL/GLASS"
+    ],
+    "46" : [
+      "Containers - Paper & Packaging",
+      "Containers - Paper And Packaging",
+      "CONTAINERS-PAPER/PLASTIC"
+    ],
+    "47" : [
+      "Cosmetics",
+      "COSMETICS & TOILETRIES"
+    ],
+    "48" : [
+      "Diversified Operations",
+      "DIVERSIFIED OPERATIONS"
+    ],
+    "49" : [
+      "Electronics - Semiconductors",
+      "ELEC-SEMICONDUCTORS"
+    ],
+    "50" : [
+      "Electronics - Miscellaneous Components",
+      "ELEC-MISC COMPONENTS"
+    ],
+    "51" : [
+      "Electronics - Measuring Instruments",
+      "ELEC MEASRNG INSTRUMENTS"
+    ],
+    "52" : [
+      "Electronics - Miscellaneous Products",
+      "ELEC PRODUCTS-MISC",
+      "Electrical Products - Miscellaneous"
+    ],
+    "53" : [
+      "Electronics - Connectors",
+      "ELEC-CONNECTORS"
+    ],
+    "54" : [
+      "Electronics - Parts Distribution",
+      "ELECTRONIC PARTS DISTRIB"
+    ],
+    "55" : [
+      "Electronics - Military",
+      "ELECTRONICS-MILITARY SYS"
+    ],
+    "57" : [
+      "Engineering - R&D Services",
+      "Engineering - R And D Services",
+      "ENGINEERING/R&D SVCS"
+    ],
+    "58" : [
+      "Automotive - Internal Combustion Engines",
+      "ENGINES-INT COMBUSTION"
+    ],
+    "59" : [
+      "Fertilizers",
+      "FERTILIZERS"
+    ],
+    "60" : [
+      "Fiber Optics",
+      "FIBER OPTICS"
+    ],
+    "61" : [
+      "Financial - Consumer Loans",
+      "FINANCE-CONSUMER LOANS"
+    ],
+    "62" : [
+      "Financial - Investment Bank",
+      "FINANCE-INVESTMENT BKRS"
+    ],
+    "63" : [
+      "Financial - Investment Management",
+      "FINANCE-INVESTMENT MGMT",
+      "Finance - Investment Management"
+    ],
+    "64" : [
+      "Financial - Leasing Companies",
+      "FINANCE-LEASING COS"
+    ],
+    "65" : [
+      "Financial - Mortgage & Related Services",
+      "FINANCE-MRTG & REL SVC"
+    ],
+    "66" : [
+      "Financial - Investment Funds",
+      "FINANCE-PUBLIC TD INV FD"
+    ],
+    "67" : [
+      "Financial - Savings & Loan",
+      "Financial - Savings And Loan",
+      "FINANCE-SAVINGS & LOAN"
+    ],
+    "68" : [
+      "Financial - Sbic & Commercial Industry",
+      "FINANCE-SBIC & COMMRCL"
+    ],
+    "69" : [
+      "Financial - Miscellaneous Services",
+      "FINANCE-MISC SERVICES"
+    ],
+    "70" : [
+      "Food - Natural Foods Products",
+      "FOOD ITEMS-WHOLESALE"
+    ],
+    "72" : [
+      "Food - Confectionery",
+      "FOOD-CONFECTIONERY"
+    ],
+    "73" : [
+      "Food - Dairy Products",
+      "FOOD-DAIRY PRODUCTS"
+    ],
+    "75" : [
+      "Food - Meat Products",
+      "FOOD-MEAT PRODUCTS"
+    ],
+    "76" : [
+      "Food - Miscellaneous",
+      "FOOD-MISC/DIVERSIFIED"
+    ],
+    "78" : [
+      "Funeral Services",
+      "FUNERAL SVCS & REL"
+    ],
+    "79" : [
+      "Furniture",
+      "FURNITURE"
+    ],
+    "80" : [
+      "Glass Products",
+      "GLASS PRODUCTS"
+    ],
+    "81" : [
+      "Hotels & Motels",
+      "Hotels And Motels",
+      "HOTELS & MOTELS"
+    ],
+    "82" : [
+      "Industrial Automation & Robotics",
+      "Industrial Automation And Robotics",
+      "INDSTRL AUTOMTN/ROBOTICS"
+    ],
+    "83" : [
+      "Instruments - Control",
+      "INSTRUMENTS-CONTROL"
+    ],
+    "84" : [
+      "Instruments - Scientific",
+      "INSTRUMENTS-SCIENTIFIC"
+    ],
+    "85" : [
+      "Insurance - Accident & Health",
+      "Insurance - Accident And Health",
+      "INSURANCE-ACC & HEALTH"
+    ],
+    "86" : [
+      "Insurance - Brokerage",
+      "INSURANCE-BROKERS"
+    ],
+    "87" : [
+      "Insurance - Life Insurance",
+      "INSURANCE-LIFE"
+    ],
+    "88" : [
+      "Insurance - Multi Line",
+      "INSURANCE-MULTI LINE"
+    ],
+    "89" : [
+      "Insurance - Property & Casualty",
+      "Insurance - Property And Casualty",
+      "INSURANCE-PROP/CAS/TITLE",
+      "Property, Casualty and Title Insurance"
+    ],
+    "90" : [
+      "Lasers Systems & Components",
+      "Lasers Systems And Components",
+      "LASERS-SYS/COMPONENTS"
+    ],
+    "91" : [
+      "Leisure & Recreation Products",
+      "Leisure And Recreation Products",
+      "LEISURE & RECREATION PROD"
+    ],
+    "92" : [
+      "Leisure & Recreation Services",
+      "Leisure And Recreation Services",
+      "LEISURE & RECREATION SVCS"
+    ],
+    "93" : [
+      "Uniform & Related",
+      "Uniform And Related",
+      "UNIFORM & RELATED"
+    ],
+    "94" : [
+      "Manufacturing - Tools & Related Products",
+      "MACHINE-TOOLS & REL PROD"
+    ],
+    "95" : [
+      "Manufacturing - Construction & Mining",
+      "Manufacturing - Construction And Mining",
+      "MACHINERY-CONST/MINING"
+    ],
+    "96" : [
+      "Manufacturing - Electrical Utilities",
+      "MACHINERY-ELEC UTILITY"
+    ],
+    "97" : [
+      "Manufacturing - Electronics",
+      "MACHINERY-ELECTRICAL"
+    ],
+    "98" : [
+      "Manufacturing - Farm Equipment",
+      "MACHINERY-FARM"
+    ],
+    "99" : [
+      "Manufacturing - General Industrial",
+      "MACHINERY-GEN INDUSTRIAL"
+    ],
+    "100" : [
+      "Manufacturing - Material Handling",
+      "MACHINERY-MATERIAL HDLG"
+    ],
+    "101" : [
+      "Manufacturing - Print",
+      "MACHINERY-PRINTING TRADE"
+    ],
+    "102" : [
+      "Manufacturing - Thermal Products",
+      "MACHINERY-THERMAL PROC"
+    ],
+    "103" : [
+      "Medical - Instruments",
+      "MEDICAL INSTRUMENTS"
+    ],
+    "104" : [
+      "Medical - Products",
+      "MEDICAL PRODUCTS"
+    ],
+    "105" : [
+      "Medical - Biomedical & Genetics",
+      "Medical - Biomedical And Genetics",
+      "MEDICAL-BIOMED/GENETICS",
+      "Medical - Biomedical and Genetics"
+    ],
+    "106" : [
+      "Medical - Drugs",
+      "MEDICAL-DRUGS"
+    ],
+    "107" : [
+      "Medical - Generic Drugs",
+      "MEDICAL-GENERIC DRUGS"
+    ],
+    "108" : [
+      "Medical - HMOs",
+      "Medical - Hmos",
+      "MEDICAL-HLTH MAINT ORG"
+    ],
+    "109" : [
+      "Medical - Hospital",
+      "MEDICAL-HOSPITALS"
+    ],
+    "110" : [
+      "Medical - Nursing Homes",
+      "MEDICAL-NURSING HOMES"
+    ],
+    "111" : [
+      "Medical - Outpatient & Home Healthcare",
+      "Medical - Outpatient And Home Healthcare",
+      "MEDICAL-OUTPNT/HM CARE"
+    ],
+    "113" : [
+      "Medical - Dental Supplies",
+      "MEDICAL/DENTAL-SUPPLIES"
+    ],
+    "114" : [
+      "Mining - Gold",
+      "MINING-GOLD"
+    ],
+    "115" : [
+      "Mining - Iron",
+      "MINING-IRON"
+    ],
+    "116" : [
+      "Mining - Miscellaneous",
+      "MINING-MISC"
+    ],
+    "117" : [
+      "Mining - Non-Ferrous",
+      "Mining - Non Ferrous",
+      "MINING-NON FERROUS"
+    ],
+    "118" : [
+      "Mining - Silver",
+      "MINING-SILVER",
+      "Silver Miners"
+    ],
+    "119" : [
+      "Metal Products - Procurement & Fabrication",
+      "Metal Products - Procurement And Fabrication",
+      "METAL PROC & FABRICATION"
+    ],
+    "120" : [
+      "Metal Products - Distribution",
+      "METAL PROD-DISTRIBUTOR"
+    ],
+    "121" : [
+      "Metal Products - Fasteners",
+      "METAL PROD-FASTENERS"
+    ],
+    "122" : [
+      "Film & Television Production & Distribution",
+      "Film And Television Production And Distribution",
+      "MOVIE/TV PRODUCTION/DISTRIB"
+    ],
+    "123" : [
+      "Consumer Products - Discretionary",
+      "CONSUMER PROD-MISC DISCRECTN",
+      "Consumer Products - Misc. Discretionary"
+    ],
+    "124" : [
+      "Office Automation & Equipment",
+      "Office Automation And Equipment",
+      "OFFICE AUTOMATION & EQP"
+    ],
+    "125" : [
+      "Office Supplies",
+      "OFFICE SUPPLIES & FORMS",
+      "Office Supplies and Forms"
+    ],
+    "126" : [
+      "Oil & Gas - Royalty Trust - United States",
+      "Oil And Gas - Royalty Trust - United States",
+      "OIL & GAS-U S ROYALTY TR"
+    ],
+    "127" : [
+      "Oil & Gas - Mechanical & And Equipment",
+      "Oil And Gas - Mechanical And And Equipment",
+      "OIL FIELD MACH & EQUIP"
+    ],
+    "128" : [
+      "Oil & Gas - Refining & Marketing",
+      "Oil And Gas - Refining And Marketing",
+      "OIL REFINING & MARKETING"
+    ],
+    "129" : [
+      "Oil & Gas - Exploration & Production - Canadian",
+      "Oil And Gas - Exploration And Production - Canadian",
+      "OIL & GAS-CDN EXP & PROD"
+    ],
+    "130" : [
+      "Oil & Gas - Integrated - Canadian",
+      "Oil And Gas - Integrated - Canadian",
+      "OIL & GAS-CDN INTEGRATED"
+    ],
+    "131" : [
+      "Oil & Gas - Field Services",
+      "Oil And Gas - Field Services",
+      "OIL & GAS-FIELD SERVICES"
+    ],
+    "132" : [
+      "Oil & Gas - Integrated - International",
+      "Oil And Gas - Integrated - International",
+      "OIL & GAS-INTL INTEGRATED",
+      "Oil & Gas - International Integrated"
+    ],
+    "133" : [
+      "Oil & Gas - Speciality - International",
+      "Oil And Gas - Speciality - International",
+      "OIL & GAS-INTL SPECIALTY"
+    ],
+    "134" : [
+      "Oil & Gas - Drilling",
+      "Oil And Gas - Drilling",
+      "OIL & GAS-DRILLNG"
+    ],
+    "135" : [
+      "Oil & Gas - Production & Pipelines",
+      "Oil And Gas - Production And Pipelines",
+      "OIL & GAS-PROD/PIPELINE",
+      "Oil & Gas - Production and Pipelines",
+      "Oil & Gas - Production and Pipelines MLP"
+    ],
+    "136" : [
+      "Oil & Gas - Exploration & Production - United States",
+      "Oil And Gas - Exploration And Production - United States",
+      "OIL & GAS-U S EXPLO & PROD"
+    ],
+    "137" : [
+      "Oil & Gas - Integrated - United States",
+      "Oil And Gas - Integrated - United States",
+      "OIL & GAS-U S INTEGRATED"
+    ],
+    "138" : [
+      "Computer - Optical Imaging",
+      "COMPUTER-OPTICAL RECOGNITN"
+    ],
+    "139" : [
+      "Paints & Related Products",
+      "Paints And Related Products",
+      "PAINTS & ALLIED PRODUCTS"
+    ],
+    "140" : [
+      "Paper & Related Products",
+      "Paper And Related Products",
+      "PAPER & PAPER PRODUCTS"
+    ],
+    "141" : [
+      "Paper - Business Forms",
+      "PAPER-BUS FORMS"
+    ],
+    "143" : [
+      "Pollution Control",
+      "POLLUTION CONTROL EQ & SVS"
+    ],
+    "144" : [
+      "Precious Metals & Jewels",
+      "Precious Metals And Jewels",
+      "PRECIOUS METALS/JEWELRY"
+    ],
+    "145" : [
+      "Commercial Printing",
+      "PRINTING-COMMERCIAL"
+    ],
+    "146" : [
+      "Security & Safety Services",
+      "Security And Safety Services",
+      "PROTECTION-SFTY EQ & SVC"
+    ],
+    "147" : [
+      "Publishing - Books",
+      "PUBLISHING-BOOKS"
+    ],
+    "148" : [
+      "Publishing - Newspapers",
+      "PUBLISHING-NEWSPAPERS"
+    ],
+    "149" : [
+      "Publishing - Periodicals",
+      "PUBLISHING-PERIODICALS"
+    ],
+    "151" : [
+      "Reit & Equity Trust",
+      "Reit And Equity Trust",
+      "REIT-MORTGAGE TRUST"
+    ],
+    "152" : [
+      "Real Estate - Development",
+      "REAL ESTATE DEVELOPMENT"
+    ],
+    "153" : [
+      "Real Estate - Operations",
+      "REAL ESTATE OPERATIONS"
+    ],
+    "154" : [
+      "Retail - Apparel & Shoes",
+      "Retail - Apparel And Shoes",
+      "RETAIL-APPAREL/SHOE"
+    ],
+    "155" : [
+      "Retail - Catalog Shopping",
+      "RETAIL-MAIL ORDER & DIRECT"
+    ],
+    "156" : [
+      "Retail - Consumer Electronics",
+      "RETAIL-CONSUMER ELECT"
+    ],
+    "157" : [
+      "Retail - Convenience Stores",
+      "RETAIL-CONVENIENCE STRS"
+    ],
+    "158" : [
+      "Retail - Discount Stores",
+      "RETAIL-DISCOUNT & VARIETY"
+    ],
+    "159" : [
+      "Retail - Pharmacies & Drug Stores",
+      "Retail - Pharmacies And Drug Stores",
+      "RETAIL-DRUG STORES",
+      "Retail - Drug Stores"
+    ],
+    "160" : [
+      "Retail - Restaurants",
+      "RETAIL-FOOD & RESTAURANTS"
+    ],
+    "161" : [
+      "Retail - Home Furnishings",
+      "RETAIL-HOME FURNISHINGS"
+    ],
+    "162" : [
+      "Retail - Jewelry",
+      "RETAIL-JEWELRY STORES"
+    ],
+    "163" : [
+      "Retail - Mail Order",
+      "RETAIL-MAIL ORD"
+    ],
+    "164" : [
+      "Retail - Major Department Store",
+      "RETAIL-MJR DEPT"
+    ],
+    "165" : [
+      "Retail - Miscellaneous",
+      "RETAIL-MISC/DIVERSIFIED"
+    ],
+    "166" : [
+      "Retail - Regional Department Stores",
+      "RETAIL-REGNL DEPT STRS"
+    ],
+    "167" : [
+      "Retail - Supermarkets",
+      "RETAIL-SUPERMARKETS"
+    ],
+    "168" : [
+      "Retail - Vending",
+      "RETAIL-VENDING"
+    ],
+    "169" : [
+      "Retail - Computer Hardware",
+      "RETAIL/WHLSLE COMPUTERS"
+    ],
+    "170" : [
+      "Rubber - Plastics",
+      "RUBBER & PLASTIC PRODUCTS"
+    ],
+    "171" : [
+      "Rubber - Tires",
+      "RUBBER-TIRES"
+    ],
+    "172" : [
+      "Schools",
+      "SCHOOLS"
+    ],
+    "173" : [
+      "Shoes & Retail Apparel",
+      "Shoes And Retail Apparel",
+      "SHOES & REL APPAREL"
+    ],
+    "174" : [
+      "Soap & Cleaning Materials",
+      "Soap And Cleaning Materials",
+      "SOAP & CLNG PREPARATNS"
+    ],
+    "175" : [
+      "Steel - Pipe & Tube",
+      "Steel - Pipe And Tube",
+      "STEEL-PIPE & TUBES"
+    ],
+    "176" : [
+      "Steel - Producers",
+      "STEEL-PRODUCERS"
+    ],
+    "177" : [
+      "Steel - Speciality",
+      "STEEL-SPECIALTY ALLOYS"
+    ],
+    "180" : [
+      "Textile - Apparel",
+      "TEXTILE-APPAREL MFG"
+    ],
+    "181" : [
+      "Textile - Home Furnishing",
+      "TEXTILE-HOME FURNISHING"
+    ],
+    "182" : [
+      "Textile - Products",
+      "TEXTILE-MILL PRODUCTS"
+    ],
+    "183" : [
+      "Tobacco",
+      "TOBACCO"
+    ],
+    "184" : [
+      "Tools - Handheld",
+      "TOOLS-HAND HELD"
+    ],
+    "185" : [
+      "Toys - Games - Hobbies",
+      "TOYS/GAMES/HOBBY PROD"
+    ],
+    "186" : [
+      "Transportation - Air Freight & Cargo",
+      "Transportation - Air Freight And Cargo",
+      "TRANSPORT-AIR FREIGHT"
+    ],
+    "187" : [
+      "Transportation - Airline",
+      "TRANSPORTATION-AIRLINE"
+    ],
+    "188" : [
+      "Transportation - Equipment & Leasing",
+      "Transportation - Equipment And Leasing",
+      "TRANSPORTATION-EQP & LSNG"
+    ],
+    "189" : [
+      "Transportation - Rail",
+      "TRANSPORTATION-RAIL"
+    ],
+    "190" : [
+      "Transportation - Shipping",
+      "TRANSPORTATION-SHIP"
+    ],
+    "191" : [
+      "Transportation - Services",
+      "TRANSPORTATION-SVCS"
+    ],
+    "192" : [
+      "Transportation - Truck",
+      "TRANSPORTATION-TRUCK"
+    ],
+    "193" : [
+      "Utility - Electric Power",
+      "UTILITY-ELECTRIC POWER",
+      "Utility - Electric Power Distribution"
+    ],
+    "194" : [
+      "Utility - Gas Distribution",
+      "UTILITY-GAS DISTRIBUTION"
+    ],
+    "196" : [
+      "Utility - Water Supply",
+      "UTILITY-WATER SUPPLY"
+    ],
+    "197" : [
+      "Wire & Cable Products",
+      "Wire And Cable Products",
+      "WIRE & CABLE PRODUCTS"
+    ],
+    "198" : [
+      "Computer - Networking",
+      "COMPUTER-NETWORKS"
+    ],
+    "199" : [
+      "Computer - Mini Computers",
+      "COMPUTER-MINI"
+    ],
+    "200" : [
+      "Gaming",
+      "GAMING"
+    ],
+    "202" : [
+      "Computer - Storage Devices",
+      "Computer- Storage Devices",
+      "COMPUTER-STORAGE DEVICES"
+    ],
+    "203" : [
+      "Computer - Integrated Systems",
+      "COMPUTER-INTEGRATED SYSTEMS"
+    ],
+    "204" : [
+      "Banks - Major Regional",
+      "BANKS-MAJOR REGIONAL"
+    ],
+    "205" : [
+      "Business - Services",
+      "BUSINESS SERVICES"
+    ],
+    "206" : [
+      "Business - Information Services",
+      "BUSINESS INFORMATION SERVICES"
+    ],
+    "207" : [
+      "Consumer Products - Staples",
+      "CONSUMER PROD-MISC DISCRECTN"
+    ],
+    "208" : [
+      "Media Conglomerates",
+      "MEDIA CONGLOMERATES"
+    ],
+    "209" : [
+      "Electronics - Manufacturing Machinery",
+      "ELECTRONICS-MANUFACTURING MACH"
+    ],
+    "210" : [
+      "Automotive - Retail & Wholesale",
+      "Automotive - Retail And Whole Sales",
+      "RETAIL/WHOLESALE AUTO/TRUCK"
+    ],
+    "211" : [
+      "Internet - Commerce",
+      "INTERNET COMMERCE"
+    ],
+    "212" : [
+      "Internet - Content",
+      "INTERNET CONTENT"
+    ],
+    "213" : [
+      "Internet - Services",
+      "INTERNET SERVICES"
+    ],
+    "214" : [
+      "Internet - Software",
+      "INTERNET SOFTWARE"
+    ],
+    "215" : [
+      "Medical Info Systems",
+      "MEDICAL INFORMATION SYSTEMS",
+      "Medical Information Systems"
+    ],
+    "216" : [
+      "Business - Software Services",
+      "BUSINESS SOFTWARE SVCS/BPO"
+    ],
+    "217" : [
+      "Internet - Software & Services",
+      "Internet - Software And Services",
+      "INTERNET SOFTWARE/SVCS",
+      "Internet Software"
+    ],
+    "218" : [
+      "Computers - IT Services",
+      "Computers - It Services",
+      "IT SERVICES"
+    ],
+    "219" : [
+      "Internet - Delivery Services",
+      "INTERNET SERVICES - DELIVERY"
+    ],
+    "220" : [
+      "Oil & Gas - Refining & Marketing - MLP",
+      "Oil And Gas - Refining And Marketing - Master Limited Partnerships",
+      "OIL REFINING & MARKETING MLP"
+    ],
+    "221" : [
+      "Oil & Gas - Production Pipeline - MLP",
+      "Oil And Gas - Production Pipeline - Mlb",
+      "OIL/GAS PROD PIPELINE MLP"
+    ],
+    "222" : [
+      "Oil & Gas - Exploration & Production - International",
+      "Oil And Gas - Exploration And Production - International",
+      "INTERNATIONAL E&P"
+    ],
+    "223" : [
+      "Oil & Gas - Integrated - Emerging Markets",
+      "Oil And Gas - Integrated - Emerging Markets",
+      "EMERGING MARKETS INTEGRATED"
+    ],
+    "224" : [
+      "Energy & Pipeline - MLP",
+      "Energy And Pipeline - Master Limited Partnerships",
+      "E&P MLP"
+    ],
+    "225" : [
+      "Large Cap Pharmaceuticals",
+      "LARGE CAP PHARMA",
+      "Large Cap Pharmaceutical"
+    ],
+    "226" : [
+      "Semiconductor - Communications",
+      "SEMI-COMMUNICATIONS"
+    ],
+    "227" : [
+      "Semiconductors - Radio Frequency",
+      "SEMI-RADIO FREQ"
+    ],
+    "228" : [
+      "Communication - Infrastructure",
+      "COMM INFRASTRUCTURE"
+    ],
+    "229" : [
+      "Wireless Equipment",
+      "WIRELESS EQUIPMENT"
+    ],
+    "230" : [
+      "Communication - Components",
+      "COMMUNICATIONS COMPONENTS"
+    ],
+    "231" : [
+      "Communication - Network Software",
+      "COMM NETWORK SOFTWARE"
+    ],
+    "232" : [
+      "Diversified Communication Services",
+      "DIVERSIFIED COMM SERVICES"
+    ],
+    "233" : [
+      "Wireline - National",
+      "WIRELINE - NATIONAL"
+    ],
+    "234" : [
+      "Wireless - Regional - Rural",
+      "WIRELINE - REGIONAL (RURAL)"
+    ],
+    "235" : [
+      "Wireline Non-US",
+      "Wireline Non-us",
+      "WIRELINE - NON-US",
+      "Wireline - Non US Providers"
+    ],
+    "237" : [
+      "Satellite & Communication",
+      "Satellite And Communication",
+      "SATELLITE COMMUNICATION"
+    ],
+    "238" : [
+      "Wireless National",
+      "WIRELESS NATIONAL"
+    ],
+    "239" : [
+      "Wireless - Regional - Rural",
+      "Wireless - Regional - Rual",
+      "WIRELESS-RURAL (REGIONAL)"
+    ],
+    "240" : [
+      "Wireless Non-US",
+      "Wireless Non-us",
+      "WIRELESS NON-US"
+    ],
+    "241" : [
+      "Semiconductor - General",
+      "SEMI-GENERAL"
+    ],
+    "242" : [
+      "Semiconductor - Analog & Mixed",
+      "Semiconductor - Analog And Mixed",
+      "SEMI-ANALOG & MIXED"
+    ],
+    "243" : [
+      "Semiconductor Memory",
+      "SEMI-MEMORY"
+    ],
+    "244" : [
+      "Semiconductors - Programmable Logic",
+      "SEMI-PRO LOGIC DEV"
+    ],
+    "245" : [
+      "Semiconductors - Graphics",
+      "SEMI-GRAPHICAL"
+    ],
+    "246" : [
+      "Semiconductors - Power",
+      "SEMI-POWER"
+    ],
+    "247" : [
+      "Semiconductor - Discretes",
+      "SEMI-DISCRETES"
+    ],
+    "248" : [
+      "Semiconductor Equipment - Wafer Fabrication",
+      "SEMI-EQPT WAFER FAB"
+    ],
+    "249" : [
+      "Semiconductor Equipment - Wafer Components",
+      "SEMI-EQPT WAFER COMP"
+    ],
+    "251" : [
+      "Semiconductor Equipment - Photomasks",
+      "SEMI-EQPT PHTOMASK"
+    ],
+    "253" : [
+      "Semiconductor Equipment - Material Services",
+      "SEMI-EQPT MATERIAL SVS"
+    ],
+    "254" : [
+      "Electronics - Power Generation",
+      "ELEC POWER"
+    ],
+    "256" : [
+      "Security"
+    ],
+    "257" : [
+      "Electric Construction",
+      "ELECT CONSTRUCTION"
+    ],
+    "260" : [
+      "Electronics - Testing Equipment",
+      "ELEC TEST EQUIPMENT"
+    ],
+    "261" : [
+      "Electronics - Manufacturing Services",
+      "ELEC MANUF SVS (EMS)"
+    ],
+    "262" : [
+      "Semiconductor - Circuit Foundry",
+      "SEMI FAB FOUNDRIES"
+    ],
+    "263" : [
+      "Electronics - Miscellaneous Services",
+      "ELEC MISC SERVICES"
+    ],
+    "264" : [
+      "Reit & Equity Trust - Retail",
+      "Reit And Equity Trust - Retail",
+      "REIT-EQTY TRUST - RETAIL"
+    ],
+    "265" : [
+      "Reit & Equity Trust - Residential",
+      "Reit And Equity Trust - Residential",
+      "REIT-EQTY TRUST - RESID",
+      "REIT - Mortgage Trusts"
+    ],
+    "266" : [
+      "Reit & Equity Trust - Other",
+      "Reit And Equity Trust - Other",
+      "REIT-EQTY TRUST - OTHER",
+      "REIT - Other Equity Trusts"
+    ],
+    "268" : [
+      "Solar",
+      "SOLAR"
+    ],
+    "270" : [
+      "Biofuels",
+      "BIOFUELS"
+    ],
+    "273" : [
+      "Alternative Energy - Other",
+      "OTHER ALT ENERGY"
+    ],
+    "274" : [
+      "Nanotechnology",
+      "NANOTECHNOLOGY"
+    ],
+    "275" : [
+      "Agriculture - Products",
+      "AGRICULTURE/PRODUCTS"
+    ],
+    "276" : [
+      "Securities & Exchanges",
+      "Securities And Exchanges",
+      "SECURITIES EXCHANGES"
+    ],
+    "277" : [
+      "Consulting Services",
+      "CONSULTING"
+    ],
+    "278" : [
+      "Staffing Firms",
+      "STAFFING",
+      "Staffing Services"
+    ],
+    "280" : [
+      "Auction & Valuation Services",
+      "Auction And Valuation Services",
+      "AUCTION/VALUATION SERVICES"
+    ],
+    "281" : [
+      "Outsourcing",
+      "OUTSOURCING"
+    ],
+    "282" : [
+      "Financial Transaction Services",
+      "FINANCIAL TRANSACTION SERVICES"
+    ],
+    "283" : [
+      "Technology Services",
+      "TECHNOLOGY SERVICES"
+    ],
+    "284" : [
+      "Government Services",
+      "GOVERNMENT SERVICES"
+    ],
+    "285" : [
+      "Medical Services",
+      "MEDICAL SERVICES"
+    ],
+    "286" : [
+      "Industrial Services",
+      "INDUSTRIAL SERVICES"
+    ],
+    "287" : [
+      "Waste Removal Services",
+      "WASTE REMOVAL SVCS"
+    ],
+    "288" : [
+      "Business - Office Products",
+      "BUSINESS/OFFICE PRODUCTS"
+    ],
+    "289" : [
+      "Consumer Services - Miscellaneous",
+      "CONSUMER PROD-MISC STAPLES"
+    ],
+    "400" : [
+      "Indicies"
+    ],
+    "500" : [
+      "Unclassified"
+    ]
+  }
+}
