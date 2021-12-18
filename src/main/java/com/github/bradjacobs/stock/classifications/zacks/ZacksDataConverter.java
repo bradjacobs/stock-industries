@@ -108,7 +108,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         put(" Non Ferrous", " Non-Ferrous");  // one-off format change
         put("Chem ", "Chemical ");            // one-off format change
         put(" Whole Sales", " Wholesale");    // appears to be typo
-        put(" Reit ", " REIT ");              // adjust caps on acronym
+        put("Reit ", "REIT ");              // adjust caps on acronym
         put(" Rv ", " RV ");                  // adjust caps on acronym
         put(" Hmos", " HMOs");                // adjust caps on acronym
         put(" It ", " IT ");                  // adjust caps on acronym

@@ -1096,7 +1096,7 @@
       "Periodical Publishing"
     ],
     "151" : [
-      "Reit & Equity Trust",
+      "REIT & Equity Trust",
       "Reit And Equity Trust",
       "REIT-MORTGAGE TRUST",
       "REIT - Mortgage Trusts"
@@ -1523,7 +1523,8 @@
     ],
     "241" : [
       "Semiconductor - General",
-      "SEMI-GENERAL"
+      "SEMI-GENERAL",
+      "Semiconductors"
     ],
     "242" : [
       "Semiconductor - Analog & Mixed",
@@ -1603,22 +1604,23 @@
     ],
     "263" : [
       "Electronics - Miscellaneous Services",
-      "ELEC MISC SERVICES"
+      "ELEC MISC SERVICES",
+      "Electrical - Misc Services"
     ],
     "264" : [
-      "Reit & Equity Trust - Retail",
+      "REIT & Equity Trust - Retail",
       "Reit And Equity Trust - Retail",
       "REIT-EQTY TRUST - RETAIL",
       "REIT - Retail Equity Trusts"
     ],
     "265" : [
-      "Reit & Equity Trust - Residential",
+      "REIT & Equity Trust - Residential",
       "Reit And Equity Trust - Residential",
       "REIT-EQTY TRUST - RESID",
       "REIT - Residential Equity Trusts"
     ],
     "266" : [
-      "Reit & Equity Trust - Other",
+      "REIT & Equity Trust - Other",
       "Reit And Equity Trust - Other",
       "REIT-EQTY TRUST - OTHER",
       "REIT - Other Equity Trusts"
@@ -1645,7 +1647,8 @@
     ],
     "275" : [
       "Agriculture - Products",
-      "AGRICULTURE/PRODUCTS"
+      "AGRICULTURE/PRODUCTS",
+      "Agricultural Products"
     ],
     "276" : [
       "Securities & Exchanges",
