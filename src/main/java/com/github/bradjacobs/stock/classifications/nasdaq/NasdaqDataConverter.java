@@ -10,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,17 +30,11 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
 {
     private static final String SECTOR_KEY = "sector";
     private static final String INDUSTRY_KEY = "industry";
-    private static final String TICKER_KEY = "symbol"; // technically only need for diagnostic purposes.
+    private static final String TICKER_KEY = "symbol";
 
-    // the following tickers had a "unique permutation" of Sector/Industry that __subjectively__ looked suspicious
-    //   thus suppressing for now.  There are other tickets with unique Sector/Industry that look correct
-    //   and have been left in.
-    private static final Set<String> SKIPPABLE_TICKERS = new HashSet<>(Arrays.asList(
-            "USLM", // Sector: Energy             Industry: Other Metals and Minerals
-            "WOR",  // Sector: Consumer Durables  Industry: Aerospace
-            "YGMZ", // Sector: Consumer Services  Industry: Transportation Services
-            "ZTO"   // Sector: Transportation     Industry: Advertising
-    ));
+    //   NEW --   each unique Sector/Industry combination MUST be affiliated
+    //               with at least these meny ticker symbols (or else it will be ignored)
+    private static final int MIN_TICKERS_FOR_SECTOR_INDUSTRY = 2;
 
     @Override
     public Classification getClassification()
@@ -54,7 +46,11 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
     public List<NasdaqRecord> createDataRecords() throws IOException
     {
         String json = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
+        return createDataRecords(json);
+    }
 
+    public List<NasdaqRecord> createDataRecords(String json) throws IOException
+    {
         // using TreeMap/TreeSet to keep everything sorted.
         //   { "Sector" : { "Industry" : [(all ticker values for sector/industry]  }  }
         Map<String, Map<String,Set<String>>> sectorIndustryMap = new TreeMap<>();
@@ -68,10 +64,6 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
             String ticker = tickerRecordMap.get(TICKER_KEY);
             String sector = tickerRecordMap.get(SECTOR_KEY);
             String industry = tickerRecordMap.get(INDUSTRY_KEY);
-
-            if (SKIPPABLE_TICKERS.contains(ticker)) {
-                continue;
-            }
 
             if (StringUtils.isNotEmpty(sector) && StringUtils.isNotEmpty(industry)) {
                 Map<String, Set<String>> industryMap = sectorIndustryMap.computeIfAbsent(sector, k -> new TreeMap<>());
@@ -91,9 +83,15 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
             String sector = sectorEntry.getKey();
             String sectorId = String.valueOf(++sectorCounter);
 
-            Set<String> industrySet = sectorEntry.getValue().keySet();
+            Map<String, Set<String>> industryTickerMap = sectorEntry.getValue();
+            Set<String> industrySet = industryTickerMap.keySet();
+
             industryCounter = 0;
             for (String industry : industrySet) {
+                Set<String> tickerValues = industryTickerMap.get(industry);
+                if (tickerValues.size() < MIN_TICKERS_FOR_SECTOR_INDUSTRY) {
+                    continue;
+                }
                 String industryId = String.format("%s.%d", sectorId, ++industryCounter);
                 recordList.add(new NasdaqRecord(sectorId, sector, industryId, industry));
             }
