@@ -22,7 +22,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -268,5 +267,23 @@ public class SicDataConverter implements DataConverter<SicRecord>
     private String cleanValue(String input) {
         return StringUtil.cleanWhitespace(input);
     }
+
+
+    // todo: FOR REFERENCE -- decide later what to do with some 'extra' sic code that popup up in circulation, but are not generated from the data source.
+//    private static final List<SicRecord> EXTRA_RECORDS = Arrays.asList(
+//            new SicRecord("", "", "", "", "", "", "3576", "Computer Communications Equipment"),
+//            new SicRecord("", "", "", "", "", "", "4955", "Hazardous Waste Management"),
+//            new SicRecord("", "", "", "", "", "", "4991", "Cogeneration Services and Small Power Producers"),
+//            new SicRecord("", "", "", "", "", "", "5412", "Convenience Stores"),
+//            new SicRecord("", "", "", "", "617", "????", "6172", "Finance Lessors"),
+//            new SicRecord("", "", "", "", "617", "????", "6189", "Asset-backed Securities"),
+//            new SicRecord("", "", "", "", "617", "????", "6199", "Finance Services"),
+//            new SicRecord("", "", "", "", "", "", "6532", "Real Estate Dealers (for Their Own Account)"),
+//            new SicRecord("", "", "", "", "677", "????", "6770", "Blank Checks"),
+//            new SicRecord("", "", "", "", "", "", "6795", "Mineral Royalty Traders"),
+//            new SicRecord("", "", "", "", "", "", "7385", "Telephone Interconnect Systems"),
+//            new SicRecord("", "", "", "", "888", "American Depositary Receipts", "8888", "Foreign Governments"),
+//            new SicRecord("", "", "", "", "", "", "9995", "Non-operating Establishments")
+//    );
 
 }
