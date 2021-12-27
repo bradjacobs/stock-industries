@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 public class AllLevelsRecord
 {
-    private static final int MAX_LEVEL = 6;
-    private static final int MAX_ARRAY_SIZE = MAX_LEVEL + 1;
+    protected static final int MAX_LEVEL = 6;
+    protected static final int MAX_ARRAY_SIZE = MAX_LEVEL + 1;
 
     private final String[] codeIdLevels = new String[MAX_ARRAY_SIZE];
     private final String[] codeTitleLevels = new String[MAX_ARRAY_SIZE];
@@ -31,7 +31,7 @@ public class AllLevelsRecord
         return "";
     }
 
-    private boolean isValidLevel(int level) {
+    protected boolean isValidLevel(int level) {
         return level >= 1 && level <= MAX_LEVEL;
     }
 

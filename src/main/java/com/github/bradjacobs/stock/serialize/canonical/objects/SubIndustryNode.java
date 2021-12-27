@@ -1,10 +1,16 @@
 package com.github.bradjacobs.stock.serialize.canonical.objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonPropertyOrder( {
+        "subIndustryId",
+        "subIndustryName",
+        "activities"
+})
 public class SubIndustryNode
 {
     @JsonProperty("subIndustryId")

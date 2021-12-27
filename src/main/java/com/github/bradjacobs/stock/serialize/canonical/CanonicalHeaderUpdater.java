@@ -1,10 +1,20 @@
 package com.github.bradjacobs.stock.serialize.canonical;
 
+import com.github.bradjacobs.stock.classifications.common.AllLevelsRecord;
+import com.github.bradjacobs.stock.serialize.canonical.objects.ActivityNode;
+import com.github.bradjacobs.stock.serialize.canonical.objects.GroupNode;
+import com.github.bradjacobs.stock.serialize.canonical.objects.IndustryNode;
+import com.github.bradjacobs.stock.serialize.canonical.objects.SectorNode;
+import com.github.bradjacobs.stock.serialize.canonical.objects.SubActivityNode;
+import com.github.bradjacobs.stock.serialize.canonical.objects.SubIndustryNode;
+import com.github.bradjacobs.stock.serialize.json.HeaderFieldDataExtractor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * TODO - this whole class needs refactoring help
@@ -14,6 +24,18 @@ public final class CanonicalHeaderUpdater
     private final Map<String,String> canonicalToOrigHeaderMap;
     private final Map<String,String> origToCanonicalHeaderMap;
     private final Map<String,String> canonicalToGenericMap;
+
+    private static final Map<Integer, Class<?>> levelToNodeClassMap = new TreeMap<Integer, Class<?>>() {{
+        put(1, SectorNode.class);
+        put(2, GroupNode.class);
+        put(3, IndustryNode.class);
+        put(4, SubIndustryNode.class);
+        put(5, ActivityNode.class);
+        put(6, SubActivityNode.class);
+    }};
+
+    private static HeaderLabeler CANONICAL_HEADER_LABELER = createCanonicalHeaderLabeler();
+
 
     public CanonicalHeaderUpdater(String[] originalDataHeaderRow)
     {
@@ -48,6 +70,8 @@ public final class CanonicalHeaderUpdater
         }
         return result;
     }
+
+
 
 
 
@@ -177,6 +201,44 @@ public final class CanonicalHeaderUpdater
         put(CANONICAL_LEVEL_6_ID_HEADER, GENERIC_ID_HEADER);
         put(CANONICAL_LEVEL_6_NAME_HEADER, GENERIC_NAME_HEADER);
     }};
+
+
+    private static HeaderLabeler createCanonicalHeaderLabeler()
+    {
+        HeaderFieldDataExtractor headerFieldDataExtractor = new HeaderFieldDataExtractor();
+        HeaderLabeler canonicalHeaderLabeler = new HeaderLabeler();
+
+        for (Map.Entry<Integer, Class<?>> entry : levelToNodeClassMap.entrySet()) {
+            Integer level = entry.getKey();
+            Class<?> clazz = entry.getValue();
+            String[] headers = headerFieldDataExtractor.getHeaderFields(clazz);
+            if (headers.length == 3) {
+                canonicalHeaderLabeler.setLevelIdTitleChildren(level, headers[0], headers[1], headers[2]);
+            }
+            else if (headers.length == 2) {
+                canonicalHeaderLabeler.setLevelIdTitleChildren(level, headers[0], headers[1], "");
+            }
+        }
+        return canonicalHeaderLabeler;
+    }
+
+
+    private static class HeaderLabeler extends AllLevelsRecord {
+        private final String[] childrenLevelTitles = new String[MAX_ARRAY_SIZE];
+
+        public HeaderLabeler() {
+            super();
+            Arrays.fill(childrenLevelTitles, "");
+        }
+
+        public void setLevelIdTitleChildren(int level, String idLabel, String titleLabel, String childrenLabel)
+        {
+            if (isValidLevel(level)) {
+                setLevelIdTitle(level, idLabel, titleLabel);
+                this.childrenLevelTitles[level] = childrenLabel;
+            }
+        }
+    }
 
 
 }
