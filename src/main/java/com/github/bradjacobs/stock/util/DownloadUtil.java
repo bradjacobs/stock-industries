@@ -37,7 +37,7 @@ public class DownloadUtil
 
     // **** NOTE *****:
     //    would be 'better' to use an htmlClient, but will only worry about that iff necessary.
-    private static InputStream createInputStream(URL url) throws IOException
+    public static InputStream createInputStream(URL url) throws IOException
     {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(CONNECTION_TIMEOUT);
@@ -45,7 +45,7 @@ public class DownloadUtil
 
         // HttpURLConnection won't always set a User-Agent, and there are some websites
         //  that will automatically return a 403 if User-Agent is not present.
-        connection.setRequestProperty("User-Agent", "Java_HttpURLConnection/" + System.getProperty("java.version"));
+        connection.addRequestProperty("User-Agent","jclient/" + System.getProperty("java.version"));
         connection.setRequestProperty("Accept", "*/*");
 
         return new BufferedInputStream(connection.getInputStream());
