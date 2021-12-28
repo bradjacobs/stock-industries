@@ -38,6 +38,14 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
 {
     private static final String NESTED_JSON_PREFIX = "\"data\"  : ";
 
+
+    // todo - used to alter the ids to make unique for the json tree generator
+    //    can come back for better soln so this isn't needed later.
+    private static final String S_NUM_FORMAT_STR = "%02d";
+    private static final String M_NUM_FORMAT_STR = "%02d";
+    private static final String X_NUM_FORMAT_STR = "%03d";
+
+
     @Override
     public Classification getClassification() {
         return Classification.ZACKS;
@@ -67,11 +75,27 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
             resultList.add(record);
         }
 
+        // TODO - TO FIX LATER
+        //   currently some json tree building code relies on each id be unique (regardless of level)
+        //   (see comment at bottom for example)
+        //   for now will 'fake it' by adding a prefix to ensure uniqueness
+        for (ZacksRecord record : resultList) {
+
+            String s = String.format(S_NUM_FORMAT_STR, Integer.parseInt(record.getSectorCode()));
+            String m = String.format(M_NUM_FORMAT_STR, Integer.parseInt(record.getMediumIndustryCode()));
+            String x = String.format(X_NUM_FORMAT_STR, Integer.parseInt(record.getExpandedIndustryCode()));
+
+            record.setSectorCode(s);
+            record.setMediumIndustryCode(s + m);
+            record.setExpandedIndustryCode(s + m + x);
+        }
+
+
         Collections.sort(resultList);
 
         // remove a "0" record if it exists
         ZacksRecord firstRecord = resultList.get(0);
-        if (firstRecord.getSectorCode().equals("0")) {
+        if (firstRecord.getSectorCode().equals("0") || firstRecord.getSectorCode().equals("00")) {
             resultList.remove(0);
         }
 
@@ -99,6 +123,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
     }
 
 
+    // todo: mess to deal with at later date.
     private static final Map<String,String> CUSTOM_POST_CLEAN_SUB_MAP = new LinkedHashMap<String,String>() {{
         put("And And ", "And ");              // fix data with a 'double and'
         put(" Rual", " Rural");               // fix data typo
@@ -108,13 +133,13 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         put(" Non Ferrous", " Non-Ferrous");  // one-off format change
         put("Chem ", "Chemical ");            // one-off format change
         put(" Whole Sales", " Wholesale");    // appears to be typo
-        put("Reit ", "REIT ");              // adjust caps on acronym
+        put("Reit ", "REIT ");                // adjust caps on acronym
         put(" Rv ", " RV ");                  // adjust caps on acronym
         put(" Hmos", " HMOs");                // adjust caps on acronym
         put(" It ", " IT ");                  // adjust caps on acronym
         put(" Sbic ", " SBIC ");              // adjust caps on acronym
         put(" Mlb", " MLP");                  // adjust caps on acronym (and fix typo)
-        put(" Master Limited Partnerships", " MLP");  // use acroynm instead
+        put(" Master Limited Partnerships", " MLP");  // use acronym instead
 
         put(" Bkrs ", " Bankers ");           // custom change (b/c orig value subjectively looks odd imho)
         put(" Mgrs", " Managers");            // custom change (b/c orig value subjectively looks odd imho)
@@ -137,7 +162,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
 
         result = StringUtils.replace(result, " And ", " & ");
 
-        // remove back teh spaces that were added.
+        // remove the spaces that were added.
         result = StringUtils.replace(result, "( ", "(");
         result = result.replaceAll("\\s+/\\s+", "/");
         result = result.replaceAll("\\s+-\\s+", " - ");
@@ -155,5 +180,24 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
 
         return result;
     }
+
+    /*
+        NOTES: below is an example of the same "id" used at different levels.
+
+        "sectorCode" : "8",   <-----------------
+        "sectorName" : "Construction",
+
+        "sectorCode" : "2",
+        "sectorName" : "Consumer Discretionary",
+        "mediumIndustryCode" : "8",      <-----------------
+        "mediumIndustryName" : "Home Furnishing - Appliance",
+
+        "sectorCode" : "5",
+        "sectorName" : "Auto, Tires & Trucks",
+        "mediumIndustryCode" : "18",
+        "mediumIndustryName" : "Autos - Tires - Trucks",
+        "expandedIndustryCode" : "8",       <-----------------
+        "expandedIndustryName" : "Automotive - Foreign"
+     */
 
 }

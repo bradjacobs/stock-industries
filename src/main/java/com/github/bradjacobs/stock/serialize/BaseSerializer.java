@@ -29,13 +29,12 @@ abstract public class BaseSerializer
     }
 
 
-    protected <T> Class<?> identifyClass(List<T> objectList) {
+    protected static <T> Class<?> identifyClass(List<T> objectList) {
         if (objectList == null || objectList.isEmpty()) {
             throw new IllegalArgumentException("cannot check class type of an empty object list.");
         }
         return objectList.get(0).getClass();
     }
-
 
 
     protected void validateFilePath(String filePath) {

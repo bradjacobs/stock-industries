@@ -45,4 +45,12 @@ public class CsvSerializer extends BaseSerializer
         return csvData;
     }
 
+    // todo - refactor to combine with above.
+    public static <T> String serializeToCsvString(List<T> objectList) throws IOException
+    {
+        Class<?> clazz = identifyClass(objectList);
+        CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).setClazz(clazz).build();
+        CsvSchema schema = csvObjectMapper.schemaFor(clazz).withHeader();
+        return csvObjectMapper.writer(schema).writeValueAsString(objectList);
+    }
 }

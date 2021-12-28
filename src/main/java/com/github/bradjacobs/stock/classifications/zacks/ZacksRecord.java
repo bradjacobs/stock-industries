@@ -18,7 +18,7 @@ public class ZacksRecord implements Comparable<ZacksRecord>
 {
     @JsonProperty
     @JsonAlias("Sector Code")
-    private int sectorCode;
+    private String sectorCode;
 
     @JsonProperty
     @JsonAlias("Sector Group")
@@ -26,7 +26,7 @@ public class ZacksRecord implements Comparable<ZacksRecord>
 
     @JsonProperty
     @JsonAlias("Medium(M) Industry Code")
-    private int mediumIndustryCode;
+    private String mediumIndustryCode;
 
     @JsonProperty
     @JsonAlias("Medium(M) Industry Group")
@@ -34,7 +34,7 @@ public class ZacksRecord implements Comparable<ZacksRecord>
 
     @JsonProperty
     @JsonAlias("Expanded(X) Industry Code")
-    private int expandedIndustryCode;
+    private String expandedIndustryCode;
 
     @JsonProperty
     @JsonAlias("Expanded(X) Industry Group")
@@ -42,13 +42,10 @@ public class ZacksRecord implements Comparable<ZacksRecord>
 
 
     public String getSectorCode() {
-        return String.valueOf(sectorCode);
+        return sectorCode;
     }
 
     public void setSectorCode(String sectorCode) {
-        setSectorCode(Integer.parseInt(sectorCode));
-    }
-    public void setSectorCode(int sectorCode) {
         this.sectorCode = sectorCode;
     }
 
@@ -61,14 +58,10 @@ public class ZacksRecord implements Comparable<ZacksRecord>
     }
 
     public String getMediumIndustryCode() {
-        return String.valueOf(mediumIndustryCode);
+        return mediumIndustryCode;
     }
 
     public void setMediumIndustryCode(String mediumIndustryCode) {
-        setMediumIndustryCode(Integer.parseInt(mediumIndustryCode));
-    }
-
-    public void setMediumIndustryCode(int mediumIndustryCode) {
         this.mediumIndustryCode = mediumIndustryCode;
     }
 
@@ -81,14 +74,10 @@ public class ZacksRecord implements Comparable<ZacksRecord>
     }
 
     public String getExpandedIndustryCode() {
-        return String.valueOf(expandedIndustryCode);
+        return expandedIndustryCode;
     }
 
     public void setExpandedIndustryCode(String expandedIndustryCode) {
-        setExpandedIndustryCode(Integer.parseInt(expandedIndustryCode));
-    }
-
-    public void setExpandedIndustryCode(int expandedIndustryCode) {
         this.expandedIndustryCode = expandedIndustryCode;
     }
 
@@ -100,19 +89,18 @@ public class ZacksRecord implements Comparable<ZacksRecord>
         this.expandedIndustryName = expandedIndustryName;
     }
 
-
     @Override
     public int compareTo(ZacksRecord other)
     {
-        int compare = Integer.compare(this.sectorCode, other.sectorCode);
+        int compare = this.sectorCode.compareTo(other.sectorCode);
         if (compare != 0) {
             return compare;
         }
-        compare = Integer.compare(this.mediumIndustryCode, other.mediumIndustryCode);
+        compare = this.mediumIndustryCode.compareTo(other.mediumIndustryCode);
         if (compare != 0) {
             return compare;
         }
-        return Integer.compare(this.expandedIndustryCode, other.expandedIndustryCode);
+        return this.expandedIndustryCode.compareTo(other.expandedIndustryCode);
     }
 
     @Override
@@ -124,9 +112,9 @@ public class ZacksRecord implements Comparable<ZacksRecord>
             return false;
         }
         ZacksRecord that = (ZacksRecord) o;
-        return sectorCode == that.sectorCode &&
-            mediumIndustryCode == that.mediumIndustryCode &&
-            expandedIndustryCode == that.expandedIndustryCode;
+        return sectorCode.equals(that.sectorCode) &&
+            mediumIndustryCode.equals(that.mediumIndustryCode) &&
+            expandedIndustryCode.equals(that.expandedIndustryCode);
     }
 
     @Override
