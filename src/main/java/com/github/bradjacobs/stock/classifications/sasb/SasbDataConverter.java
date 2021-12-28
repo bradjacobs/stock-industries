@@ -5,7 +5,6 @@ import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
 import com.github.bradjacobs.stock.util.StringUtil;
 import com.github.bradjacobs.stock.util.UrlUtil;
-import com.sun.javafx.fxml.builder.URLBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
