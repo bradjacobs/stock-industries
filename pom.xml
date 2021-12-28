@@ -53,13 +53,7 @@
 			<artifactId>commons-text</artifactId>
 			<version>1.9</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>4.4</version>
-		</dependency>
-
+		
 		<!-- primarily for CSV Mapper -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
