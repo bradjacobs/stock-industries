@@ -5,26 +5,15 @@ import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
-import com.github.bradjacobs.stock.util.PdfUtil;
-import com.github.bradjacobs.stock.util.StringUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 // alternate definition location:
 //    http://www.zacksdata.com/app/download/247340904/Zacks+Sector+Industry+Mapping+Scheme.pdf
@@ -158,7 +147,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         result = StringUtils.replace(result, "/", " / ");
         result = StringUtils.replace(result, "(", "( ");
 
-        result = WordUtils.capitalizeFully(result);  // todo - update library for recent func
+        result = WordUtils.capitalizeFully(result);
 
         result = StringUtils.replace(result, " And ", " & ");
 
