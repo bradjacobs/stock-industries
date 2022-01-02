@@ -1,7 +1,6 @@
 package com.github.bradjacobs.stock.classifications.naics;
 
 import bwj.util.excel.ExcelReader;
-import bwj.util.excel.QuoteMode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.bradjacobs.stock.classifications.Classification;
@@ -9,10 +8,12 @@ import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.classifications.common.TupleToPojoConverter;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
+import com.github.bradjacobs.stock.serialize.csv.CsvMatrixConverter;
 import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,9 +21,14 @@ import java.util.stream.Collectors;
 
 /**
  * NOTE:
- *   these 2 files have code values in different columns:
+ *     https://www.census.gov/naics/?48967
+ *
+ *   these 2 file types have code values in different columns:
  *      https://www.census.gov/naics/2017NAICS/2-6%20digit_2017_Codes.xlsx
+ *      https://www.census.gov/naics/2022NAICS/2-6%20digit_2022_Codes.xlsx
+ *        vs
  *      https://www.census.gov/naics/2017NAICS/2017_NAICS_Descriptions.xlsx
+ *         (no 2022 link....at least as of last time checked on dec 2021)
  */
 public class NaicsDataConverter implements DataConverter<NaicsRecord>
 {
@@ -41,8 +47,7 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         ExcelReader excelReader = ExcelReader.builder().build();
         String csvData = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 
-        CsvDeserializer csvDeserializer = new CsvDeserializer();
-        List<RawNaicsRecord> rawRecords = csvDeserializer.csvToObjectList(RawNaicsRecord.class, csvData);
+        List<RawNaicsRecord> rawRecords = convertToRawRecords(csvData);
         List<RawNaicsRecord> claanRecords = sanitizeList(rawRecords);
 
         List<NaicsRecord> resultRecords = TUPLE_TO_POJO_CONVERTER.doConvertToObjects(NaicsRecord.class, claanRecords);
@@ -104,6 +109,36 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         return cleanValue(description);
     }
 
+    private List<RawNaicsRecord> convertToRawRecords(String csvData) throws IOException
+    {
+        List<RawNaicsRecord> rawRecords;
+        if (csvData.startsWith("Seq") || csvData.startsWith("\"Seq"))
+        {
+            // the "2-6_digit_xxx_Codes" file is badly formatted, and trying to load the data into a Pojo
+            //  was more heartache than desired.  Thus workaround.
+            String[][] matrix = CsvMatrixConverter.convertToMatrix(csvData);
+            int codeColumnIndex = 1;
+            int titleColumnIndex = 2;
+            // todo - move hardcode numbers to better spot
+
+            rawRecords = new ArrayList<>();
+            for (int i = 1; i < matrix.length; i++)
+            {
+                String code = matrix[i][codeColumnIndex].trim();
+                String title = matrix[i][titleColumnIndex].trim();
+                if (StringUtils.isNotEmpty(code) && StringUtils.isNotEmpty(title)) {
+                    rawRecords.add(new RawNaicsRecord(code, title));
+                }
+            }
+        }
+        else {
+            CsvDeserializer csvDeserializer = new CsvDeserializer();
+            rawRecords = csvDeserializer.csvToObjectList(RawNaicsRecord.class, csvData);
+        }
+        return rawRecords;
+    }
+
+
     private static class RawNaicsRecord implements CodeTitleLevelRecord
     {
         @JsonProperty("Code")
@@ -112,6 +147,15 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         private String title;
         @JsonProperty("Description")
         private String description;
+
+        public RawNaicsRecord() {
+        }
+
+        public RawNaicsRecord(String code, String title) {
+            this.code = code;
+            this.title = title;
+            this.description = "";
+        }
 
         @Override
         public String getCodeId() { return code; }

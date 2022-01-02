@@ -13,7 +13,7 @@ public enum Classification
     ISIC("isic", false,"http://www.ilo.org/ilostat-files/Documents/ISIC.xlsx"),
     MGECS("mgecs", true,"https://advisor.morningstar.com/Enterprise/VTC/MorningstarGlobalEquityClassStructure2019v3.pdf"),  // aka MorningStar
     NACE("nace", false, "https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=ACT_OTH_CLS_DLD&StrNom=NACE_REV2&StrFormat=CSV&StrLanguageCode=EN&IntKey=&IntLevel=&bExport="),
-    NAICS("naics", true,"https://www.census.gov/naics/2017NAICS/2017_NAICS_Descriptions.xlsx"),
+    NAICS("naics", false,"https://www.census.gov/naics/2022NAICS/2-6%20digit_2022_Codes.xlsx"),
     NAPCS("napcs", false,"https://www.census.gov/naics/napcs/structure/2017NAPCSStructure.xlsx"),
     NASDAQ("nasdaq", false,"https://api.nasdaq.com/api/screener/stocks?limit=0&download=true"), // **
     //RBICS("rbics", false, ""), // requires authorization.  i.e.  https://developer.factset.com/api-catalog/factset-rbics-api
