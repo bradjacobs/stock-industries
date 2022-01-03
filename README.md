@@ -26,6 +26,7 @@ and/or intellectual property rights.
 | RBICS<sup>(2)</sup> | [Revere Business Industry Classification System](https://www.sasb.org/find-your-industry/) (aka FactSet) | (N/A) | |
 | SASB | [Sustainable Industry Classification System](https://www.sasb.org/find-your-industry/) | [source](https://www.sasb.org/find-your-industry/) | HTML |
 | SIC | [Standard Industrial Classification](https://siccode.com) | [source](https://www.osha.gov/data/sic-manual) | HTML |
+| SITC | [Standard International Trade Classification](https://unstats.un.org/unsd/classifications/Econ/) | [source](https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/SITCCodeandDescription.xlsx) | Excel |
 | TRBC | [The Refinitiv Business Classification](https://www.refinitiv.com) | [source](https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf) | PDF |
 | UNSPSC | [United Nations Standard Products and Services Code](https://www.ungm.org/Public/UNSPSC) | [source](https://www.ungm.org/Public/UNSPSC/Excel) | Excel |
 | ZACKS | [Zacks Sector & Industry Classification](https://www.zacks.com) | [source](https://www.zacks.com/zrank/sector-industry-classification.php) <br>[alternate](http://www.zacksdata.com/app/download/247340904/Zacks+Sector+Industry+Mapping+Scheme.pdf) | HTML/PDF |

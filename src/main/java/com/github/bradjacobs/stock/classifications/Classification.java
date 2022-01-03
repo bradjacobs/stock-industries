@@ -19,6 +19,7 @@ public enum Classification
     //RBICS("rbics", false, ""), // requires authorization.  i.e.  https://developer.factset.com/api-catalog/factset-rbics-api
     SASB("sasb", true,"https://www.sasb.org/find-your-industry/"), // **
     SIC("sic", false,"https://www.osha.gov/data/sic-manual"),
+    SITC("sitc", false,"https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/SITCCodeandDescription.xlsx"),
     TRADINGVIEW("trdvw", false,"https://www.tradingview.com/markets/stocks-usa/sectorandindustry-industry/"),
     TRBC("trbc", false,"https://www.refinitiv.com/content/dam/marketing/en_us/documents/quick-reference-guides/trbc-business-classification-quick-guide.pdf"),  // aka Refinitiv
     UNSPSC("unspsc", false,"https://www.ungm.org/Public/UNSPSC/Excel"),
