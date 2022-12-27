@@ -24,14 +24,12 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
     }
 
     @Override
-    public List<TrbcRecord> createDataRecords() throws IOException
-    {
+    public List<TrbcRecord> createDataRecords() throws IOException {
         String[] pdfFileLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
         return parseLines(pdfFileLines);
     }
 
-    private List<TrbcRecord> parseLines(String[] lines) throws JsonProcessingException
-    {
+    private List<TrbcRecord> parseLines(String[] lines) throws JsonProcessingException {
         List<TrbcEntry> entryList = getEntryRecords(lines);
         return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(TrbcRecord.class, entryList);
     }
@@ -42,19 +40,16 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
      * @param lines lines to parse
      * @return List<TrbcEntry>
      */
-    private List<TrbcEntry> getEntryRecords(String[] lines)
-    {
+    private List<TrbcEntry> getEntryRecords(String[] lines) {
         List<TrbcEntry> resultList = new ArrayList<>();
 
-        for (int i = 0; i < lines.length; i++)
-        {
+        for (int i = 0; i < lines.length; i++) {
             String line = lines[i].trim();
             if (isSkipableLine(line)) {
                 continue;
             }
 
             String[] lineElements = line.split(" ");
-
             // if there are exactly 2 elements and the last is a number
             //   then this is a result of a pdf multi-line parse issue
             //     thus prepend the previous 2 lines to create a 'new' line
@@ -83,40 +78,26 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
                 resultList.add(trbcEntry);
             }
         }
-
         return resultList;
     }
 
-    protected String cleanValue(String input)
-    {
+    protected String cleanValue(String input) {
         // todo - some minor upper/lower case fixes.
         return StringUtil.cleanWhitespace(input);
     }
 
-    private boolean isSkipableLine(String line)
-    {
-        if (StringUtils.isEmpty(line)) {
-            return true;
-        }
-        if (isTableColumnHeaderRow(line)) {
-            return true;
-        }
-        if (line.startsWith("Thomson Reuters")) {
-            return true;
-        }
-        if (line.toLowerCase().contains("refinitiv")) {
-            return true;
-        }
-        return false;
+    private boolean isSkipableLine(String line) {
+        return StringUtils.isEmpty(line) ||
+                isTableColumnHeaderRow(line) ||
+                line.startsWith("Thomson Reuters") ||
+                line.toLowerCase().contains("refinitiv");
     }
 
-    private boolean isTableColumnHeaderRow(String line)
-    {
+    private boolean isTableColumnHeaderRow(String line) {
         return line.startsWith("Economic");
     }
 
-    private static class TrbcEntry implements CodeTitleLevelRecord
-    {
+    private static class TrbcEntry implements CodeTitleLevelRecord {
         private final String code;
         private final String title;
 
@@ -134,5 +115,4 @@ public class TrbcDataConverter implements DataConverter<TrbcRecord>
             return code.length() / 2;
         }  // level is always 1/2 the size of the id.
     }
-
 }
