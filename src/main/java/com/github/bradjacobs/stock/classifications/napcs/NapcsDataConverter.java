@@ -2,6 +2,7 @@ package com.github.bradjacobs.stock.classifications.napcs;
 
 import bwj.util.excel.ExcelReader;
 import bwj.util.excel.QuoteMode;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,12 +31,9 @@ public class NapcsDataConverter implements DataConverter<NapcsRecord>
         return Classification.NAPCS;
     }
 
-
     @Override
-    public List<NapcsRecord> createDataRecords() throws IOException
-    {
+    public List<NapcsRecord> createDataRecords() throws IOException {
         ExcelReader excelReader = ExcelReader.builder().build();
-
         String csvData = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 
         CsvDeserializer csvDeserializer = new CsvDeserializer();
@@ -56,13 +54,16 @@ public class NapcsDataConverter implements DataConverter<NapcsRecord>
             put(11, 6);
         }};
 
-        @JsonProperty("2017 NAPCS Code")
+        @JsonProperty("Code")
+        @JsonAlias({"2017 NAPCS Code", "2022 NAPCS Code"})
         private String code;
+
         @JsonProperty("Title")
+        @JsonAlias({"2017 NAPCS Title", "2022 NAPCS Title"})
         private String title;
+
         @JsonIgnore
         private final Map<String, Object> additionalProperties = new HashMap<>();
-
 
         @Override
         public String getCodeId() {
@@ -90,5 +91,4 @@ public class NapcsDataConverter implements DataConverter<NapcsRecord>
             this.additionalProperties.put(name, value);
         }
     }
-
 }
