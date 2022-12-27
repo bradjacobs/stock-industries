@@ -25,13 +25,11 @@ public class IsicDataConverter implements DataConverter<IsicRecord>
     }
 
     @Override
-    public List<IsicRecord> createDataRecords() throws IOException
-    {
+    public List<IsicRecord> createDataRecords() throws IOException {
         ExcelReader excelReader = ExcelReader.builder().setSkipEmptyRows(true).setSheetName(EXCEL_TAB_NAME).build();
         String csvText = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 
         CsvDeserializer csvDeserializer = new CsvDeserializer();
         return csvDeserializer.deserializeObjects(IsicRecord.class, csvText);
     }
-
 }

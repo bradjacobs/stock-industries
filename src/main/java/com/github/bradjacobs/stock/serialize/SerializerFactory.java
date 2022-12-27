@@ -12,8 +12,7 @@ public class SerializerFactory
 {
     private SerializerFactory() { }
 
-    public static BaseSerializer createSerializer(DataDefinition dataDefinition)
-    {
+    public static BaseSerializer createSerializer(DataDefinition dataDefinition) {
         if (dataDefinition == null) {
             throw new IllegalArgumentException("Must provide a dataDefinition!");
         }
@@ -29,9 +28,7 @@ public class SerializerFactory
         }
     }
 
-
-    public static BaseDeserializer createDeserialzer(DataDefinition dataDefinition)
-    {
+    public static BaseDeserializer createDeserialzer(DataDefinition dataDefinition) {
         if (dataDefinition == null) {
             throw new IllegalArgumentException("Must provide a dataDefinition!");
         }
@@ -46,5 +43,4 @@ public class SerializerFactory
             throw new IllegalArgumentException("Unrecognized dataDefinition type: " + dataDefinition.getClass());
         }
     }
-
 }

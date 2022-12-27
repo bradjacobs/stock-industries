@@ -39,7 +39,6 @@ public class SicDataConverter implements DataConverter<SicRecord>
 
     private static final String BASE_URL = "https://www.osha.gov";
 
-
     // NOTE:  found an actual 'typo' on one of the pages, which interferes w/ the parsing
     //    specifically incorrect IndustryGroup title on https://www.osha.gov/data/sic-manual/major-group-94
     //  thus the "fix" is to do a special substitution (which is kludgy)
@@ -48,7 +47,6 @@ public class SicDataConverter implements DataConverter<SicRecord>
     private static final Map<String,String> INDUSTRY_GROUP_SUBSTITUTION_MAP =
         Collections.singletonMap("9431 Administration of Public Health Programs", "Industry Group 944: Administration of Social, Human Resource and Income Maintenance Programs");
 
-
     @Override
     public Classification getClassification()
     {
@@ -56,8 +54,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
     }
 
     @Override
-    public List<SicRecord> createDataRecords() throws IOException
-    {
+    public List<SicRecord> createDataRecords() throws IOException {
         // note: only 'industryIdToNameMap' really needs sorting
         //   (but it's not hurting leaving all the same here)
         Map<String,String> divisionIdToNameMap = new TreeMap<>();
@@ -65,9 +62,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
         Map<String,String> majorGroupIdDivisionIdMap = new TreeMap<>();
         Map<String,String> industryGroupIdToNameMap = new TreeMap<>();
         Map<String,String> industryIdToNameMap = new TreeMap<>();
-
         Map<String,String> majorGroupUrlMap = new LinkedHashMap<>();
-
 
         // first parse the main document for the Division & MajorGroups
         //   AMD...
@@ -79,10 +74,8 @@ public class SicDataConverter implements DataConverter<SicRecord>
 
         Elements divisionLinkElements = oshaDoc.getElementsByAttributeValueStarting("title", DIVISION_TITLE_PREFIX);
 
-        for (Element divisionLinkElement : divisionLinkElements)
-        {
+        for (Element divisionLinkElement : divisionLinkElements) {
             String divisionLinkTitle = divisionLinkElement.attr("title");
-
             int divisionColonIndex = divisionLinkTitle.indexOf(":");
             String divisionId = divisionLinkTitle.substring(DIVISION_TITLE_PREFIX.length(), divisionColonIndex);
             String divisionName = cleanValue(divisionLinkTitle.substring(divisionColonIndex+1));
@@ -93,8 +86,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
             Element parentParent = divisionLinkElement.parent().parent();
 
             Elements majorGroupLinkElements = parentParent.getElementsByAttributeValueStarting("title", MAJOR_GROUP_TITLE_PREFIX);
-            for (Element majorGroupLinkElement : majorGroupLinkElements)
-            {
+            for (Element majorGroupLinkElement : majorGroupLinkElements) {
                 String majorGroupLinkTitle = majorGroupLinkElement.attr("title");
                 int majorGroupColonIndex = majorGroupLinkTitle.indexOf(":");
                 String majorGroupId = majorGroupLinkTitle.substring(MAJOR_GROUP_TITLE_PREFIX.length(), majorGroupColonIndex);
@@ -111,15 +103,11 @@ public class SicDataConverter implements DataConverter<SicRecord>
             }
         }
 
-
         // now.... visit each link and capture all the industry group + industry info
         //    side note:  would have to dive another level of web pages in order to
         //       grab full description of the industryId/Name  (not really worth it at present)
-
-        for (Map.Entry<String, String> urlEntry : majorGroupUrlMap.entrySet())
-        {
+        for (Map.Entry<String, String> urlEntry : majorGroupUrlMap.entrySet()) {
             String majorGroupId = urlEntry.getKey();
-
             URL url = UrlUtil.createURL(urlEntry.getValue());
 
             // slight pause to be kind.
@@ -127,14 +115,11 @@ public class SicDataConverter implements DataConverter<SicRecord>
             catch (InterruptedException e) { /* ignore */}
 
             //System.out.println("Fetching URL: " + url);
-
             String industryGroupHtml = DownloadUtil.downloadFile(url);
-
             Document industryGroupDoc = Jsoup.parse(industryGroupHtml);
 
             Elements pElements = industryGroupDoc.getElementsByTag("p");
-            for (Element pElement : pElements)
-            {
+            for (Element pElement : pElements) {
                 String text = pElement.text();
 
                 // kludge!!  handling 'typo' on one of the webpages
@@ -143,8 +128,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
                     text = alternateText;
                 }
 
-                if (text.startsWith(INDUSTRY_GROUP_TITLE_PREFIX))
-                {
+                if (text.startsWith(INDUSTRY_GROUP_TITLE_PREFIX)) {
                     int colonIndex = text.indexOf(":");
                     String industryGroupId = text.substring(INDUSTRY_GROUP_TITLE_PREFIX.length(), colonIndex);
                     String name = cleanValue(text.substring(colonIndex+1));
@@ -156,8 +140,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
 
             // now fetch all the industries.   note: these elements are _not_ nested inside the industryGroup elements.
             Elements industryLinkElements = industryGroupDoc.getElementsByAttributeValueStarting("title", majorGroupId);
-            for (Element industryLinkElement : industryLinkElements)
-            {
+            for (Element industryLinkElement : industryLinkElements) {
                 String industryLinkTitle = industryLinkElement.attr("title");
                 String industryId = industryLinkTitle.substring(0, 4);
                 String industryName = cleanValue(industryLinkElement.text());
@@ -171,10 +154,8 @@ public class SicDataConverter implements DataConverter<SicRecord>
             //      (example: "Industry Group 945: Administration Of Veteran's Affairs, Except", from https://www.osha.gov/data/sic-manual/major-group-94
             //       note it abruptly ends w/ "Except")
             // Thus will attempt to see if can create a better alternate name (if applicable and available)
-
             Map<String,String> alternateIndustryGroupMap = createAlternateIndustryGroupTitleMap(currentPageIndustryIdToNameMap);
-            for (Map.Entry<String, String> entry : alternateIndustryGroupMap.entrySet())
-            {
+            for (Map.Entry<String, String> entry : alternateIndustryGroupMap.entrySet()) {
                 String industryGroup = entry.getKey();
                 String industryGroupAlternateTitle = entry.getValue();
                 String industryGroupCurrentTiTle = industryGroupIdToNameMap.get(industryGroup);
@@ -185,12 +166,9 @@ public class SicDataConverter implements DataConverter<SicRecord>
             }
         }
 
-
         // finally... reassemble everything.
         List<SicRecord> sicRecords = new ArrayList<>();
-
-        for (Map.Entry<String, String> industryIdNameEntry : industryIdToNameMap.entrySet())
-        {
+        for (Map.Entry<String, String> industryIdNameEntry : industryIdToNameMap.entrySet()) {
             SicRecord record = new SicRecord();
 
             String industryId = industryIdNameEntry.getKey();
@@ -218,7 +196,6 @@ public class SicDataConverter implements DataConverter<SicRecord>
         return sicRecords;
     }
 
-
     // todo: come back and refactor b/c even though the method below works, it's a little magical.
     /**
      * extra trickery...
@@ -232,14 +209,12 @@ public class SicDataConverter implements DataConverter<SicRecord>
      * @param industryIdToNameMap
      * @return
      */
-    private Map<String,String> createAlternateIndustryGroupTitleMap(Map<String,String> industryIdToNameMap)
-    {
+    private Map<String,String> createAlternateIndustryGroupTitleMap(Map<String,String> industryIdToNameMap) {
         // create a simple map of industryGroup -> list of its industries.
         Map<String,List<String>> industryGroupToIndustryMap = new HashMap<>();
         List<String> industryIds = new ArrayList<>(industryIdToNameMap.keySet());
 
-        for (String industryId : industryIds)
-        {
+        for (String industryId : industryIds) {
             String industryGroup = industryId.substring(0, industryId.length()-1);
             List<String> industryList = industryGroupToIndustryMap.computeIfAbsent(industryGroup, k -> new ArrayList<>());
             industryList.add(industryId);
@@ -249,8 +224,7 @@ public class SicDataConverter implements DataConverter<SicRecord>
         //     which will ONLY be populated if there was only 1 industry for the group.
         Map<String,String> resultMap = new HashMap<>();
 
-        for (Map.Entry<String, List<String>> entry : industryGroupToIndustryMap.entrySet())
-        {
+        for (Map.Entry<String, List<String>> entry : industryGroupToIndustryMap.entrySet()) {
             String industryGroupId = entry.getKey();
             List<String> industryIdList = entry.getValue();
 
@@ -260,14 +234,12 @@ public class SicDataConverter implements DataConverter<SicRecord>
                 resultMap.put(industryGroupId, industryTitle);
             }
         }
-
         return resultMap;
     }
 
     private String cleanValue(String input) {
         return StringUtil.cleanWhitespace(input);
     }
-
 
     // todo: FOR REFERENCE -- decide later what to do with some 'extra' sic code that popup up in circulation, but are not generated from the data source.
 //    private static final List<SicRecord> EXTRA_RECORDS = Arrays.asList(

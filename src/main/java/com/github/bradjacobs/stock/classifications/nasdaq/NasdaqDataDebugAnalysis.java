@@ -16,19 +16,16 @@ public class NasdaqDataDebugAnalysis
      * Prints any one-off looking sector/industry pair, b/c sometimes the data can be 'off'
      * @param sectorIndustryMap sectorIndustryMap
      */
-    public static void sectorMapValidityCheck(Map<String, Map<String, Set<String>>> sectorIndustryMap)
-    {
+    public static void sectorMapValidityCheck(Map<String, Map<String, Set<String>>> sectorIndustryMap) {
         Map<String, List<SectorIndustryTickerCountRecord>> industryTrackingMap = new HashMap<>();
 
         // scan over the entire data structure to see if there are any Sector/Industry combinations
         //   that correlate with exactly _ONE_ ticker.  Meaning there 'could' be a data error.
         StringBuilder msgBuilder = new StringBuilder();
-        for (Map.Entry<String, Map<String, Set<String>>> sectorEntry : sectorIndustryMap.entrySet())
-        {
+        for (Map.Entry<String, Map<String, Set<String>>> sectorEntry : sectorIndustryMap.entrySet()) {
             String sector = sectorEntry.getKey();
             Map<String, Set<String>> industryMap = sectorEntry.getValue();
-            for (Map.Entry<String, Set<String>> industryEntry : industryMap.entrySet())
-            {
+            for (Map.Entry<String, Set<String>> industryEntry : industryMap.entrySet()) {
                 String industry = industryEntry.getKey();
                 Set<String> tickerSet = industryEntry.getValue();
 
@@ -67,7 +64,6 @@ public class NasdaqDataDebugAnalysis
         return sb.toString();
     }
 
-
     private static class SectorIndustryTickerCountRecord {
         private final String sector;
         private final String industry;
@@ -78,7 +74,6 @@ public class NasdaqDataDebugAnalysis
             this.tickerCount = tickerCount;
         }
     }
-
 
     // REFERENCE ONLY:
     //   as of 06/10/2021, all the Sector/Industry combinations that match
@@ -111,9 +106,7 @@ public class NasdaqDataDebugAnalysis
      */
 
 /*
-
 For references -- 11/17/2021
-
 Oil & Gas Production                --  Energy(129)  Public Utilities(5)
 Business Services                   --  Finance(359)  Miscellaneous(74)
 Consumer Electronics/Appliances     --  Consumer Durables(1)  Consumer Non-Durables(10)  Energy(1)

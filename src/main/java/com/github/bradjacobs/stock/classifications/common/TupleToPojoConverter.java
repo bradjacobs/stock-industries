@@ -33,8 +33,7 @@ public class TupleToPojoConverter
         return JSON_MAPPER.convertValue(listOfMaps, javaType);
     }
 
-    public <R extends CodeTitleLevelRecord> List<AllLevelsRecord> doConvert(List<R> codeTitleRecords)
-    {
+    public <R extends CodeTitleLevelRecord> List<AllLevelsRecord> doConvert(List<R> codeTitleRecords) {
         AllLevelsRecord currentRecord = new AllLevelsRecord();
         List<AllLevelsRecord> resultList = new ArrayList<>();
 
@@ -51,16 +50,13 @@ public class TupleToPojoConverter
             currentRecord.setLevelIdTitle(level, codeId, title);
         }
         resultList.add(currentRecord);
-
         return resultList;
     }
 
-    public <T> List<Map<String,String>> generateListOfMaps(Class<T> clazz, List<AllLevelsRecord> recordList)
-    {
+    public <T> List<Map<String,String>> generateListOfMaps(Class<T> clazz, List<AllLevelsRecord> recordList) {
         String[] headerFieldNames = headerFieldDataExtractor.getHeaderFields(clazz);
 
         int maxLevels = headerFieldNames.length / 2;
-
         List<Map<String,String>> listOfMaps = new ArrayList<>();
 
         String[] codeIdTitleArray = new String[maxLevels+1];
@@ -80,12 +76,10 @@ public class TupleToPojoConverter
             codeNameTitleArray[level] = headerFieldNames[titleFieldIndex];
         }
 
-        for (AllLevelsRecord record : recordList)
-        {
+        for (AllLevelsRecord record : recordList) {
             Map<String,String> valueMap = new LinkedHashMap<>();
 
-            for (int level = 1; level <= maxLevels; level++)
-            {
+            for (int level = 1; level <= maxLevels; level++) {
                 String levelIdValue = record.getCodeId(level);
                 String levelNameValue = record.getCodeTitle(level);
                 String levelIdLabel = codeIdTitleArray[level];
@@ -94,8 +88,7 @@ public class TupleToPojoConverter
                 if (StringUtils.isEmpty(levelIdValue) ||
                         StringUtils.isEmpty(levelNameValue) ||
                         StringUtils.isEmpty(levelIdLabel) ||
-                        StringUtils.isEmpty(levelNameLabel))
-                {
+                        StringUtils.isEmpty(levelNameLabel)) {
                     break;
                 }
 
@@ -109,5 +102,4 @@ public class TupleToPojoConverter
         }
         return listOfMaps;
     }
-
 }

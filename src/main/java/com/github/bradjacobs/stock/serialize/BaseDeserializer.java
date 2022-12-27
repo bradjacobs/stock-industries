@@ -11,23 +11,16 @@ abstract public class BaseDeserializer
 {
     abstract protected <T> List<T> deserializeObjects(Class<T> clazz, String data) throws IOException;
 
-
-    public <T> List<T> deserializeFromFile(Class<T> clazz, String filePath) throws IOException
-    {
+    public <T> List<T> deserializeFromFile(Class<T> clazz, String filePath) throws IOException {
         return deserializeFromFile(clazz, new File(filePath));
     }
 
-    public <T> List<T> deserializeFromFile(Class<T> clazz, File file) throws IOException
-    {
+    public <T> List<T> deserializeFromFile(Class<T> clazz, File file) throws IOException {
         String fileData = readFile(file);
         return deserializeObjects(clazz, fileData);
     }
 
-
-
-
-    protected String readFile(File file) throws IOException
-    {
+    protected String readFile(File file) throws IOException {
         validateFile(file);
         return new String ( Files.readAllBytes( Paths.get(file.getAbsolutePath()) ) );
     }
@@ -43,5 +36,4 @@ abstract public class BaseDeserializer
             throw new IllegalArgumentException("Unable to read file.  Directory was given instead of file: " + file.getAbsolutePath());
         }
     }
-
 }

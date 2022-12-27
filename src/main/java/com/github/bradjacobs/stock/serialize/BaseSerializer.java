@@ -15,19 +15,16 @@ abstract public class BaseSerializer
 
     abstract public String generateFileName(Classification classification);
 
-    public <T> String serialize(List<T> objectList) throws IOException
-    {
+    public <T> String serialize(List<T> objectList) throws IOException {
         validateObjectList(objectList);
         return serializeObjects(objectList);
     }
 
-    public <T> void serializeToFile(File file, List<T> objectList) throws IOException
-    {
+    public <T> void serializeToFile(File file, List<T> objectList) throws IOException {
         validateFile(file);
         String fileContent = serialize(objectList);
         FileUtils.writeStringToFile(file, fileContent, StandardCharsets.UTF_8);
     }
-
 
     protected static <T> Class<?> identifyClass(List<T> objectList) {
         if (objectList == null || objectList.isEmpty()) {
@@ -35,7 +32,6 @@ abstract public class BaseSerializer
         }
         return objectList.get(0).getClass();
     }
-
 
     protected void validateFilePath(String filePath) {
         if (StringUtils.isEmpty(filePath)) {
@@ -66,5 +62,4 @@ abstract public class BaseSerializer
             }
         }
     }
-
 }

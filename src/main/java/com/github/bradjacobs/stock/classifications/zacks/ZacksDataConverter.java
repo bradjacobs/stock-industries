@@ -27,13 +27,11 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
 {
     private static final String NESTED_JSON_PREFIX = "\"data\"  : ";
 
-
     // todo - used to alter the ids to make unique for the json tree generator
     //    can come back for better soln so this isn't needed later.
     private static final String S_NUM_FORMAT_STR = "%02d";
     private static final String M_NUM_FORMAT_STR = "%02d";
     private static final String X_NUM_FORMAT_STR = "%03d";
-
 
     @Override
     public Classification getClassification() {
@@ -41,8 +39,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
     }
 
     @Override
-    public List<ZacksRecord> createDataRecords() throws IOException
-    {
+    public List<ZacksRecord> createDataRecords() throws IOException {
         // download html page..
         String html = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
 
@@ -56,8 +53,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         // even though now have records, the names are in a bad format (html cruft)
         //  so now iterate and clean up the name on each record.
         List<ZacksRecord> resultList = new ArrayList<>();
-        for (ZacksRecord record : recordArray)
-        {
+        for (ZacksRecord record : recordArray) {
             record.setSectorName( cleanUpName(record.getSectorName()) );
             record.setMediumIndustryName( cleanUpName(record.getMediumIndustryName()) );
             record.setExpandedIndustryName( cleanUpName(record.getExpandedIndustryName()) );
@@ -69,7 +65,6 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         //   (see comment at bottom for example)
         //   for now will 'fake it' by adding a prefix to ensure uniqueness
         for (ZacksRecord record : resultList) {
-
             String s = String.format(S_NUM_FORMAT_STR, Integer.parseInt(record.getSectorCode()));
             String m = String.format(M_NUM_FORMAT_STR, Integer.parseInt(record.getMediumIndustryCode()));
             String x = String.format(X_NUM_FORMAT_STR, Integer.parseInt(record.getExpandedIndustryCode()));
@@ -78,7 +73,6 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
             record.setMediumIndustryCode(s + m);
             record.setExpandedIndustryCode(s + m + x);
         }
-
 
         Collections.sort(resultList);
 
@@ -96,9 +90,7 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         return cleanValue(extractedName);
     }
 
-
-    private String extractTitleFromSpanTag(String str)
-    {
+    private String extractTitleFromSpanTag(String str) {
         String extractedTitle = StringUtils.substringBetween(str, "title=\"", "\"");
         if (extractedTitle == null) {
             extractedTitle = str;
@@ -106,11 +98,9 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         return extractedTitle;
     }
 
-    public String extractNestedJson(String html)
-    {
+    public String extractNestedJson(String html) {
         return StringUtils.substringBetween(html, NESTED_JSON_PREFIX, "\n");
     }
-
 
     // todo: mess to deal with at later date.
     private static final Map<String,String> CUSTOM_POST_CLEAN_SUB_MAP = new LinkedHashMap<String,String>() {{
@@ -138,7 +128,6 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
      * Going thru arguably too much pain to make all strings look 'pretty'
      */
     private String cleanValue(String input) {
-
         String result = input;
         // add spaces around characters to allow for capitialization fomratting
         //    (note:  alt impl is required if performance becomes important)
@@ -188,5 +177,4 @@ public class ZacksDataConverter implements DataConverter<ZacksRecord>
         "expandedIndustryCode" : "8",       <-----------------
         "expandedIndustryName" : "Automotive - Foreign"
      */
-
 }

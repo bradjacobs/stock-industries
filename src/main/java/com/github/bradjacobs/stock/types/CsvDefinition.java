@@ -11,7 +11,6 @@ public class CsvDefinition implements DataDefinition
     private static final String EXTENSION = "csv";
     private static final String DOT_EXTENSION = "." + EXTENSION;
 
-
     // included as part of the fileName to indicate in 'sparse' format
     private static final String SPARSE_FILE_NAME_ID = "_sparse";
 
@@ -19,10 +18,7 @@ public class CsvDefinition implements DataDefinition
     //   will be N/A if no long descriptions available
     private static final String LONG_DESC_FILE_NAME_ID = "_w_desc";
 
-
-
-    private CsvDefinition(boolean includeDescription, boolean sparsely)
-    {
+    private CsvDefinition(boolean includeDescription, boolean sparsely) {
         this.includeDescription = includeDescription;
         this.sparsely = sparsely;
     }
@@ -37,10 +33,8 @@ public class CsvDefinition implements DataDefinition
         return sparsely;
     }
 
-
     @Override
-    public String generateFileName(Classification classification)
-    {
+    public String generateFileName(Classification classification) {
         if (classification == null) {
             throw new IllegalArgumentException("Must provide a classification");
         }
@@ -56,9 +50,7 @@ public class CsvDefinition implements DataDefinition
         return sb.toString();
     }
 
-
-    public static CsvDefinition generateInstance(String fileName)
-    {
+    public static CsvDefinition generateInstance(String fileName) {
         // todo - come back to simplify
         if (StringUtils.isEmpty(fileName)) {
             throw new IllegalArgumentException("Must supply a fileName");
@@ -77,13 +69,11 @@ public class CsvDefinition implements DataDefinition
         return builder.build();
     }
 
-
     public static Builder builder() {
         return new Builder();
     }
 
-    public static class Builder
-    {
+    public static class Builder {
         private Builder() { }
 
         private boolean includeLongDescriptions = false;

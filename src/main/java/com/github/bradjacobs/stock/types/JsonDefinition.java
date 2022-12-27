@@ -13,7 +13,6 @@ public class JsonDefinition implements DataDefinition
     private static final String EXTENSION = "json";
     private static final String DOT_EXTENSION = "." + EXTENSION;
 
-
     //   todo - come back and reorganize a little better.
     // substrings included as part of the fileName specific format
     private static final String LONG_DESC_FILE_NAME_ID = "_w_desc";  // includes long descriptions (if available, n/a for tree)
@@ -21,10 +20,7 @@ public class JsonDefinition implements DataDefinition
     private static final String CANONICAL_FILE_NAME_ID = "_canonical";  // indicates canonical form (i.e. 'common header names regardless of customer)
     private static final String BASIC_FILE_NAME_ID = "_basic";  // indicates basic tree form (i.e. simple generic nodes)
 
-
-
-    public JsonDefinition(boolean includeDescription, boolean isTree, JsonKeyName jsonKeyName)
-    {
+    public JsonDefinition(boolean includeDescription, boolean isTree, JsonKeyName jsonKeyName) {
         this.includeDescription = includeDescription;
         this.isTree = isTree;
         this.jsonKeyName = jsonKeyName;
@@ -45,10 +41,8 @@ public class JsonDefinition implements DataDefinition
         return jsonKeyName;
     }
 
-
     @Override
-    public String generateFileName(Classification classification)
-    {
+    public String generateFileName(Classification classification) {
         if (classification == null) {
             throw new IllegalArgumentException("Must provide a classificaiton");
         }
@@ -70,8 +64,7 @@ public class JsonDefinition implements DataDefinition
         return sb.toString();
     }
 
-    public static JsonDefinition generateInstance(String fileName)
-    {
+    public static JsonDefinition generateInstance(String fileName) {
         // todo - come back to simplify
         if (StringUtils.isEmpty(fileName)) {
             throw new IllegalArgumentException("Must supply a fileName");
@@ -103,7 +96,6 @@ public class JsonDefinition implements DataDefinition
         }
     }
 
-
     public enum JsonKeyName {
         NORMAL,
         CANONICAL,
@@ -114,9 +106,7 @@ public class JsonDefinition implements DataDefinition
         return new Builder();
     }
 
-
-    public static class Builder
-    {
+    public static class Builder {
         private Builder() { }
 
         public JsonTreeBuilder asTree() {
@@ -127,8 +117,7 @@ public class JsonDefinition implements DataDefinition
         }
     }
 
-    public static class JsonTreeBuilder
-    {
+    public static class JsonTreeBuilder {
         private JsonKeyName jsonKeyName = JsonKeyName.NORMAL;
 
         public JsonTreeBuilder withCanonicalKeyNames() {
@@ -150,8 +139,7 @@ public class JsonDefinition implements DataDefinition
         }
     }
 
-    public static class JsonFlatBuilder
-    {
+    public static class JsonFlatBuilder {
         private boolean includeLongDescriptions = false;
 
         public JsonFlatBuilder withLongDescriptions(boolean includeLongDescriptions) {
@@ -163,5 +151,4 @@ public class JsonDefinition implements DataDefinition
             return new JsonDefinition(includeLongDescriptions, false, JsonKeyName.NORMAL);
         }
     }
-
 }

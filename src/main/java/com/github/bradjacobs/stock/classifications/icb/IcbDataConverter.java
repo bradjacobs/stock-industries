@@ -18,12 +18,10 @@ public class IcbDataConverter implements DataConverter<IcbRecord>
     }
 
     @Override
-    public List<IcbRecord> createDataRecords() throws IOException
-    {
+    public List<IcbRecord> createDataRecords() throws IOException {
         ExcelReader excelReader = ExcelReader.builder().build();
 
         String csvText = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
-
         CsvDeserializer csvDeserializer = new CsvDeserializer();
         return csvDeserializer.deserializeObjects(IcbRecord.class, csvText);
     }

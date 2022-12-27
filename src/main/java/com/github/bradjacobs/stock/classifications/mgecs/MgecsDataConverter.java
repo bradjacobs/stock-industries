@@ -3,9 +3,11 @@ package com.github.bradjacobs.stock.classifications.mgecs;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.util.DownloadUtil;
+import com.github.bradjacobs.stock.util.PdfUtil;
 import com.github.bradjacobs.stock.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,8 +31,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
 
 
     @Override
-    public List<MgecsRecord> createDataRecords() throws IOException
-    {
+    public List<MgecsRecord> createDataRecords() throws IOException {
         String[] pdfFileLines = DownloadUtil.downloadPdfFile(getClassification().getSourceFileLocation());
 
         // UPDATE:
@@ -44,11 +45,9 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         // search for line where the data 'actually' starts.
         int firstDataLineIndex = findFirstDataRowIndex(pdfFileLines);
 
-        for (int i = firstDataLineIndex; i < pdfFileLines.length; i++)
-        {
+        for (int i = firstDataLineIndex; i < pdfFileLines.length; i++) {
             String line = pdfFileLines[i].trim();
-            if (isValidCodeId(line))
-            {
+            if (isValidCodeId(line)) {
                 String id = line;
                 String name = pdfFileLines[++i];  // don't trim (..yet)
 
@@ -80,16 +79,13 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
                 // now finally can trim + clean value
                 name = cleanValue(name);
 
-                if (id.length() == SECTOR_ID_LENGTH)
-                {
+                if (id.length() == SECTOR_ID_LENGTH) {
                     sectorNameMap.put(id, name);
                 }
-                else if (id.length() == GROUP_ID_LENGTH)
-                {
+                else if (id.length() == GROUP_ID_LENGTH) {
                     groupNameMap.put(id, name);
                 }
-                else if (id.length() == INDUSTRY_ID_LENGTH)
-                {
+                else if (id.length() == INDUSTRY_ID_LENGTH) {
                     // NOTE: sub-optimal solution b/c future lines are examined in getDescription method as well as this loop.
                     //   (even though problem exists, not worth addressing at present)
                     String desc = getDescription(pdfFileLines, i+1);
@@ -107,8 +103,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         // now the industryToRecordMap.values() have all of the records,
         //   but need to backfill in the sector and group information.
         List<MgecsRecord> recordList = new ArrayList<>(industryToRecordMap.values());
-        for (MgecsRecord record : recordList)
-        {
+        for (MgecsRecord record : recordList) {
             String industryId = record.getIndustryId();
 
             // taking advantage that the sector & group ids are always a substring of the industry id.
@@ -122,8 +117,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         }
 
         // sanity check
-        for (MgecsRecord naicsRecord : recordList)
-        {
+        for (MgecsRecord naicsRecord : recordList) {
             if (StringUtils.isEmpty(naicsRecord.getSectorId())) {
                 throw new RuntimeException("empty sectorId detected");
             }
@@ -138,8 +132,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         return recordList;
     }
 
-    private boolean isValidCodeId(String str)
-    {
+    private boolean isValidCodeId(String str) {
         if (StringUtils.isNumeric(str)) {
             int idLength = str.length();
             return idLength == SECTOR_ID_LENGTH || idLength == GROUP_ID_LENGTH || idLength == INDUSTRY_ID_LENGTH;
@@ -147,10 +140,8 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         return false;
     }
 
-    private int findFirstDataRowIndex(String[] fileLines)
-    {
-        for (int i = 0; i < fileLines.length; i++)
-        {
+    private int findFirstDataRowIndex(String[] fileLines) {
+        for (int i = 0; i < fileLines.length; i++) {
             String line = fileLines[i].trim();
             if (line.equalsIgnoreCase(START_LINE_INDICATOR)) {
                 return i;
@@ -158,7 +149,6 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         }
         return -1;  // not found.
     }
-
 
     /**
      * check if line contains "Morningstar", which implies it's a header/footer
@@ -169,8 +159,7 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         return line != null && line.toLowerCase().contains("morningstar");
     }
 
-    protected String cleanValue(String input)
-    {
+    protected String cleanValue(String input) {
         String result = StringUtil.cleanWhitespace(input);
 
         // replace special 8212 dash w/ "normal" dash (if necessary)
@@ -180,18 +169,15 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
         return result;
     }
 
-    private String getDescription(String[] pdfFileLines, int startingIndex)
-    {
+    private String getDescription(String[] pdfFileLines, int startingIndex) {
         StringBuilder sb = new StringBuilder();
         int currentIndex = startingIndex;
 
-        while (true)
-        {
+        while (true) {
             if (currentIndex >= pdfFileLines.length) {
                 break;
             }
             String currentLine = pdfFileLines[currentIndex++].trim();
-
             if (StringUtils.isEmpty(currentLine)) {
                 continue;
             }
@@ -214,5 +200,4 @@ public class MgecsDataConverter implements DataConverter<MgecsRecord>
 
         return cleanValue(sb.toString());
     }
-
 }

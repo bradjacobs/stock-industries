@@ -19,26 +19,21 @@ public class DownloadUtil
 
     private DownloadUtil() { }
 
-    public static String downloadFile(URL url) throws IOException
-    {
-        try (InputStream in = createInputStream(url))
-        {
+    public static String downloadFile(URL url) throws IOException {
+        try (InputStream in = createInputStream(url)) {
             return IOUtils.toString(in, StandardCharsets.UTF_8.name());
         }
     }
 
-    public static String[] downloadPdfFile(URL url) throws IOException
-    {
-        try (InputStream in = createInputStream(url))
-        {
+    public static String[] downloadPdfFile(URL url) throws IOException {
+        try (InputStream in = createInputStream(url)) {
             return PdfUtil.getPdfFileLines(in);
         }
     }
 
     // **** NOTE *****:
     //    would be 'better' to use an htmlClient, but will only worry about that iff necessary.
-    public static InputStream createInputStream(URL url) throws IOException
-    {
+    public static InputStream createInputStream(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(CONNECTION_TIMEOUT);
         connection.setReadTimeout(READ_TIMEOUT);
@@ -50,5 +45,4 @@ public class DownloadUtil
 
         return new BufferedInputStream(connection.getInputStream());
     }
-
 }

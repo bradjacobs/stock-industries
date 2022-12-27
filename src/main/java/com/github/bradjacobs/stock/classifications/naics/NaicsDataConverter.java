@@ -62,9 +62,7 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         return resultRecords;
     }
 
-
-    private List<RawNaicsRecord> sanitizeList(List<RawNaicsRecord> inputRecords)
-    {
+    private List<RawNaicsRecord> sanitizeList(List<RawNaicsRecord> inputRecords) {
         List<RawNaicsRecord> filteredList = inputRecords.stream().sequential()
                 .filter(r -> (r.getCodeId().length() != IGNORABLE_ID_LENGTH || !StringUtils.isNumeric(r.getCodeId())))
                 .collect(Collectors.toList());
@@ -76,8 +74,7 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         return filteredList;
     }
 
-    protected String cleanValue(String input)
-    {
+    protected String cleanValue(String input) {
         String cleanedValue = StringUtil.cleanWhitespace(input);
 
         // remove any trailing capital 'T' (if exists)
@@ -109,11 +106,9 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         return cleanValue(description);
     }
 
-    private List<RawNaicsRecord> convertToRawRecords(String csvData) throws IOException
-    {
+    private List<RawNaicsRecord> convertToRawRecords(String csvData) throws IOException {
         List<RawNaicsRecord> rawRecords;
-        if (csvData.startsWith("Seq") || csvData.startsWith("\"Seq"))
-        {
+        if (csvData.startsWith("Seq") || csvData.startsWith("\"Seq")) {
             // the "2-6_digit_xxx_Codes" file is badly formatted, and trying to load the data into a Pojo
             //  was more heartache than desired.  Thus workaround.
             String[][] matrix = CsvMatrixConverter.convertToMatrix(csvData);
@@ -122,8 +117,7 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
             // todo - move hardcode numbers to better spot
 
             rawRecords = new ArrayList<>();
-            for (int i = 1; i < matrix.length; i++)
-            {
+            for (int i = 1; i < matrix.length; i++) {
                 String code = matrix[i][codeColumnIndex].trim();
                 String title = matrix[i][titleColumnIndex].trim();
                 if (StringUtils.isNotEmpty(code) && StringUtils.isNotEmpty(title)) {
@@ -138,9 +132,7 @@ public class NaicsDataConverter implements DataConverter<NaicsRecord>
         return rawRecords;
     }
 
-
-    private static class RawNaicsRecord implements CodeTitleLevelRecord
-    {
+    private static class RawNaicsRecord implements CodeTitleLevelRecord {
         @JsonProperty("Code")
         private String code;
         @JsonProperty("Title")

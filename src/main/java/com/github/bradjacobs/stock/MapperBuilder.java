@@ -21,7 +21,6 @@ public class MapperBuilder
         return new CsvMapperBuilder();
     }
 
-
     public static class JsonMapperBuilder {
         private boolean indentOutput = true;   // default to pretty mode
         private boolean suppressNullArrays = true;
@@ -49,7 +48,6 @@ public class MapperBuilder
         }
 
         public JsonMapper build() {
-
             JsonMapper mapper = new JsonMapper();
             if (indentOutput) {
                 mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -66,11 +64,9 @@ public class MapperBuilder
                 }
                 mapper.addMixIn(clazz, NoDescriptionMixin.class);
             }
-
             return mapper;
         }
     }
-
 
     public static class CsvMapperBuilder {
         private boolean arrayWrap = false;
@@ -92,8 +88,7 @@ public class MapperBuilder
             return this;
         }
 
-        public CsvMapper build()
-        {
+        public CsvMapper build() {
             // all of this stuff is always included for now
             CsvMapper.Builder builder = CsvMapper.builder()
                 .enable(CsvParser.Feature.SKIP_EMPTY_LINES)
@@ -125,5 +120,4 @@ public class MapperBuilder
         abstract public String getDescription();
         @JsonIgnore abstract public String getDefinition();
     }
-
 }

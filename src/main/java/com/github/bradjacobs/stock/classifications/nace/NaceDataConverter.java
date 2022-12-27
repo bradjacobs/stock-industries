@@ -31,7 +31,6 @@ public class NaceDataConverter implements DataConverter<NaceRecord>
 
     private static final TupleToPojoConverter TUPLE_TO_POJO_CONVERTER = new TupleToPojoConverter();
 
-
     @Override
     public Classification getClassification()
     {
@@ -39,8 +38,7 @@ public class NaceDataConverter implements DataConverter<NaceRecord>
     }
 
     @Override
-    public List<NaceRecord> createDataRecords() throws IOException
-    {
+    public List<NaceRecord> createDataRecords() throws IOException {
         CsvSchema schema = CsvSchema.emptySchema().withHeader().withColumnSeparator(COLUMN_SEPARATOR);
         CsvMapper csvObjectMapper = MapperBuilder.csv().setArrayWrap(false).build();
 
@@ -53,9 +51,7 @@ public class NaceDataConverter implements DataConverter<NaceRecord>
         return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(NaceRecord.class, pojoList);
     }
 
-
-    private static class RawNaceRecord implements CodeTitleLevelRecord
-    {
+    private static class RawNaceRecord implements CodeTitleLevelRecord {
         @JsonProperty("Code")
         private String code;
         @JsonProperty("Description")

@@ -11,8 +11,7 @@ public class AllLevelsRecord
     private final String[] codeIdLevels = new String[MAX_ARRAY_SIZE];
     private final String[] codeTitleLevels = new String[MAX_ARRAY_SIZE];
 
-    public AllLevelsRecord()
-    {
+    public AllLevelsRecord() {
         Arrays.fill(codeIdLevels, "");
         Arrays.fill(codeTitleLevels, "");
     }
@@ -39,19 +38,15 @@ public class AllLevelsRecord
         return !getCodeId(level).isEmpty();
     }
 
-
-    public void setLevelIdTitle(int level, String codeId, String title)
-    {
+    public void setLevelIdTitle(int level, String codeId, String title) {
         if (isValidLevel(level)) {
             codeIdLevels[level] = codeId;
             codeTitleLevels[level] = title;
         }
     }
 
-    public AllLevelsRecord copy(int levelsToCopy)
-    {
+    public AllLevelsRecord copy(int levelsToCopy) {
         AllLevelsRecord newRecord = new AllLevelsRecord();
-
         if (isValidLevel(levelsToCopy)) {
             System.arraycopy(this.codeIdLevels, 0, newRecord.codeIdLevels, 0, levelsToCopy);
             System.arraycopy(this.codeTitleLevels, 0, newRecord.codeTitleLevels, 0, levelsToCopy);

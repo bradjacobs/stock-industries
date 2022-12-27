@@ -25,8 +25,7 @@ public class SitcDataConverter implements DataConverter<SitcRecord>
     }
 
     @Override
-    public List<SitcRecord> createDataRecords() throws IOException
-    {
+    public List<SitcRecord> createDataRecords() throws IOException {
         ExcelReader excelReader = ExcelReader.builder().build();
         String csvText = excelReader.convertToCsvText(getClassification().getSourceFileLocation());
 
@@ -36,9 +35,7 @@ public class SitcDataConverter implements DataConverter<SitcRecord>
         return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(SitcRecord.class, rawRecords);
     }
 
-
-    private static class RawSitcRecord implements CodeTitleLevelRecord
-    {
+    private static class RawSitcRecord implements CodeTitleLevelRecord {
         @JsonProperty("Classification")
         private String classification;
         @JsonProperty("Code")
@@ -61,5 +58,4 @@ public class SitcDataConverter implements DataConverter<SitcRecord>
             return level;
         }
     }
-
 }

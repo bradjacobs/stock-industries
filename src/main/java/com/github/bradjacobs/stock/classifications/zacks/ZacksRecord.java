@@ -90,8 +90,7 @@ public class ZacksRecord implements Comparable<ZacksRecord>
     }
 
     @Override
-    public int compareTo(ZacksRecord other)
-    {
+    public int compareTo(ZacksRecord other) {
         int compare = this.sectorCode.compareTo(other.sectorCode);
         if (compare != 0) {
             return compare;

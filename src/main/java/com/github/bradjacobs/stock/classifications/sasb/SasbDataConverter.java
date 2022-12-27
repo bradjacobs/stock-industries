@@ -32,14 +32,10 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
         return Classification.SASB;
     }
 
-
     @Override
-    public List<SasbRecord> createDataRecords() throws IOException
-    {
+    public List<SasbRecord> createDataRecords() throws IOException {
         String htmlData = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
-
         Document doc = Jsoup.parse(htmlData);
-
         Elements panelsElementsCollection = doc.getElementsByClass(PANELS_CLASS);
 
         if (panelsElementsCollection.size() == 0) {
@@ -47,22 +43,17 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
         }
 
         Element panelElements = panelsElementsCollection.get(0);
-
         List<SasbRecord> recordList = new ArrayList<>();
 
-        for (Element childSectorElement : panelElements.children())
-        {
+        for (Element childSectorElement : panelElements.children()) {
             // note: assuming there's only ONE table for the child sector element
             Elements innerTableRowElements = childSectorElement.getElementsByTag("tr");
 
-
             SasbRecord prevRecord = new SasbRecord();
-
             int rowCount = innerTableRowElements.size();
 
             // note: start at row index 1 (skip header row)
-            for (int j = 1; j < rowCount; j++)
-            {
+            for (int j = 1; j < rowCount; j++) {
                 Element tableRowElement = innerTableRowElements.get(j);
                 SasbRecord record = createRecord(tableRowElement, prevRecord);
                 recordList.add(record);
@@ -72,14 +63,10 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
 
         // fetch descriptions (from a different page) and append to the records
         appendDescriptions(recordList);
-
-
         return recordList;
     }
 
-
-    private SasbRecord createRecord(Element tableRowElement, SasbRecord prevRecord)
-    {
+    private SasbRecord createRecord(Element tableRowElement, SasbRecord prevRecord) {
         // NOTE assume there's always __6__ columns
         Elements cellElements = tableRowElement.getElementsByTag("td");
 
@@ -93,7 +80,6 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
         return new SasbRecord(sectorId, sectorName, subSectorId, subSectorName, industryId, industryName);
     }
 
-
     private String getCellTextOrDefault(Element cellElement, String defaultValue) {
         String value = StringUtil.cleanWhitespace(cellElement.text());
         if (StringUtils.isEmpty(value)) {
@@ -102,13 +88,10 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
         return value;
     }
 
-
-    private void appendDescriptions(List<SasbRecord> recordList) throws IOException
-    {
+    private void appendDescriptions(List<SasbRecord> recordList) throws IOException {
         String htmlData = DownloadUtil.downloadFile(DESCRIPTION_URL);
 
         Document doc = Jsoup.parse(htmlData);
-
         Elements industryLabelElements = doc.getElementsByClass(DESCRIPTION_LABEL_CLASS);
         Elements industryDescriptionElements = doc.getElementsByClass(DESCRIPTION_CLASS);
 
@@ -117,20 +100,16 @@ public class SasbDataConverter implements DataConverter<SasbRecord>
         }
 
         Map<String,String> descriptionLookupMap = new HashMap<>();
-
         int industryCount = industryLabelElements.size();
-        for (int i = 0; i < industryCount; i++)
-        {
+        for (int i = 0; i < industryCount; i++) {
             String industryName = StringUtil.cleanWhitespace(industryLabelElements.get(i).text());
             String description = industryDescriptionElements.get(i).text().trim();
             descriptionLookupMap.put(industryName.toLowerCase(), description);
         }
 
-        for (SasbRecord record : recordList)
-        {
+        for (SasbRecord record : recordList) {
             String description = descriptionLookupMap.get(record.getIndustryName().toLowerCase());
             record.setDescription(description);
         }
     }
-
 }

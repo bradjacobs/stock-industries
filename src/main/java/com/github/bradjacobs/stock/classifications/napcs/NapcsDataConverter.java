@@ -42,8 +42,7 @@ public class NapcsDataConverter implements DataConverter<NapcsRecord>
         return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(NapcsRecord.class, rawRecords);
     }
 
-    private static class RawNapcsRecord implements CodeTitleLevelRecord
-    {
+    private static class RawNapcsRecord implements CodeTitleLevelRecord {
         // map to determine the depth level based on the length of the id.
         private static final Map<Integer,Integer> LENGTH_TO_LEVEL_MAP =  new HashMap<Integer, Integer>() {{
             put( 2, 1);

@@ -43,14 +43,12 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
     }
 
     @Override
-    public List<NasdaqRecord> createDataRecords() throws IOException
-    {
+    public List<NasdaqRecord> createDataRecords() throws IOException {
         String json = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
         return createDataRecords(json);
     }
 
-    public List<NasdaqRecord> createDataRecords(String json) throws IOException
-    {
+    public List<NasdaqRecord> createDataRecords(String json) throws IOException {
         // using TreeMap/TreeSet to keep everything sorted.
         //   { "Sector" : { "Industry" : [(all ticker values for sector/industry]  }  }
         Map<String, Map<String,Set<String>>> sectorIndustryMap = new TreeMap<>();
@@ -59,8 +57,7 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
         String innerRowsJson = mapper.writeValueAsString(mapper.readTree(json).get("data").get("rows"));
         List<Map<String,String>> listOfMaps = mapper.readValue(innerRowsJson, new TypeReference<List<Map<String, String>>>() {});
 
-        for (Map<String, String> tickerRecordMap : listOfMaps)
-        {
+        for (Map<String, String> tickerRecordMap : listOfMaps) {
             String ticker = tickerRecordMap.get(TICKER_KEY);
             String sector = tickerRecordMap.get(SECTOR_KEY);
             String industry = tickerRecordMap.get(INDUSTRY_KEY);
@@ -73,13 +70,11 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
         }
 
         List<NasdaqRecord> recordList = new ArrayList<>();
-
         // counters are used to give 'pseudo' id values.
         int sectorCounter = 0;
         int industryCounter = 0;
 
-        for (Map.Entry<String, Map<String, Set<String>>> sectorEntry : sectorIndustryMap.entrySet())
-        {
+        for (Map.Entry<String, Map<String, Set<String>>> sectorEntry : sectorIndustryMap.entrySet()) {
             String sector = sectorEntry.getKey();
             String sectorId = String.valueOf(++sectorCounter);
 
@@ -99,7 +94,6 @@ public class NasdaqDataConverter implements DataConverter<NasdaqRecord>
 
         //   NOTE: uncomment for debugging purposes
         //NasdaqDataDebugAnalysis.sectorMapValidityCheck(sectorIndustryMap);
-
         return recordList;
     }
 }
