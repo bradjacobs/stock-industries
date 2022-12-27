@@ -1,27 +1,15 @@
 package com.github.bradjacobs.stock.classifications.tradingview;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.github.bradjacobs.stock.MapperBuilder;
 import com.github.bradjacobs.stock.classifications.Classification;
 import com.github.bradjacobs.stock.classifications.DataConverter;
-import com.github.bradjacobs.stock.classifications.nasdaq.NasdaqRecord;
-import com.github.bradjacobs.stock.classifications.sasb.SasbRecord;
 import com.github.bradjacobs.stock.util.DownloadUtil;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,10 +22,8 @@ import java.util.TreeSet;
  */
 public class TradingViewDataConverter implements DataConverter<TradingViewRecord>
 {
-    private static final String TABLE_CLASS_NAME = "tv-data-table tv-screener-table";
     private static final int INDUSTRY_COLUMN_INDEX = 0;
     private static final int SECTOR_COLUMN_INDEX = 5;
-
 
     @Override
     public Classification getClassification()
@@ -46,21 +32,18 @@ public class TradingViewDataConverter implements DataConverter<TradingViewRecord
     }
 
     @Override
-    public List<TradingViewRecord> createDataRecords() throws IOException
-    {
+    public List<TradingViewRecord> createDataRecords() throws IOException {
         List<TradingViewRecord> recordList = new ArrayList<>();
 
         String htmlData = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
         Document doc = Jsoup.parse(htmlData);
-        Elements panelsElementsCollection = doc.getElementsByClass(TABLE_CLASS_NAME);
-
+        // *** NOTE ***  "Assuming" there's only 1 table !!
+        Elements panelsElementsCollection = doc.getElementsByTag("table");
         if (panelsElementsCollection.size() == 0) {
-            throw new InternalError("Unable to find primary class name: " + TABLE_CLASS_NAME);
+            throw new InternalError("Unable to find primary table.");
         }
 
         Map<String, Set<String>> sectorIndustryMap = new TreeMap<>();
-
-
         Element tableElement = panelsElementsCollection.get(0);
         Elements rowElements = tableElement.getElementsByTag("tr");
 
@@ -79,8 +62,7 @@ public class TradingViewDataConverter implements DataConverter<TradingViewRecord
         int sectorCounter = 0;
         int industryCounter = 0;
 
-        for (Map.Entry<String, Set<String>> sectorEntry : sectorIndustryMap.entrySet())
-        {
+        for (Map.Entry<String, Set<String>> sectorEntry : sectorIndustryMap.entrySet()) {
             String sector = sectorEntry.getKey();
             String sectorId = String.valueOf(++sectorCounter);
 
@@ -91,7 +73,6 @@ public class TradingViewDataConverter implements DataConverter<TradingViewRecord
                 recordList.add(new TradingViewRecord(sectorId, sector, industryId, industry));
             }
         }
-
         return recordList;
     }
 }
