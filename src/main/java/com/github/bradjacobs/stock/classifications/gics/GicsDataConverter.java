@@ -1,7 +1,6 @@
 package com.github.bradjacobs.stock.classifications.gics;
 
 import bwj.util.excel.ExcelReader;
-import bwj.util.excel.QuoteMode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
@@ -22,8 +21,11 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
     private static final String DISCONTINUED_IDENTIFIER = "discontinued";  // substring identifier for deprecated records.
 
     private static final int SRC_DESC_COLUMN = 7;
-    private static final int DEST_DESC_COLUMN = 8;
 
+    // possible a 'description' could be on more than 1 line,
+    //  but we will never bother to check for single description
+    //  exceeding this many lines.
+    private static final int MAX_DESCRIPTION_LINES = 10;
 
     @Override
     public Classification getClassification()
@@ -32,11 +34,9 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
     }
 
     @Override
-    public List<GicsRecord> createDataRecords() throws IOException
-    {
+    public List<GicsRecord> createDataRecords() throws IOException {
         ExcelReader excelReader = ExcelReader.builder().setSkipEmptyRows(true).build();
         String[][] csvData = excelReader.convertToDataMatrix(getClassification().getSourceFileLocation());
-
 
         //   Step 1
         // The 'problem' with the given data is the description value is actually on a separate line following the other data.
@@ -48,15 +48,33 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
             //    (this is a "lucky convenience", because this extra column exactly where the description value should go)
             String[] dataRow = csvData[i];
             String[] extraDescriptionRow = csvData[i+1];
-            String desc = extraDescriptionRow[SRC_DESC_COLUMN];
-            dataRow[DEST_DESC_COLUMN] = desc;
 
-            // clean up newlines and weird spaces for all the values.
+            // clean up newlines and/or weird spaces for all the values.
             for (int j = 0; j < dataRow.length; j++) {
                 dataRow[j] = StringUtil.cleanWhitespace(dataRow[j]);
             }
+            String desc = extraDescriptionRow[SRC_DESC_COLUMN];
 
-            rowDataList.add(dataRow);
+            // handle a description that can be one more than 1 line
+            //   todo: this is terrible... should clean up in the future.
+            int stopLine = i+MAX_DESCRIPTION_LINES;
+            for (int k = i+2; k < stopLine && k < csvData.length; k++) {
+                String[] nextLine = csvData[k];
+                if (nextLine[6].trim().isEmpty()) {
+                    desc += " : " + nextLine[SRC_DESC_COLUMN];
+                    i++;
+                }
+                else {
+                    break;
+                }
+            }
+
+            //  IMPORTANT NOTE:  the dataRow array length by 1 to make room for description
+            String[] dataRowCopy = new String[dataRow.length+1];
+            System.arraycopy(dataRow, 0, dataRowCopy, 0, dataRow.length);
+            dataRowCopy[dataRow.length] = desc;
+
+            rowDataList.add(dataRowCopy);
         }
 
         //   Step 2
@@ -93,10 +111,8 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
                 finalGicsRecords.add(gicsRecord);
             }
         }
-
         return finalGicsRecords;
     }
-
 
     private int findFirstDataRowIndex(String[][] csvData) {
         for (int i = 0; i < csvData.length; i++)
@@ -110,21 +126,20 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
         return -1;
     }
 
-
     private boolean shouldSkip(GicsRecord record)
     {
         return SKIP_DISCONTINUED_RECORDS && isDiscontinued(record);
     }
 
+    // todo: make less lame
     private boolean isDiscontinued(GicsRecord record) {
-        if (record.getSectorName().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getGroupName().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getIndustryName().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getSubIndustryName().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getDescription().contains(DISCONTINUED_IDENTIFIER)) {
+        if (record.getSectorName().toLowerCase().contains(DISCONTINUED_IDENTIFIER) ||
+            record.getGroupName().toLowerCase().contains(DISCONTINUED_IDENTIFIER) ||
+            record.getIndustryName().toLowerCase().contains(DISCONTINUED_IDENTIFIER) ||
+            record.getSubIndustryName().toLowerCase().contains(DISCONTINUED_IDENTIFIER) ||
+            record.getDescription().toLowerCase().contains(DISCONTINUED_IDENTIFIER)) {
             return true;
         }
         return false;
     }
-
 }
