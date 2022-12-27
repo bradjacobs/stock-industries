@@ -8,36 +8,22 @@ import com.github.bradjacobs.stock.classifications.DataConverter;
 import com.github.bradjacobs.stock.classifications.common.CodeTitleLevelRecord;
 import com.github.bradjacobs.stock.classifications.common.TupleToPojoConverter;
 import com.github.bradjacobs.stock.serialize.csv.CsvDeserializer;
-import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
- *
  * SEE  https://www.ungm.org/Public/UNSPSC
- */
-
-
-/*
-SIDE NOTE:  duplicate "Combination volume expanders" will be removed
-
- E  -  Medical, Laboratory & Test Equipment & Supplies & Pharmaceuticals
-   51000000  -  Drugs and Pharmaceutical Products
-       51130000  -  Hematolic drugs
-           51132000  -  Hemorrheologic agents
-               51132001  -  Pentoxifylline
-               51132300  -  Combination volume expanders    <=******
-            ....
-           51132200  -  Combination non-opioid analgesics
-           51132300  -  Combination volume expanders        <=******
-               51132308  -  Idarucizumab
  */
 public class UnspscDataConverter implements DataConverter<UnspscRecord>
 {
@@ -59,59 +45,60 @@ public class UnspscDataConverter implements DataConverter<UnspscRecord>
         CsvDeserializer csvDeserializer = new CsvDeserializer();
         List<RawUnspscRecord> rawRecords = csvDeserializer.csvToObjectList(RawUnspscRecord.class, csvData);
 
-        // need a custom comparator for special logic for sorting records.
-        CustomRawUnspscRecordComparator comparator = new CustomRawUnspscRecordComparator(rawRecords);
+        // Important Note:  cannot fully rely on the key/parentKey fields to build record hierarchy
+        //    have found there's sometimes 'missing or incorrect' values, thus have to rely
+        //    mostly on the codeId value to figure out tree structure.
+        // with the exception that must rely on the key value for the top-most parent objects
 
-        List<RawUnspscRecord> dedupedRecords = removeDuplicateCodeRecords(rawRecords);
-        dedupedRecords.sort(comparator);
+        // split the list into 2 sub-lists
+        //   [0] collection of parent records  &  [1] collection of all the other records
+        List<List<RawUnspscRecord>> partitionLists = new ArrayList<>(
+                rawRecords.stream()
+                .collect(Collectors.partitioningBy(s -> !s.getParentKey().isEmpty()))
+                        .values());
 
-        return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(UnspscRecord.class, dedupedRecords);
-    }
+        // create special map of the 'parent objects'
+        //     key --> record object  (using TreeMap to preserve sort key order)
+        Map<String,RawUnspscRecord> parentKeyToRecordMap = partitionLists.get(0)
+                .stream()
+                .collect(Collectors.toMap(
+                        RawUnspscRecord::getKey, Function.identity(),
+                        (e1, e2) -> e1,
+                        TreeMap::new)
+                );
 
+        // use a Set to 'de-dupe' entries
+        Set<RawUnspscRecord> childRecords = new HashSet<>(partitionLists.get(1));
 
-    /**
-     * Remove any duplicate records that have the same CODE_ID
-     *   (not be be confused with the 'key' field which is also unique)
-     * @param rawRecords recordList
-     * @return List of records that all have unique codeId
-     */
-    private List<RawUnspscRecord> removeDuplicateCodeRecords(List<RawUnspscRecord> rawRecords) {
-        Map<String,RawUnspscRecord> codeRecordMap = new HashMap<>();
-        for (RawUnspscRecord record : rawRecords) {
-            if (!codeRecordMap.containsKey(record.getCodeId())) {
-                codeRecordMap.put(record.getCodeId(), record);
-            }
+        // for all immediate children of the parent objects,
+        // create a lookup map of the prefix (first part) of the code to parent key
+        //    Example Record: {key:104269, parentKey:104, code:42000000}
+        //       renders entry {key:"42", value:"104"}
+        Map<String,String> prefixToRootParentKeyMap = childRecords
+                .stream()
+                .filter(k -> k.getParentKey().length() == 3)  // criteria to find 'immediate children of parents'
+                .collect(Collectors.toMap(RawUnspscRecord::getCodeIdPrefix, RawUnspscRecord::getParentKey));
+
+        // create a map where all records fall into a collection
+        //  under the top-most parent 3-digit key
+        Map<String, List<RawUnspscRecord>> categoryBucketMap = childRecords
+                .stream()
+                .collect(Collectors.groupingBy( k -> prefixToRootParentKeyMap.get(k.getCodeIdPrefix())));
+
+        // Build final record list
+        //   Iterate thru all the keys (which are in order)
+        //     add the parent object, then add all its children in sorted order
+        List<RawUnspscRecord> masterList = new ArrayList<>();
+        for (String key : parentKeyToRecordMap.keySet()) {
+            masterList.add( parentKeyToRecordMap.get(key) );
+            List<RawUnspscRecord> recordList = categoryBucketMap.get(key);
+            recordList.sort(Comparator.comparing(RawUnspscRecord::getCodeId));
+            masterList.addAll(recordList);
         }
-        return new ArrayList<>(codeRecordMap.values());
+
+        // finally run the list of records thru the converter
+        return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(UnspscRecord.class, masterList);
     }
-
-
-    /**
-     * Special Comparator for RawUnspscRecord object because can NOT sort on the codeId alone.
-     */
-    private static class CustomRawUnspscRecordComparator implements Comparator<RawUnspscRecord> {
-
-        private final SectorCodeLookup sectorCodeLookup;
-
-        public CustomRawUnspscRecordComparator(List<RawUnspscRecord> rawRecords) {
-            this.sectorCodeLookup = new SectorCodeLookup(rawRecords);;
-        }
-
-        @Override
-        public int compare(RawUnspscRecord record1, RawUnspscRecord record2) {
-            String sector1 = sectorCodeLookup.getRootSectorLetter(record1);
-            String sector2 = sectorCodeLookup.getRootSectorLetter(record2);
-            int compareValue = sector1.compareTo(sector2);
-            if (compareValue == 0) {
-                compareValue = Integer.compare(record1.getCodeId().length(), record2.getCodeId().length());
-                if (compareValue == 0) {
-                    compareValue = record1.getCodeId().compareTo(record2.getCodeId());
-                }
-            }
-            return compareValue;
-        }
-    }
-
 
     private static class RawUnspscRecord implements CodeTitleLevelRecord {
         @JsonProperty("Key")
@@ -132,22 +119,31 @@ public class UnspscDataConverter implements DataConverter<UnspscRecord>
             return code;
         }
 
+        // gets the first 2 digits of the codeId
+        public String getCodeIdPrefix() {
+            if (code.isEmpty()) {
+                return "";
+            }
+            return code.substring(0,2);
+        }
+
         @Override
         public String getCodeTitle() {
             return title;
         }
 
+        // NOTE: using equals/hashcode on the "CODE" field (instead of 'key')
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof RawUnspscRecord)) return false;
             RawUnspscRecord that = (RawUnspscRecord) o;
-            return key.equals(that.key);
+            return code.equals(that.code);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(key);
+            return Objects.hash(code);
         }
 
         @Override
@@ -156,49 +152,16 @@ public class UnspscDataConverter implements DataConverter<UnspscRecord>
         }
     }
 
-
-    // todo - could be cleaner
-    private static class SectorCodeLookup
-    {
-        private final Map<String,RawUnspscRecord> keyRecordLookuMap = new HashMap<>();
-        private final Map<String,String> keyToRootSectorLetterMap = new HashMap<>();
-
-        public SectorCodeLookup(List<RawUnspscRecord> inputList) {
-            for (RawUnspscRecord record : inputList) {
-                keyRecordLookuMap.put(record.getKey(), record);
-            }
-        }
-
-        public String getRootSectorLetter(RawUnspscRecord record) {
-            String sectorLetter = keyToRootSectorLetterMap.get(record.getKey());
-            if (sectorLetter == null)
-            {
-                if (StringUtils.isEmpty(record.getParentKey())) {
-                    sectorLetter = record.getCodeId();
-                }
-                else {
-                    RawUnspscRecord parent = keyRecordLookuMap.get(record.getParentKey());
-                    sectorLetter =  getRootSectorLetter(parent);
-                }
-                keyToRootSectorLetterMap.put(record.getKey(), sectorLetter);
-            }
-            return sectorLetter;
-        }
-    }
-
-
     /**
      * Calculate level depth based on the format of the codeId
      * @param codeId codeId
      * @return level
      */
-    private static int getLevel(String codeId)
-    {
+    private static int getLevel(String codeId) {
         if (codeId.length() == 1) {
             return 1;
         }
-        else if (codeId.length() == CODE_STR_LENGTH)
-        {
+        else if (codeId.length() == CODE_STR_LENGTH) {
             char[] codeChars = codeId.toCharArray();
             for (int i = codeChars.length - 1; i >= 0; i--) {
                 // 0 1 2 3 4 5 6 7  (index of first non-zero char (from right to left)
