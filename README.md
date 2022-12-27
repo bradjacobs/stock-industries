@@ -1,10 +1,11 @@
-# Stock Industries  (IN PROGRESS)
+# Stock Industry Sector Classification Parsing
 
 ## Description
 
 For stock research & edification purposes, this project examines existing sector/industry classifications and renders them into a format that is more conveniently 'parsable' (such 
 as JSON or CSV)
 
+_UPDATE_: This project NOT kept up-to-date.
 
 ## Disclaimers
 #### Part 1
@@ -40,7 +41,3 @@ and/or intellectual property rights.
 * The intention is to keep all sector/industry definitions true and accurate to the original source.  However it's possible this project might reveal some subtle differences (like
  punctuation). If you require true reliability/accuracy of all sector/industry definitions, then please go to the respective source (links above)
 * Links to the sources used are listed above, however cannot guarantee they are (or will remain) the most current version of any sector/industry definitions
- 
-
-## Usage
-(coming soon)
