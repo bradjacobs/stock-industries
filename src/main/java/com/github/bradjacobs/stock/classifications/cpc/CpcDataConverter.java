@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+// https://unstats.un.org/unsd/classifications/Econ/      general info link
 // https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/CPC_Ver_2_1_english_structure.txt
 
 /**
@@ -30,8 +31,7 @@ public class CpcDataConverter implements DataConverter<CpcRecord>
     }
 
     @Override
-    public List<CpcRecord> createDataRecords() throws IOException
-    {
+    public List<CpcRecord> createDataRecords() throws IOException {
         String csvData = DownloadUtil.downloadFile(getClassification().getSourceFileLocation());
         CsvDeserializer csvDeserializer = new CsvDeserializer();
         List<RawCpcRecord> rawRecords = csvDeserializer.csvToObjectList(RawCpcRecord.class, csvData);
@@ -39,8 +39,8 @@ public class CpcDataConverter implements DataConverter<CpcRecord>
         return TUPLE_TO_POJO_CONVERTER.doConvertToObjects(CpcRecord.class, rawRecords);
     }
 
-    protected String cleanValue(String input)
-    {
+    // todo - use or remove
+    protected String cleanValue(String input) {
         String cleanValue = input;
         for (String tag : TAGS_TO_REMOVE) {
             cleanValue = StringUtils.replace(cleanValue, tag, "");
@@ -48,9 +48,7 @@ public class CpcDataConverter implements DataConverter<CpcRecord>
         return StringUtil.cleanWhitespace(cleanValue);
     }
 
-
-    private static class RawCpcRecord implements CodeTitleLevelRecord
-    {
+    private static class RawCpcRecord implements CodeTitleLevelRecord {
         @JsonProperty("CPC21code")
         private String code;
         @JsonProperty("CPC21title")
