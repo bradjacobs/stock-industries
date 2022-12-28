@@ -19,17 +19,10 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
 {
     private static final boolean SKIP_DISCONTINUED_RECORDS = true;
     private static final String DISCONTINUED_IDENTIFIER = "discontinued";  // substring identifier for deprecated records.
-
     private static final int SRC_DESC_COLUMN = 7;
 
-    // possible a 'description' could be on more than 1 line,
-    //  but we will never bother to check for single description
-    //  exceeding this many lines.
-    private static final int MAX_DESCRIPTION_LINES = 10;
-
     @Override
-    public Classification getClassification()
-    {
+    public Classification getClassification() {
         return Classification.GICS;
     }
 
@@ -43,38 +36,26 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
         // Thus recreate the CSV such that the description is included with its related data on the same line.
         int startIndex = findFirstDataRowIndex(csvData);
         List<String[]> rowDataList = new ArrayList<>();
-        for (int i = startIndex; i < csvData.length; i+=2) {
-            //  IMPORTANT NOTE:  the dataRow array actually has a length 1 greater than it should!
-            //    (this is a "lucky convenience", because this extra column exactly where the description value should go)
+
+        for (int i = startIndex; i < csvData.length; i++) {
             String[] dataRow = csvData[i];
-            String[] extraDescriptionRow = csvData[i+1];
 
-            // clean up newlines and/or weird spaces for all the values.
-            for (int j = 0; j < dataRow.length; j++) {
-                dataRow[j] = StringUtil.cleanWhitespace(dataRow[j]);
-            }
-            String desc = extraDescriptionRow[SRC_DESC_COLUMN];
+            // grab description(s) which start on the next line
+            List<String> descriptionList = getDescriptions(i+1, csvData);
+            String description = String.join(" ", descriptionList);
 
-            // handle a description that can be one more than 1 line
-            //   todo: this is terrible... should clean up in the future.
-            int stopLine = i+MAX_DESCRIPTION_LINES;
-            for (int k = i+2; k < stopLine && k < csvData.length; k++) {
-                String[] nextLine = csvData[k];
-                if (nextLine[6].trim().isEmpty()) {
-                    desc += " : " + nextLine[SRC_DESC_COLUMN];
-                    i++;
-                }
-                else {
-                    break;
-                }
-            }
+            // adjust current line index for description lines
+            i = i + descriptionList.size();
 
-            //  IMPORTANT NOTE:  the dataRow array length by 1 to make room for description
+            // IMPORTANT NOTE: incrrease dataRow array length by 1 to make room for description
             String[] dataRowCopy = new String[dataRow.length+1];
             System.arraycopy(dataRow, 0, dataRowCopy, 0, dataRow.length);
-            dataRowCopy[dataRow.length] = desc;
+            dataRowCopy[dataRow.length] = description;
 
-            rowDataList.add(dataRowCopy);
+            boolean isSkippable = cleanRow(dataRowCopy);
+            if (!isSkippable) {
+                rowDataList.add(dataRowCopy);
+            }
         }
 
         //   Step 2
@@ -101,17 +82,24 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
         CsvMapper csvMapper = MapperBuilder.csv().build();
         ObjectReader objReader = csvMapper.readerWithTypedSchemaFor(GicsRecord.class);
         MappingIterator<GicsRecord> iterator = objReader.readValues(fullCsvData);
-        List<GicsRecord> gicsRecords = iterator.readAll();
+        return iterator.readAll();
+    }
 
-        //   Step 5
-        // Strip out any records that don't belong (discontinued)
-        List<GicsRecord> finalGicsRecords = new ArrayList<>();
-        for (GicsRecord gicsRecord : gicsRecords) {
-            if (! shouldSkip(gicsRecord)) {
-                finalGicsRecords.add(gicsRecord);
+    private List<String> getDescriptions(int startRowIndex, String[][] csvData) {
+        List<String> descriptionList = new ArrayList<>();
+        for (int j = startRowIndex; j < csvData.length; j++) {
+            String[] row = csvData[j];
+            String descCell = StringUtil.cleanWhitespace( row[SRC_DESC_COLUMN] );
+            String prevCell = StringUtil.cleanWhitespace( row[SRC_DESC_COLUMN-1] );
+
+            if (prevCell.isEmpty() && !descCell.isEmpty()) {
+                descriptionList.add(descCell);
+            }
+            else {
+                break;
             }
         }
-        return finalGicsRecords;
+        return descriptionList;
     }
 
     private int findFirstDataRowIndex(String[][] csvData) {
@@ -126,20 +114,27 @@ public class GicsDataConverter implements DataConverter<GicsRecord>
         return -1;
     }
 
-    private boolean shouldSkip(GicsRecord record)
-    {
-        return SKIP_DISCONTINUED_RECORDS && isDiscontinued(record);
-    }
-
-    // todo: make less lame
-    private boolean isDiscontinued(GicsRecord record) {
-        if (record.getSectorName().toLowerCase().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getGroupName().toLowerCase().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getIndustryName().toLowerCase().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getSubIndustryName().toLowerCase().contains(DISCONTINUED_IDENTIFIER) ||
-            record.getDescription().toLowerCase().contains(DISCONTINUED_IDENTIFIER)) {
-            return true;
+    // side-effect row cleaning any string values as needed
+    private boolean cleanRow(String[] dataRow) {
+        boolean isskippable = false;
+        for (int i = 0; i < dataRow.length; i++) {
+            String value = dataRow[i];
+            if (value.toLowerCase().contains(DISCONTINUED_IDENTIFIER)) {
+                // don't strip out a discontinued identifier
+                if (SKIP_DISCONTINUED_RECORDS) {
+                    isskippable = true;
+                }
+            }
+            else {
+                value = value.trim();
+                //  remove any suffixes such as " (New Name)"
+                if (!value.isEmpty() && value.charAt(value.length()-1) == ')') {
+                    int lastOpenParen = value.lastIndexOf('(');
+                    value = value.substring(0, lastOpenParen);
+                }
+            }
+            dataRow[i] = StringUtil.cleanWhitespace(value);
         }
-        return false;
+        return isskippable;
     }
 }
